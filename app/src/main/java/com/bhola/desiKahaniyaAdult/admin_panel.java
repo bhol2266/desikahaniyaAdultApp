@@ -3,6 +3,7 @@ package com.bhola.desiKahaniyaAdult;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -14,14 +15,26 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class admin_panel extends AppCompatActivity {
     public static int counter = 0;
@@ -81,16 +94,22 @@ public class admin_panel extends AppCompatActivity {
                     while (cursor.moveToNext()) {
                         title.add(cursor.getString(3));
                         paragraph.add(cursor.getString(2));
+
+
                     }
                 } catch (Exception ignored) {
 
                 }
 
                 int randomNum = (int) (Math.random() * (title.size() - 1 - 0 + 1) + 0);
+
+                fetchStoryAPI()
                 pragraphofstory.setText(decryption(paragraph.get(randomNum)));
                 title_story.setText(title.get(randomNum));
                 date.setText("2022-04-19");
                 uncensored_title = title.get(randomNum);
+                Log.d(SplashScreen.TAG, "onClick: "+title_story);
+                Log.d(SplashScreen.TAG, "onClick: "+pragraphofstory);
             }
         });
 
@@ -109,6 +128,58 @@ public class admin_panel extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void fetchStoryAPI() {
+
+        String API_URL = "https://clownfish-app-jn7w9.ondigitalocean.app/storiesDetails";
+        RequestQueue requestQueue = Volley.newRequestQueue(admin_panel.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, API_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jSONArray = jsonObject.getJSONObject("data").getJSONArray("description");
+                    ArrayList<String> arrayList = new ArrayList();
+                    for (int i = 0; i <jSONArray.length() ; i++) {
+                        arrayList.add((String) jSONArray.get(i));
+                    }
+
+                    String str = String.join("\n\n", arrayList);
+                    storyText.setText(str.toString().trim().replaceAll("\\/", ""));
+
+//                   storiesInsideparagraphLayout.setVisibility(View);
+//               relatedStoriesLayout.setVisibility(0);
+
+                    new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updateStoryParagraph(title, str);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("href", href);
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
 

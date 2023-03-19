@@ -36,6 +36,7 @@ import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -219,9 +220,19 @@ public class StoryPage extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    String description = jsonObject.getString("data");
-                    storyText.setText(description.toString().trim().replaceAll("\\/", ""));
-                    new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updateStoryParagraph(title, description);
+                    JSONArray jSONArray = jsonObject.getJSONObject("data").getJSONArray("description");
+                    ArrayList<String> arrayList = new ArrayList();
+                    for (int i = 0; i <jSONArray.length() ; i++) {
+                        arrayList.add((String) jSONArray.get(i));
+                    }
+
+                    String str = String.join("\n\n", arrayList);
+                storyText.setText(str.toString().trim().replaceAll("\\/", ""));
+
+//                   storiesInsideparagraphLayout.setVisibility(View);
+//               relatedStoriesLayout.setVisibility(0);
+
+                    new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updateStoryParagraph(title, str);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -554,7 +565,7 @@ public class StoryPage extends AppCompatActivity {
         }
         try {
             cursor.moveToFirst();
-            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13));
+            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13),cursor.getInt(14));
 
             return storyItemModel;
         } finally {

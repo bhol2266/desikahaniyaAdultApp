@@ -61,7 +61,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String Main_App_url1 = "https://play.google.com/store/apps/details?id=com.bhola.desiKahaniyaAdult";
     public static String Refer_App_url2 = "https://play.google.com/store/apps/developer?id=UK+DEVELOPERS";
     public static String Ads_State = "inactive";
-    public static String DB_NAME = "desikahaniya.db";
+    public static String DB_NAME = "desikahaniya";
     public static String exit_Refer_appNavigation = "inactive";
     public static String App_updating = "inactive";
     public static String Notification_ImageURL = "https://hotdesipics.co/wp-content/uploads/2022/06/Hot-Bangla-Boudi-Ki-Big-Boobs-Nangi-Selfies-_002.jpg";

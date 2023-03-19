@@ -8,11 +8,12 @@ public class StoryItemModel {
     int like;
     int audio;
     String storiesInsideParagraph;
+    int read;
 
     public StoryItemModel(StoryItemModel dataFROM_db) {
     }
 
-    public StoryItemModel(String title, String href, String date, String views, String description, String audiolink, String category, String tags, String relatedStories, int completeDate, String story, int like, int audio, String storiesInsideParagraph) {
+    public StoryItemModel(String title, String href, String date, String views, String description, String audiolink, String category, String tags, String relatedStories, int completeDate, String story, int like, int audio, String storiesInsideParagraph, int read) {
         Title = title;
         this.href = href;
         this.date = date;
@@ -27,6 +28,7 @@ public class StoryItemModel {
         this.like = like;
         this.audio = audio;
         this.storiesInsideParagraph = storiesInsideParagraph;
+        this.read = read;
     }
 
     public String getTitle() {
@@ -139,6 +141,14 @@ public class StoryItemModel {
 
     public void setStoriesInsideParagraph(String storiesInsideParagraph) {
         this.storiesInsideParagraph = storiesInsideParagraph;
+    }
+
+    public int getRead() {
+        return read;
+    }
+
+    public void setRead(int read) {
+        this.read = read;
     }
 }
 
