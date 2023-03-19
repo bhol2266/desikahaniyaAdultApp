@@ -43,7 +43,7 @@
         android:layout_height="100dp"
         android:layout_margin="5dp"
         android:ems="10"
-        android:hint="Paragraph"
+        android:hint="loading..."
         android:inputType="textMultiLine"
         android:maxLines="8" />
 

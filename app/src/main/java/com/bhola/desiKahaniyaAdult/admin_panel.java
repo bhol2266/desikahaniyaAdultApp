@@ -1,13 +1,13 @@
 package com.bhola.desiKahaniyaAdult;
 
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Space;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +41,7 @@ public class admin_panel extends AppCompatActivity {
 
     DatabaseReference mref, notificationMref;
     TextView Users_Counters;
-    EditText title_story, pragraphofstory, date, image_url;
+    EditText title_story, pragraphofstory, dateTextview, image_url;
     Button selectStory, insertBTN, Refer_App_url_BTN, STory_Switch_Active_BTN;
     Switch switch_Exit_Nav, switch_Activate_Ads, switch_App_Updating;
     Button Ad_Network;
@@ -74,7 +74,7 @@ public class admin_panel extends AppCompatActivity {
         Refer_App_url_BTN = findViewById(R.id.Refer_App_url_BTN);
         title_story = findViewById(R.id.title_story);
         pragraphofstory = findViewById(R.id.pragraphofstory);
-        date = findViewById(R.id.dateofstory);
+        dateTextview = findViewById(R.id.dateofstory);
         image_url = findViewById(R.id.image_url);
 
 
@@ -86,14 +86,18 @@ public class admin_panel extends AppCompatActivity {
         selectStory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                title_story.setText("");
+                pragraphofstory.setText("loading...");
                 List<String> title = new ArrayList<>();
-                List<String> paragraph = new ArrayList<>();
+                List<String> href = new ArrayList<>();
+                List<String> date = new ArrayList<>();
 
                 try {
                     Cursor cursor = new DatabaseHelper(admin_panel.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readalldata();
                     while (cursor.moveToNext()) {
-                        title.add(cursor.getString(3));
-                        paragraph.add(cursor.getString(2));
+                        title.add(cursor.getString(0));
+                        href.add(cursor.getString(1));
+                        date.add(cursor.getString(2));
 
 
                     }
@@ -103,13 +107,10 @@ public class admin_panel extends AppCompatActivity {
 
                 int randomNum = (int) (Math.random() * (title.size() - 1 - 0 + 1) + 0);
 
-                fetchStoryAPI()
-                pragraphofstory.setText(decryption(paragraph.get(randomNum)));
-                title_story.setText(title.get(randomNum));
-                date.setText("2022-04-19");
-                uncensored_title = title.get(randomNum);
-                Log.d(SplashScreen.TAG, "onClick: "+title_story);
-                Log.d(SplashScreen.TAG, "onClick: "+pragraphofstory);
+                fetchStoryAPI(SplashScreen.decryption(href.get(randomNum)));
+                title_story.setText(SplashScreen.decryption(title.get(randomNum)));
+                dateTextview.setText(date.get(randomNum));
+                uncensored_title = SplashScreen.decryption(title.get(randomNum));
             }
         });
 
@@ -117,7 +118,7 @@ public class admin_panel extends AppCompatActivity {
         insertBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!image_url.getText().toString().isEmpty() && !pragraphofstory.getText().toString().isEmpty() && !title_story.getText().toString().isEmpty() && !date.getText().toString().isEmpty()) {
+                if (!image_url.getText().toString().isEmpty() && !pragraphofstory.getText().toString().isEmpty() && !title_story.getText().toString().isEmpty() && !dateTextview.getText().toString().isEmpty()) {
                     pasteAndRuncode();
                     FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all", uncensored_title, "पूरी कहानी पढ़ें", image_url.getText().toString(), "Notification_Story", admin_panel.this);
                     fcmNotificationsSender.SendNotifications();
@@ -130,57 +131,6 @@ public class admin_panel extends AppCompatActivity {
 
     }
 
-    private void fetchStoryAPI() {
-
-        String API_URL = "https://clownfish-app-jn7w9.ondigitalocean.app/storiesDetails";
-        RequestQueue requestQueue = Volley.newRequestQueue(admin_panel.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, API_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jSONArray = jsonObject.getJSONObject("data").getJSONArray("description");
-                    ArrayList<String> arrayList = new ArrayList();
-                    for (int i = 0; i <jSONArray.length() ; i++) {
-                        arrayList.add((String) jSONArray.get(i));
-                    }
-
-                    String str = String.join("\n\n", arrayList);
-                    storyText.setText(str.toString().trim().replaceAll("\\/", ""));
-
-//                   storiesInsideparagraphLayout.setVisibility(View);
-//               relatedStoriesLayout.setVisibility(0);
-
-                    new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updateStoryParagraph(title, str);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "onErrorResponse: " + error.getMessage());
-
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("href", href);
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/x-www-form-urlencoded");
-                return params;
-            }
-        };
-
-        requestQueue.add(stringRequest);
-    }
 
 
     private void deleteNotification_Stories() {
@@ -222,7 +172,7 @@ public class admin_panel extends AppCompatActivity {
 
         String titlee = title_story.getText().toString();
         String paragrapg = pragraphofstory.getText().toString();
-        String datee = date.getText().toString();
+        String datee = dateTextview.getText().toString();
 
         String Push_ID = notificationMref.push().getKey();
         notificationMref.child("Notification").child(Push_ID).child("Title").setValue(titlee);
@@ -232,7 +182,7 @@ public class admin_panel extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Data is Successfully Added", Toast.LENGTH_SHORT).show();
 
         title_story.getText().clear();
-        date.getText().clear();
+        dateTextview.getText().clear();
         pragraphofstory.getText().clear();
 
     }
@@ -349,6 +299,54 @@ public class admin_panel extends AppCompatActivity {
             decryptedText = decryptedText + c;
         }
         return decryptedText;
+    }
+
+    private void fetchStoryAPI(String href) {
+
+        String API_URL = "https://clownfish-app-jn7w9.ondigitalocean.app/storiesDetails";
+        RequestQueue requestQueue = Volley.newRequestQueue(admin_panel.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, API_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray jSONArray = jsonObject.getJSONObject("data").getJSONArray("description");
+                    ArrayList<String> arrayList = new ArrayList();
+                    for (int i = 0; i <jSONArray.length() ; i++) {
+                        arrayList.add((String) jSONArray.get(i));
+                    }
+
+                    String str = String.join("\n\n", arrayList);
+                    pragraphofstory.setText(str.toString().trim().replaceAll("\\/", ""));
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(SplashScreen.TAG, "onErrorResponse: " + error.getMessage());
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("href", href);
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
 }
