@@ -46,9 +46,7 @@ public class ftab1 extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_ftab1, container, false);
 
-        if (SplashScreen.Login_Times > 3 && SplashScreen.Sex_Story.equals("active")) {
-//            changeTitle_Textview(view);
-        }
+
 
         gridItems(view);
         return view;

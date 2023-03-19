@@ -30,7 +30,7 @@ public class admin_panel extends AppCompatActivity {
     TextView Users_Counters;
     EditText title_story, pragraphofstory, date, image_url;
     Button selectStory, insertBTN, Refer_App_url_BTN, STory_Switch_Active_BTN;
-    Switch switch_Exit_Nav, switch_Activate_Ads, switch_Sex_Story;
+    Switch switch_Exit_Nav, switch_Activate_Ads, switch_App_Updating;
     Button Ad_Network;
     static String uncensored_title = "";
 
@@ -43,7 +43,6 @@ public class admin_panel extends AppCompatActivity {
         initViews();
         appControl();
         deleteNotification_Stories();
-        Ad_Network_Selection();
         Add_Stories_to_Notification_Buttons();
 
 
@@ -52,14 +51,12 @@ public class admin_panel extends AppCompatActivity {
 
     private void initViews() {
 
-        mref = FirebaseDatabase.getInstance().getReference().child("shareapp_url");
+        mref = FirebaseDatabase.getInstance().getReference().child("Hindi_desi_Kahani_Adult");
         notificationMref = FirebaseDatabase.getInstance().getReference();
-        Ad_Network = findViewById(R.id.Ad_Network);
         selectStory = findViewById(R.id.selectStory);
         insertBTN = findViewById(R.id.insert);
-        STory_Switch_Active_BTN = findViewById(R.id.XXXSTory_Switch_Active);
         switch_Activate_Ads = findViewById(R.id.Activate_Ads);
-        switch_Sex_Story = findViewById(R.id.Sex_Story);
+        switch_App_Updating = findViewById(R.id.App_updating_Switch);
         switch_Exit_Nav = findViewById(R.id.switch_Exit_Nav);
         Refer_App_url_BTN = findViewById(R.id.Refer_App_url_BTN);
         title_story = findViewById(R.id.title_story);
@@ -79,17 +76,16 @@ public class admin_panel extends AppCompatActivity {
                 List<String> title = new ArrayList<>();
                 List<String> paragraph = new ArrayList<>();
 
-                for (int i = 1; i <= 6; i++) {
-                    try {
-                        Cursor cursor = new DatabaseHelper(admin_panel.this, "MCB_Story", SplashScreen.DB_VERSION, "Collection" + i).readalldata();
-                        while (cursor.moveToNext()) {
-                            title.add(cursor.getString(3));
-                            paragraph.add(cursor.getString(2));
-                        }
-                    } catch (Exception e) {
-
+                try {
+                    Cursor cursor = new DatabaseHelper(admin_panel.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readalldata();
+                    while (cursor.moveToNext()) {
+                        title.add(cursor.getString(3));
+                        paragraph.add(cursor.getString(2));
                     }
+                } catch (Exception ignored) {
+
                 }
+
                 int randomNum = (int) (Math.random() * (title.size() - 1 - 0 + 1) + 0);
                 pragraphofstory.setText(decryption(paragraph.get(randomNum)));
                 title_story.setText(title.get(randomNum));
@@ -115,28 +111,6 @@ public class admin_panel extends AppCompatActivity {
 
     }
 
-
-    private void Ad_Network_Selection() {
-
-
-        Ad_Network.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Ad_Network.getText().toString().equals("admob")) {
-                    mref.child("Ad_Network").setValue("facebook");
-                    Ad_Network.setBackgroundColor(Color.parseColor("#D11A1A"));
-
-                } else {
-                    mref.child("Ad_Network").setValue("admob");
-                    Ad_Network.setBackgroundColor(Color.parseColor("#4267B2"));
-                }
-
-
-            }
-        });
-
-
-    }
 
     private void deleteNotification_Stories() {
 
@@ -192,13 +166,11 @@ public class admin_panel extends AppCompatActivity {
 
     }
 
-
     private void appControl() {
         checkButtonState();
         EditText Refer_App_url2;
 
         Refer_App_url2 = findViewById(R.id.Refer_App_url2);
-
         Refer_App_url_BTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,7 +183,6 @@ public class admin_panel extends AppCompatActivity {
             }
 
         });
-
         switch_Exit_Nav.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -238,32 +209,22 @@ public class admin_panel extends AppCompatActivity {
 
             }
         });
-        switch_Sex_Story.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        switch_App_Updating.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                 if (isChecked) {
-                    if (SplashScreen.Sex_Story_Switch_Open.equals("active")) {
-                        mref.child("Sex_Story").setValue("active");
-                    }
+                    mref.child("updatingApp_on_PLatStore").setValue("active");
                 } else {
-                    mref.child("Sex_Story").setValue("inactive");
+                    mref.child("updatingApp_on_PLatStore").setValue("inactive");
                 }
+
             }
         });
-
-
-        STory_Switch_Active_BTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (STory_Switch_Active_BTN.getText().toString().trim().equals("Disabled")) {
-                    mref.child("Sex_Story_Switch_Open").setValue("active");
-                } else
-                    mref.child("Sex_Story_Switch_Open").setValue("inactive");
-            }
-        });
-
 
     }
+
 
     private void checkButtonState() {
 
@@ -289,30 +250,11 @@ public class admin_panel extends AppCompatActivity {
                 } else {
                     switch_Activate_Ads.setChecked(false);
                 }
-                String FakeStoryStatus = (String) snapshot.child("Sex_Story").getValue().toString().trim();
-                if (FakeStoryStatus.equals("active")) {
-                    switch_Sex_Story.setChecked(true);
 
+                if (snapshot.child("updatingApp_on_PLatStore").getValue().toString().trim().equals("active")) {
+                    switch_App_Updating.setChecked(true);
                 } else {
-                    switch_Sex_Story.setChecked(false);
-                }
-
-                if (snapshot.child("Sex_Story_Switch_Open").getValue().toString().trim().equals("active")) {
-                    STory_Switch_Active_BTN.setText("Enabled");
-                    STory_Switch_Active_BTN.setBackgroundColor(Color.parseColor("#10FF00"));
-                } else {
-                    STory_Switch_Active_BTN.setText("Disabled");
-                    switch_Sex_Story.setChecked(false);
-                    STory_Switch_Active_BTN.setBackgroundColor(Color.parseColor("#FF0000"));
-                }
-
-                String Ad_Network_name = (String) snapshot.child("Ad_Network").getValue().toString().trim();
-
-                Ad_Network.setText(Ad_Network_name);
-                if (snapshot.child("Ad_Network").getValue().toString().trim().equals("admob")) {
-                    Ad_Network.setBackgroundColor(Color.parseColor("#D11A1A"));
-                } else {
-                    Ad_Network.setBackgroundColor(Color.parseColor("#4267B2"));
+                    switch_App_Updating.setChecked(false);
                 }
 
             }

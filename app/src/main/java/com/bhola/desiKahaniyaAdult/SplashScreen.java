@@ -58,14 +58,12 @@ public class SplashScreen extends AppCompatActivity {
 
     public static String TAG = "TAGA";
     public static String Notification_Intent_Firebase = "inactive";
-    public static String Sex_Story = "inactive";
-    public static String Ad_Network_Name = "facebook";
     public static String Main_App_url1 = "https://play.google.com/store/apps/details?id=com.bhola.desiKahaniyaAdult";
     public static String Refer_App_url2 = "https://play.google.com/store/apps/developer?id=UK+DEVELOPERS";
     public static String Ads_State = "inactive";
     public static String DB_NAME = "desikahaniya.db";
     public static String exit_Refer_appNavigation = "inactive";
-    public static String Sex_Story_Switch_Open = "inactive";
+    public static String App_updating = "inactive";
     public static String Notification_ImageURL = "https://hotdesipics.co/wp-content/uploads/2022/06/Hot-Bangla-Boudi-Ki-Big-Boobs-Nangi-Selfies-_002.jpg";
     DatabaseReference url_mref;
     public static int Login_Times = 0;
@@ -186,22 +184,18 @@ public class SplashScreen extends AppCompatActivity {
         }
 
 
-        url_mref = FirebaseDatabase.getInstance().getReference().child("shareapp_url");
+        url_mref = FirebaseDatabase.getInstance().getReference().child("Hindi_desi_Kahani_Adult");
         url_mref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 Refer_App_url2 = (String) snapshot.child("Refer_App_url2").getValue();
                 exit_Refer_appNavigation = (String) snapshot.child("switch_Exit_Nav").getValue();
-                Sex_Story = (String) snapshot.child("Sex_Story").getValue();
-                Sex_Story_Switch_Open = (String) snapshot.child("Sex_Story_Switch_Open").getValue();
                 Ads_State = (String) snapshot.child("Ads").getValue();
-                Ad_Network_Name = (String) snapshot.child("Ad_Network").getValue();
+                App_updating = (String) snapshot.child("updatingApp_on_PLatStore").getValue();
                 Notification_ImageURL = (String) snapshot.child("Notification_ImageURL").getValue();
 
-                if (SplashScreen.Ads_State.equals("active")) {
-                    showAds();
-                }
+
 
                 Handler handler2 = new Handler();
                 handler2.postDelayed(new Runnable() {
@@ -267,16 +261,6 @@ public class SplashScreen extends AppCompatActivity {
         }
     }
 
-    private void showAds() {
-
-        if (Ad_Network_Name.equals("admob")) {
-
-            ADS_ADMOB rewarded_ads = new ADS_ADMOB(mRewardedVideoAd, this, getString(R.string.Rewarded_ADS_Unit_ID));
-            rewarded_ads.RewardedVideoAds();
-        } else {
-            ADS_FACEBOOK.interstitialAd(this, facebook_IntertitialAds, getString(R.string.Facebbok_InterstitialAdUnit));
-        }
-    }
 
 
     boolean isInternetAvailable(Context context) {

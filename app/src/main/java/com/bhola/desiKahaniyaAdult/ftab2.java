@@ -186,15 +186,7 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
             @Override
             public void onClick(View v) {
 
-                if (SplashScreen.Ads_State.equals("active")) {
-                    if (SplashScreen.Ad_Network_Name.equals("admob")) {
-                        ADS_ADMOB rewarded_ads = new ADS_ADMOB(mRewardedVideoAd, v.getContext(), v.getContext().getString(R.string.Rewarded_ADS_Unit_ID));
-                        rewarded_ads.RewardedVideoAds();
-                    } else {
 
-                        ADS_FACEBOOK.interstitialAd(v.getContext(), facebook_IntertitialAds, v.getContext().getString(R.string.Facebbok_InterstitialAdUnit));
-                    }
-                }
 
                 if (isInternetAvailable()) {
                     Intent intent = new Intent(context, AudioPlayer.class);

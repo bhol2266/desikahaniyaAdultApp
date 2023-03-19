@@ -71,13 +71,7 @@ Collection_GridView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection__grid_view);
 
-        try {
-            if (SplashScreen.Ads_State.equals("active")) {
-                showAds();
-            }
-        } catch (Exception e) {
-            Log.d(TAG, "Exception: " + e.getMessage());
-        }
+
 
         navigationDrawer();
         tabview();
@@ -125,22 +119,7 @@ Collection_GridView extends AppCompatActivity {
     }
 
 
-    private void showAds() {
 
-        if (SplashScreen.Ad_Network_Name.equals("admob")) {
-
-            mAdView = findViewById(R.id.adView);
-            ADS_ADMOB.BannerAd(this, mAdView);
-
-
-        } else {
-            LinearLayout facebook_bannerAd_layput, facebook_bannerAd_layput_2;
-            facebook_bannerAd_layput = findViewById(R.id.banner_container);
-            ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebbok_BannerAdUnit_1));
-
-
-        }
-    }
 
 
     @Override
@@ -185,17 +164,6 @@ Collection_GridView extends AppCompatActivity {
             init(); // Show PLay store Review option
         }
 
-
-        if ((SplashScreen.Ads_State.equals("active") && SplashScreen.Ad_Network_Name.equals("admob"))) {
-            AdView mAdView2;
-            mAdView2 = promptView.findViewById(R.id.adView2);
-            ADS_ADMOB.BannerAd(this, mAdView2);
-        }
-        if ((SplashScreen.Ads_State.equals("active") && SplashScreen.Ad_Network_Name.equals("facebook"))) {
-            LinearLayout facebook_bannerAd_layput;
-            facebook_bannerAd_layput = promptView.findViewById(R.id.banner_container);
-            ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebbok_BannerAdUnit_1));
-        }
 
         exit = promptView.findViewById(R.id.exit_button2);
         exit2 = promptView.findViewById(R.id.exit_button1);

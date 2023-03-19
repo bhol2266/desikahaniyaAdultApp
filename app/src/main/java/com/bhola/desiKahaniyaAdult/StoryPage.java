@@ -74,13 +74,7 @@ public class StoryPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story_page);
 
-        try {
-            if (SplashScreen.Ads_State.equals("active")) {
-                showAds();
-            }
-        } catch (Exception e) {
 
-        }
 
 
         Intents_and_InitViews();
@@ -258,24 +252,7 @@ public class StoryPage extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void showAds() {
 
-
-        if (SplashScreen.Ad_Network_Name.equals("admob")) {
-            mAdView = findViewById(R.id.adView);
-            ADS_ADMOB.BannerAd(this, mAdView);
-
-            ADS_ADMOB rewarded_ads = new ADS_ADMOB(mRewardedVideoAd, this, getString(R.string.Rewarded_ADS_Unit_ID));
-            rewarded_ads.RewardedVideoAds();
-        } else {
-            LinearLayout facebook_bannerAd_layput;
-            facebook_bannerAd_layput = findViewById(R.id.banner_container);
-            ADS_FACEBOOK.interstitialAd(this, facebook_IntertitialAds, getString(R.string.Facebbok_InterstitialAdUnit));
-            ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebbok_BannerAdUnit_1));
-        }
-
-
-    }
 
 
     private void Intents_and_InitViews() {
@@ -384,15 +361,7 @@ public class StoryPage extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (SplashScreen.Ads_State.equals("active")) {
-            if (SplashScreen.Ad_Network_Name.equals("admob")) {
-                ADS_ADMOB rewarded_ads = new ADS_ADMOB(mRewardedVideoAd, this, getString(R.string.Rewarded_ADS_Unit_ID));
-                rewarded_ads.RewardedVideoAds();
-            } else {
-                ADS_FACEBOOK.interstitialAd(this, facebook_IntertitialAds, getString(R.string.Facebbok_InterstitialAdUnit));
 
-            }
-        }
 
     }
 

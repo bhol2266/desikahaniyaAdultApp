@@ -43,7 +43,6 @@ public class AudioPlayerOffline extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player_offline);
 
-        loadAds();
         progressbar = findViewById(R.id.progressbar);
         playBtn_and_SeekbarLayout = findViewById(R.id.playBtn_and_SeekbarLayout);
         loadingMessage = findViewById(R.id.message);
@@ -73,7 +72,6 @@ public class AudioPlayerOffline extends AppCompatActivity {
 
                 } else if (mediaPlayer.isPlaying()) { //   PAUSE
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    loadAds();
                     mediaPlayer.pause();
                     playBtn.setBackgroundResource(R.drawable.play);
                     pausePosition = mediaPlayer.getCurrentPosition();
@@ -159,11 +157,6 @@ public class AudioPlayerOffline extends AppCompatActivity {
         }
     }
 
-    private void loadAds() {
-        if (SplashScreen.Ads_State.equals("active")) {
-            showAds();
-        }
-    }
 
     private void setCurrentTime() {
         int currentProgressinSeconds = mediaPlayer.getCurrentPosition() / 1000;
@@ -205,32 +198,11 @@ public class AudioPlayerOffline extends AppCompatActivity {
     }
 
 
-    private void showAds() {
-
-
-        if (SplashScreen.Ad_Network_Name.equals("admob")) {
-            mAdView = findViewById(R.id.adView);
-            ADS_ADMOB.BannerAd(this, mAdView);
-
-            ADS_ADMOB rewarded_ads = new ADS_ADMOB(mRewardedVideoAd, this, getString(R.string.Rewarded_ADS_Unit_ID));
-            rewarded_ads.RewardedVideoAds();
-        } else {
-            LinearLayout facebook_bannerAd_layput;
-            facebook_bannerAd_layput = findViewById(R.id.banner_container);
-            ADS_FACEBOOK.interstitialAd(this, facebook_IntertitialAds, getString(R.string.Facebbok_InterstitialAdUnit));
-            ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebbok_BannerAdUnit_1));
-        }
-
-
-    }
-
-
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         try {
-            loadAds();
             handler.removeCallbacks(runnable);
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 Toast.makeText(AudioPlayerOffline.this, "Stopped", Toast.LENGTH_SHORT).show();

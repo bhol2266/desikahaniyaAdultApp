@@ -66,9 +66,7 @@ public class Notification_Story_Detail extends AppCompatActivity {
 
                 }
 
-                if (!SplashScreen.Sex_Story.equals("active") && !SplashScreen.Sex_Story_Switch_Open.equals("active")) {
-                    collectonData.clear();
-                }
+
                 adapter2 = new NotificationAdapter(collectonData,context,title1);
                 recyclerView.setAdapter(adapter2);
                 adapter2.notifyDataSetChanged();

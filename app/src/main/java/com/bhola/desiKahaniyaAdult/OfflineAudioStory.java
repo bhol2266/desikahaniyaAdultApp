@@ -57,10 +57,6 @@ public class OfflineAudioStory extends AppCompatActivity {
         setContentView(R.layout.activity_collection_detail);
 //        StatusBarTransparent();
 
-        if (SplashScreen.Ads_State.equals("active")) {
-            showAds();
-        }
-
         actionBar();
 
         progressBar2 = findViewById(R.id.progressBar2);
@@ -79,24 +75,7 @@ public class OfflineAudioStory extends AppCompatActivity {
 
     }
 
-    private void showAds() {
 
-
-        if (SplashScreen.Ad_Network_Name.equals("admob")) {
-//NO BANNER AD IN STORY LIST
-
-            mAdView = findViewById(R.id.adView);
-            ADS_ADMOB.BannerAd(this, mAdView);
-        } else {
-
-            LinearLayout facebook_bannerAd_layput;
-            facebook_bannerAd_layput = findViewById(R.id.banner_container);
-            ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebbok_BannerAdUnit_1));
-
-        }
-
-
-    }
 
 
     private void loadSavedAudioFiles() {

@@ -49,13 +49,6 @@ public class Download_Detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.download);
 
-        try {
-            if (SplashScreen.Ads_State.equals("active")) {
-                showAds(SplashScreen.Ad_Network_Name,this);
-            }
-        } catch (Exception e) {
-
-        }
 
         actionBar();
         initViews();

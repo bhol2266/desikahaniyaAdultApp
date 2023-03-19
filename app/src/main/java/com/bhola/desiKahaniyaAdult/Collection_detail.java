@@ -67,37 +67,14 @@ public class Collection_detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection_detail);
 
-        try {
-            if (SplashScreen.Ads_State.equals("active")) {
-                showAds();
-            }
-        } catch (Exception e) {
 
-        }
 
         initviews_Check_Internet_Connectivity_Actionbar();
 
 
     }
 
-    private void showAds() {
 
-
-        if (SplashScreen.Ad_Network_Name.equals("admob")) {
-            mAdView = findViewById(R.id.adView);
-            ADS_ADMOB.BannerAd(this, mAdView);
-        } else {
-
-            LinearLayout facebook_bannerAd_layput;
-            facebook_bannerAd_layput = findViewById(R.id.banner_container);
-
-
-            ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebbok_BannerAdUnit_1));
-
-        }
-
-
-    }
 
 
     private void initviews_Check_Internet_Connectivity_Actionbar() {
