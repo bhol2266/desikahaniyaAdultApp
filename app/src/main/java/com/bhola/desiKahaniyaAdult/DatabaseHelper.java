@@ -139,6 +139,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public Cursor readLikedStories() {
+        return getWritableDatabase().query("StoryItems", null, "like=?", new String[] { String.valueOf(1) }, null, null, "completeDate DESC", null);
+    }
+
 
     public Cursor readaDataByCategory(String category, int page) {
         page = (page - 1) * 15;
@@ -148,17 +152,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sQLiteDatabase.query("StoryItems", null, "category=?", new String[]{category}, null, null, "completeDate DESC", String.valueOf(page) + ",15");
     }
 
-    public String updaterecord(String title, int like_value) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("like", like_value);
 
-        float res = db.update("StoryItems", cv, "Title = ?", new String[]{encryption(title)});
+    public String updaterecord(String title, int like_value) {
+        SQLiteDatabase sQLiteDatabase = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("like", like_value);
+
+        float res = sQLiteDatabase.update("StoryItems", contentValues, "Title = ?", new String[]{encryption(title)});
         if (res == -1)
             return "Failed";
         else
             return "Liked";
-
     }
 
     public String updateStoryParagraph(String title, String story) {
@@ -171,6 +175,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return "Failed";
         else
             return "Liked";
+    }
+
+    public String updateStoryRead(String paramString, int paramInt) {
+        SQLiteDatabase sQLiteDatabase = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("read", Integer.valueOf(paramInt));
+        return (sQLiteDatabase.update("StoryItems", contentValues, "Title = ?", new String[]{encryption(paramString)}) == -1.0F) ? "Failed" : "Liked";
     }
 
 
