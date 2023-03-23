@@ -104,7 +104,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query("StoryItems", null, "Title=?", new String[]{encryption(title)}, null, null, null, null);
         return cursor;
 
-    } public Cursor readFakeStory() {
+    }
+
+    public Cursor readFakeStory() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query("FakeStory", null, null, null, null, null, null, null);
         return cursor;
@@ -139,17 +141,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public Cursor readaDataByCategory(String category, int page) {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        if (category.equals("Latest Stories")) {
-            Cursor cursor = db.query("StoryItems", null, null, null, null, null, "completeDate DESC", "20");
-            return cursor;
-        } else {
-            Cursor cursor = db.query("StoryItems", null, "category=?", new String[]{category}, null, null, "completeDate DESC", "20");
-            return cursor;
-        }
-
-
+        Log.d(TAG, "page: "+page);
+        page = (page - 1) * 15;
+        SQLiteDatabase sQLiteDatabase = getWritableDatabase();
+        if (category.equals("Latest Stories"))
+            return sQLiteDatabase.query("StoryItems", null, null, null, null, null, "completeDate DESC", String.valueOf(page) + ",15");
+        return sQLiteDatabase.query("StoryItems", null, "category=?", new String[]{category}, null, null, "completeDate DESC", String.valueOf(page) + ",15");
     }
 
     public String updaterecord(String title, int like_value) {

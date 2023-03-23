@@ -2,6 +2,7 @@ package com.bhola.desiKahaniyaAdult;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -25,6 +26,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import soup.neumorphism.NeumorphCardView;
 import soup.neumorphism.NeumorphTextView;
@@ -55,34 +58,47 @@ public class ftab1 extends Fragment {
 
 
     private void gridItems(View view) {
+
+
         ArrayList<HashMap<String, String>> Category_List = new ArrayList<HashMap<String, String>>();
-        HashMap<String, String> m_li;
 
-        try {
-            JSONObject obj = new JSONObject(loadJSONFromAsset());
-            JSONArray m_jArry = obj.getJSONArray("categories");
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    HashMap<String, String> m_li;
+                    JSONObject obj = new JSONObject(loadJSONFromAsset());
+                    JSONArray m_jArry = obj.getJSONArray("categories");
 
-            for (int i = 0; i < m_jArry.length(); i++) {
-                JSONObject json_obj = m_jArry.getJSONObject(i);
+                    for (int i = 0; i < m_jArry.length(); i++) {
+                        JSONObject json_obj = m_jArry.getJSONObject(i);
 
-                String category_title = json_obj.getString("category_title");
-                String href = json_obj.getString("href");
+                        String category_title = json_obj.getString("category_title");
+                        String href = json_obj.getString("href");
 
-                //Add your values in your `ArrayList` as below:
-                m_li = new HashMap<String, String>();
-                m_li.put("category_title", category_title);
-                m_li.put("href", href);
-                Category_List.add(m_li);
+                        //Add your values in your `ArrayList` as below:
+                        m_li = new HashMap<String, String>();
+                        m_li.put("category_title", category_title);
+                        m_li.put("href", href);
+                        Category_List.add(m_li);
 
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d(TAG, "categorySlider: "+e.getMessage());
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        createGridItems(Category_List,view);
+                    }
+                });
             }
-            createGridItems(Category_List,view);
+        });
 
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Log.d(TAG, "categorySlider: "+e.getMessage());
-
-        }
     }
 
     private void createGridItems(ArrayList<HashMap<String, String>> Category_List, View view) {

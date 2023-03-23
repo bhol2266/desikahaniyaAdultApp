@@ -61,7 +61,7 @@ public class Download_Detail extends AppCompatActivity {
         String[] Table_Names = {"Collection1", "Collection2", "Collection3", "Collection4", "Collection5", "Collection6","Collection7","Collection8","Collection9","Collection10"};
 
         for (int i = 0; i < Table_Names.length; i++) {
-            getDataFromDatabase(Table_Names[i]);
+//            getDataFromDatabase(Table_Names[i]);
         }
 
         checkCollectionDataEmpty();
@@ -98,26 +98,26 @@ public class Download_Detail extends AppCompatActivity {
 
 
 
-    private void getDataFromDatabase() {
-
-        Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readaDataByCategory(href, page);
-        try {
-            try {
-                while (cursor.moveToNext()) {
-                    StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
-                    collectonData.add(storyItemModel);
-                }
-
-            } finally {
-                cursor.close();
-            }
-
-        } catch (Exception ignored) {
-
-        }
-
-
-    }
+//    private void getDataFromDatabase() {
+//
+//        Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readaDataByCategory(href, page);
+//        try {
+//            try {
+//                while (cursor.moveToNext()) {
+//                    StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
+//                    collectonData.add(storyItemModel);
+//                }
+//
+//            } finally {
+//                cursor.close();
+//            }
+//
+//        } catch (Exception ignored) {
+//
+//        }
+//
+//
+//    }
 
 
     private void checkCollectionDataEmpty() {
