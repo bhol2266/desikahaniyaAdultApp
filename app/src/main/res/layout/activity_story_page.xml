@@ -45,9 +45,9 @@
                 android:fontFamily="@font/robotoslab_regular"
                 android:longClickable="true"
                 android:text="Full Story"
-                android:textColor="@color/textcolor"
-                android:textFontWeight="900"
-                android:textSize="25sp" />
+                android:textColor="@color/themeColor"
+                android:textFontWeight="700"
+                android:textSize="27sp" />
 
 
             <com.airbnb.lottie.LottieAnimationView

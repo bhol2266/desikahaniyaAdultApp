@@ -32,18 +32,17 @@ import java.util.List;
 public class Download_Detail extends AppCompatActivity {
 
 
-    String Ads_State;
     List<Object> collectonData;
     public static StoryDetails_Adapter adapter;
     ImageView back;
     RecyclerView recyclerView;
-    TextView emptyView;
-
+    TextView message;
+    LinearLayout progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.download);
+        setContentView(R.layout.activity_collection_detail);
 
         actionBar();
         initViews();
@@ -74,6 +73,7 @@ public class Download_Detail extends AppCompatActivity {
         } finally {
             cursor.close();
         }
+        progressBar.setVisibility(View.GONE);
 
 
     }
@@ -82,11 +82,10 @@ public class Download_Detail extends AppCompatActivity {
     private void checkCollectionDataEmpty() {
         if (collectonData.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
+            message.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
-
+            message.setVisibility(View.GONE);
         }
     }
 
@@ -96,19 +95,21 @@ public class Download_Detail extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Collection_GridView.class);
-                intent.putExtra("Ads_Status", Ads_State);
-                startActivity(intent);
-                finish();
+             onBackPressed();
             }
         });
+        TextView title_collection=findViewById(R.id.title_collection);
+        title_collection.setText("Offline Stories");
+
 
     }
 
 
     private void initViews() {
-        emptyView = findViewById(R.id.emptyView);
-        recyclerView = findViewById(R.id.recyclerView_Downloads);
+        message = findViewById(R.id.message);
+        recyclerView = findViewById(R.id.recyclerView);
+        progressBar =findViewById(R.id.progressBar);
+
     }
 
 }

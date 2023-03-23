@@ -118,7 +118,7 @@ public class Collection_detail extends AppCompatActivity {
     private void Send_ALL_DATA_TO_RECYCLERVIEW() {
 
 
-        adapter = new StoryDetails_Adapter(collectonData, context);
+        adapter = new StoryDetails_Adapter(collectonData, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

@@ -1,5 +1,6 @@
 package com.bhola.desiKahaniyaAdult;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -31,10 +33,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.DatabaseReference;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,6 +47,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class StoryPage extends AppCompatActivity {
     ImageView back;
@@ -55,10 +59,10 @@ public class StoryPage extends AppCompatActivity {
     Animation rotate_openAnim, rotate_closeAnim, fromBottom, toBottom;
     boolean clicked = false;
     FloatingActionButton add, share, copy, textsixe, favourite_button;
-    String DB_TABLENUMBER;
     int _id;
     SeekBar seekBar;
     Button button;
+    String activityComingFrom;
 
     String TAG = "TAGA";
 
@@ -68,13 +72,16 @@ public class StoryPage extends AppCompatActivity {
         setContentView(R.layout.activity_story_page);
 
 
-
-
         Intents_and_InitViews();
         actionBar();
-        fetchStory();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fetchStory();
+            }
+        },100);
 
-        checkfavourite(DB_TABLENUMBER);
+        checkfavourite();
 
 
         share.setOnClickListener(new View.OnClickListener() {
@@ -98,8 +105,14 @@ public class StoryPage extends AppCompatActivity {
 
                 final MediaPlayer mp = MediaPlayer.create(v.getContext(), R.raw.sound);
                 mp.start();
+                if (activityComingFrom.equals("Download_Detail")) {
+                    final Vibrator vibe = (Vibrator) v.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                    vibe.vibrate(80);//80 represents the milliseconds (the duration of the vibration)
+                    Toast.makeText(StoryPage.this, "To Remove From Download LongPress From Downloads Screen", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                Cursor cursor = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, DB_TABLENUMBER).readsingleRow(title);
+                Cursor cursor = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readsingleRow(title);
                 try {
                     if (cursor.getCount() > 0) {
                         cursor.moveToFirst();
@@ -107,13 +120,13 @@ public class StoryPage extends AppCompatActivity {
 
                         if (liked == 0) {
                             favourite_button.setImageResource(R.drawable.favourite_active);
-                            String res = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, DB_TABLENUMBER).updaterecord(title, 1);
+                            String res = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updaterecord(title, 1);
                             Toast.makeText(StoryPage.this, "Downloaded to Offline Stories", Toast.LENGTH_SHORT).show();
 
                         } else {
 
                             favourite_button.setImageResource(R.drawable.favourite_inactive);
-                            String res = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, DB_TABLENUMBER).updaterecord(title, 0);
+                            String res = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updaterecord(title, 0);
                             Toast.makeText(StoryPage.this, "Removed from Offline Stories", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -184,6 +197,7 @@ public class StoryPage extends AppCompatActivity {
 
     private void fetchStory() {
 
+
         Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readsingleRow(title);
         try {
             cursor.moveToFirst();
@@ -200,7 +214,7 @@ public class StoryPage extends AppCompatActivity {
             cursor.close();
         }
 
-
+        updateStoryread();
     }
 
     private void fetchStoryAPI() {
@@ -214,12 +228,12 @@ public class StoryPage extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jSONArray = jsonObject.getJSONObject("data").getJSONArray("description");
                     ArrayList<String> arrayList = new ArrayList();
-                    for (int i = 0; i <jSONArray.length() ; i++) {
+                    for (int i = 0; i < jSONArray.length(); i++) {
                         arrayList.add((String) jSONArray.get(i));
                     }
 
                     String str = String.join("\n\n", arrayList);
-                storyText.setText(str.toString().trim().replaceAll("\\/", ""));
+                    storyText.setText(str.toString().trim().replaceAll("\\/", ""));
 
 //                   storiesInsideparagraphLayout.setVisibility(View);
 //               relatedStoriesLayout.setVisibility(0);
@@ -256,18 +270,16 @@ public class StoryPage extends AppCompatActivity {
     }
 
 
-
-
     private void Intents_and_InitViews() {
 
 //Intents
         title = getIntent().getStringExtra("title");
         relatedStories = getIntent().getStringExtra("relatedStories");
         storiesInsideParagraph = getIntent().getStringExtra("storiesInsideParagraph");
+        activityComingFrom = getIntent().getStringExtra("activityComingFrom");
         href = getIntent().getStringExtra("href");
         heading = getIntent().getStringExtra("Story");
         date = getIntent().getStringExtra("date");
-        DB_TABLENUMBER = getIntent().getStringExtra("DB_TABLENUMBER");
         _id = getIntent().getIntExtra("_id", 0);
 
 //InitViews
@@ -292,22 +304,24 @@ public class StoryPage extends AppCompatActivity {
     }
 
 
-    private void checkfavourite(String DB_TABLENUMBER) {
+    private void checkfavourite() {
 
-        Cursor cursor = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, DB_TABLENUMBER).readsingleRow(title);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            int liked = cursor.getInt(11);
-            if (liked == 0) {
-                favourite_button.setImageResource(R.drawable.favourite_inactive);
-            } else {
-                favourite_button.setImageResource(R.drawable.favourite_active);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Cursor cursor = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readsingleRow(title);
+                if (cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                    int liked = cursor.getInt(11);
+                    if (liked == 0) {
+                        favourite_button.setImageResource(R.drawable.favourite_inactive);
+                    } else {
+                        favourite_button.setImageResource(R.drawable.favourite_active);
+                    }
+                }
+                cursor.close();
             }
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
+        }, 1000);
 
 
     }
@@ -348,9 +362,7 @@ public class StoryPage extends AppCompatActivity {
 
 
     private void actionBar() {
-
         text2Speech();
-        title_category = getIntent().getStringExtra("bhola2");
         back = findViewById(R.id.back_arrow);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -361,11 +373,8 @@ public class StoryPage extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-
+    private void updateStoryread() {
+        new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updateStoryRead(title, 1);
     }
 
     private void text2Speech() {
@@ -557,7 +566,7 @@ public class StoryPage extends AppCompatActivity {
         }
         try {
             cursor.moveToFirst();
-            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13),cursor.getInt(14));
+            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
 
             return storyItemModel;
         } finally {

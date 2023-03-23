@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <item android:id="@+id/menu_notificaton"
-      android:icon="@drawable/menu_notification"
-      android:title="Notifications"
-      />
+<!--  <item android:id="@+id/menu_notificaton"-->
+<!--      android:icon="@drawable/menu_notification"-->
+<!--      android:title="Notifications"-->
+<!--      />-->
 
   <item android:id="@+id/menu_downloads"
       android:icon="@drawable/menu_favourite"

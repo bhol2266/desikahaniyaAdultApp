@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
@@ -54,6 +55,11 @@ public class StoryDetails_Adapter extends RecyclerView.Adapter<RecyclerView.View
         storyRowViewHolder.title.setText(SplashScreen.decryption(storyItemModel.getTitle()));
         storyRowViewHolder.date.setText(storyItemModel.getDate());
         storyRowViewHolder.views.setText(storyItemModel.getViews());
+        if (storyItemModel.getRead() == 1) {
+            storyRowViewHolder.title.setTextColor(Color.parseColor("#0E4C92"));
+        } else {
+            storyRowViewHolder.title.setTextColor(Color.parseColor("#BF171717"));
+        }
 
 
         storyRowViewHolder.recyclerview.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +72,7 @@ public class StoryDetails_Adapter extends RecyclerView.Adapter<RecyclerView.View
                 intent.putExtra("href", SplashScreen.decryption(storyItemModel.getHref()));
                 intent.putExtra("relatedStories", storyItemModel.getRelatedStories());
                 intent.putExtra("storiesInsideParagraph", storyItemModel.getStoriesInsideParagraph());
+                intent.putExtra("activityComingFrom", context.getClass().getSimpleName());
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 v.getContext().startActivity(intent);
