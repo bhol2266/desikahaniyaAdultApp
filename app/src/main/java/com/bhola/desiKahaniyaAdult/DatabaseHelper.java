@@ -104,6 +104,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query("StoryItems", null, "Title=?", new String[]{encryption(title)}, null, null, null, null);
         return cursor;
 
+    } public Cursor readFakeStory() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query("FakeStory", null, null, null, null, null, null, null);
+        return cursor;
+
     }
 
     public int readLatestStoryDate() {
@@ -133,7 +138,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public Cursor readaDataByCategory(String category) {
+    public Cursor readaDataByCategory(String category, int page) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         if (category.equals("Latest Stories")) {
