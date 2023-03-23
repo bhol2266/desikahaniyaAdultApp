@@ -141,7 +141,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public Cursor readaDataByCategory(String category, int page) {
-        Log.d(TAG, "page: "+page);
         page = (page - 1) * 15;
         SQLiteDatabase sQLiteDatabase = getWritableDatabase();
         if (category.equals("Latest Stories"))

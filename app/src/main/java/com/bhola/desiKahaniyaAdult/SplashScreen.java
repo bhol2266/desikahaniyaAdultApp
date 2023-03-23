@@ -196,7 +196,6 @@ public class SplashScreen extends AppCompatActivity {
                 Notification_ImageURL = (String) snapshot.child("Notification_ImageURL").getValue();
 
 
-
                 Handler handler2 = new Handler();
                 handler2.postDelayed(new Runnable() {
                     @Override
@@ -260,7 +259,6 @@ public class SplashScreen extends AppCompatActivity {
 
         }
     }
-
 
 
     boolean isInternetAvailable(Context context) {
@@ -344,6 +342,9 @@ public class SplashScreen extends AppCompatActivity {
 
                         JSONObject categoryObject = json_obj.getJSONObject("category");
                         String category = categoryObject.getString("title");
+                        if (category.equals("Gay Sex Stories In Hindi")) {
+                            category="Gay Sex Stories";
+                        }
 
                         JSONArray storyArray = json_obj.getJSONArray("description");
                         ArrayList<String> storyArrayList = new ArrayList();
@@ -378,14 +379,13 @@ public class SplashScreen extends AppCompatActivity {
                         String storiesInsideParagraph = String.join(", ", storiesInsideParagraphList);
 
 
-
                         //Add your values in your `ArrayList` as below:
                         m_li = new HashMap<String, String>();
                         m_li.put("Title", Title);
                         m_li.put("href", href);
                         m_li.put("date", date);
                         m_li.put("views", views);
-                        m_li.put("description", description.substring(0,100));
+                        m_li.put("description", description.substring(0, 100));
                         m_li.put("story", description);
                         m_li.put("audiolink", audiolink);
                         m_li.put("category", category);
