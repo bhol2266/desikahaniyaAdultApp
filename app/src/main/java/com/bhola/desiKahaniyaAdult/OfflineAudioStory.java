@@ -66,11 +66,7 @@ public class OfflineAudioStory extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        if (checkPermissions()) {
-            loadSavedAudioFiles();
-        } else {
-            requestPermissions();
-        }
+        loadSavedAudioFiles();
 
 
     }

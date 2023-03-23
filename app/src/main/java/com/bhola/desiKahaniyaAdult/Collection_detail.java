@@ -49,7 +49,8 @@ public class Collection_detail extends AppCompatActivity {
     Button retryBtn;
     String TAG = "taga";
     List<Object> collectonData;
-    Collection_Details_ADAPTER adapter2;
+
+    StoryDetails_Adapter adapter2;
     DatabaseReference mref2;
     String Ads_State, title_category, href;
     Context context;
@@ -132,7 +133,7 @@ public class Collection_detail extends AppCompatActivity {
         progressBar2.setVisibility(View.GONE);
 
 
-        adapter2 = new Collection_Details_ADAPTER(collectonData, context, "StoryItems", Ads_State, title_category);
+        adapter2 = new StoryDetails_Adapter(collectonData, context, "StoryItems", Ads_State, title_category);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter2);
@@ -354,85 +355,3 @@ public class Collection_detail extends AppCompatActivity {
 }
 
 
-class Collection_Details_ADAPTER extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int MENU_ITEM_VIEW_TYPE = 0;
-
-    private static final int UNIFIED_NATIVE_AD_VIEW_TYPE = 1;
-    List<Object> collectonData;
-
-    Context context;
-    String Collection_DB_Table_Name;
-    String Ads_State;
-    String title_category;
-
-    public Collection_Details_ADAPTER(List<Object> collectonData, Context context, String message, String ads_State, String title_category) {
-        this.collectonData = collectonData;
-        this.context = context;
-        this.Collection_DB_Table_Name = message;
-        this.Ads_State = ads_State;
-        this.title_category = title_category;
-    }
-
-    @NonNull
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View Story_ROW_viewHolder = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_layout, parent, false);
-        return new Collection_Details_ADAPTER.Story_ROW_viewHolder(Story_ROW_viewHolder);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-        Collection_Details_ADAPTER.Story_ROW_viewHolder storyRowViewHolder = (Story_ROW_viewHolder) holder;
-        StoryItemModel storyItemModel = (StoryItemModel) collectonData.get(position);
-
-        storyRowViewHolder.title.setText(SplashScreen.decryption(storyItemModel.getTitle()));
-        storyRowViewHolder.date.setText(storyItemModel.getDate());
-        storyRowViewHolder.views.setText(storyItemModel.getViews());
-
-
-        storyRowViewHolder.recyclerview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), StoryPage.class);
-                intent.putExtra("category", title_category);
-                intent.putExtra("title", SplashScreen.decryption(storyItemModel.getTitle()));
-                intent.putExtra("date", storyItemModel.getDate());
-                intent.putExtra("href", SplashScreen.decryption(storyItemModel.getHref()));
-                intent.putExtra("relatedStories", storyItemModel.getRelatedStories());
-                intent.putExtra("storiesInsideParagraph", storyItemModel.getStoriesInsideParagraph());
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                v.getContext().startActivity(intent);
-            }
-        });
-    }
-
-
-    @Override
-    public int getItemCount() {
-        return collectonData.size();
-    }
-
-
-    public class Story_ROW_viewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        TextView index, heading, date, views;
-
-        LinearLayout recyclerview;
-
-
-        public Story_ROW_viewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            recyclerview = itemView.findViewById(R.id.recyclerviewLayout);
-            title = itemView.findViewById(R.id.titlee);
-            date = itemView.findViewById(R.id.date_recyclerview);
-            views = itemView.findViewById(R.id.views);
-
-        }
-    }
-
-
-}

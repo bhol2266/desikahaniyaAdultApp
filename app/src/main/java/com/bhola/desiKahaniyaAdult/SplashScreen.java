@@ -240,8 +240,8 @@ public class SplashScreen extends AppCompatActivity {
     private void handler_forIntent() {
         lottie.cancelAnimation();
         if (Notification_Intent_Firebase.equals("active")) {
-            Intent intent = new Intent(getApplicationContext(), Notification_Story_Detail.class);
-            startActivity(intent);
+//            Intent intent = new Intent(getApplicationContext(), Notification_Story_Detail.class);
+//            startActivity(intent);
         } else {
             Intent intent = new Intent(getApplicationContext(), Collection_GridView.class);
             startActivity(intent);

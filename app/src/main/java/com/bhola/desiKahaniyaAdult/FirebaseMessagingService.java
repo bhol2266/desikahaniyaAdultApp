@@ -66,9 +66,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             System.out.println(e);
         }
 
-        Intent resultIntent;
+        Intent resultIntent = null;
         if (remoteMessage.getData().get("KEY1").matches("Notification_Story")) {
-            resultIntent = new Intent(this, Notification_Story_Detail.class);
+//            resultIntent = new Intent(this, Notification_Story_Detail.class);
 
         } else {
             resultIntent = new Intent(this, SplashScreen.class);

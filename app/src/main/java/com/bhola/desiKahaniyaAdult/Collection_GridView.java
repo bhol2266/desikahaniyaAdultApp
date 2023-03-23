@@ -285,12 +285,12 @@ Collection_GridView extends AppCompatActivity {
                         startActivity(i);
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
-                    case R.id.menu_notificaton:
-                        Intent intent2 = new Intent(getApplicationContext(), Notification_Story_Detail.class);
-                        intent2.putExtra("Ads_Status", Ads_State);
-                        startActivity(intent2);
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
+//                    case R.id.menu_notificaton:
+//                        Intent intent2 = new Intent(getApplicationContext(), Notification_Story_Detail.class);
+//                        intent2.putExtra("Ads_Status", Ads_State);
+//                        startActivity(intent2);
+//                        drawerLayout.closeDrawer(GravityCompat.START);
+//                        break;
 
                     case R.id.menu_share_app:
                         String share_msg = "Hi I have downloaded Hindi Desi Kahani App.\n" +

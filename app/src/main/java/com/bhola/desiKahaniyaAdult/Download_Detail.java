@@ -98,27 +98,25 @@ public class Download_Detail extends AppCompatActivity {
 
 
 
-    private void getDataFromDatabase(String Table_Name) {
+    private void getDataFromDatabase() {
 
+        Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readaDataByCategory(href, page);
+        try {
+            try {
+                while (cursor.moveToNext()) {
+                    StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
+                    collectonData.add(storyItemModel);
+                }
 
-        Cursor cursor = new DatabaseHelper2(Download_Detail.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, Table_Name).readalldata();
-
-
-        while (cursor.moveToNext()) {
-            int id = cursor.getInt(0);
-            String Date = cursor.getString(1);
-            String Story = cursor.getString(2);
-            String Title = cursor.getString(3);
-            int Liked = cursor.getInt(4);
-
-            if (Liked == 1) {
-                ModelData_forFavourites modelData_forFavourites = new ModelData_forFavourites(id, Date, Story, Title, Liked);
-                collectonData.add(modelData_forFavourites);
+            } finally {
+                cursor.close();
             }
+
+        } catch (Exception ignored) {
+
         }
-        if (cursor != null) {
-            cursor.close();
-        }
+
+
     }
 
 

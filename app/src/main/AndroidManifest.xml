@@ -49,8 +49,6 @@
             android:name=".Collection_detail"
             android:screenOrientation="portrait" />
         <activity android:name=".admin_panel" />
-        <activity android:name=".Notification_Story_Detail" />
-        <activity android:name=".Notification_StoryPage" />
         <activity android:name=".Download_Detail" />
         <activity
             android:name=".Collection_GridView"
