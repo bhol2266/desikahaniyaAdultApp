@@ -47,26 +47,18 @@ import java.util.Locale;
 import java.util.Map;
 
 public class StoryPage extends AppCompatActivity {
-    ImageView back, play_audio;
+    ImageView back;
     TextView storyText, textsize, title_textview;
-    DatabaseReference mref;
     String date, heading, title, href, title_category, relatedStories, storiesInsideParagraph;
     AlertDialog dialog;
     private TextToSpeech mTTS;
     Animation rotate_openAnim, rotate_closeAnim, fromBottom, toBottom;
     boolean clicked = false;
     FloatingActionButton add, share, copy, textsixe, favourite_button;
-    String collection;
     String DB_TABLENUMBER;
     int _id;
-    String android_id;
     SeekBar seekBar;
     Button button;
-    private AdView mAdView;
-    RewardedInterstitialAd mRewardedVideoAd;
-
-    com.facebook.ads.InterstitialAd facebook_IntertitialAds;
-    com.facebook.ads.AdView facebook_adView;
 
     String TAG = "TAGA";
 

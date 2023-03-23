@@ -64,12 +64,7 @@ String TAG="TAGA";
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadAudioDatabase(view);
-            }
-        },1000);
+        loadAudioDatabase(view);
 
         if (!isInternetAvailable(getContext())) {
             Toast.makeText(getContext(), "Check Internet Connection!", Toast.LENGTH_SHORT).show();

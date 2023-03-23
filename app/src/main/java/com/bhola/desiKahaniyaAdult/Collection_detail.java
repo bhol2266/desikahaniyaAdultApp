@@ -127,7 +127,8 @@ public class Collection_detail extends AppCompatActivity {
             public void run() {
                 getDataFromDB();
             }
-        },1000);
+        },50);
+
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -164,27 +165,15 @@ public class Collection_detail extends AppCompatActivity {
 
     private void getDataFromDB() {
 
-        ExecutorService service = Executors.newSingleThreadExecutor();
-        service.execute(new Runnable() {
-            @Override
-            public void run() {
-                Cursor cursor = (new DatabaseHelper(Collection_detail.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems")).readaDataByCategory(href, page);
-                while (cursor.moveToNext()) {
-                    StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), "cursor.getString(10)", cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
-                    collectonData.add(storyItemModel);
+        Cursor cursor = (new DatabaseHelper(Collection_detail.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems")).readaDataByCategory(href, page);
+        while (cursor.moveToNext()) {
+            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), "cursor.getString(10)", cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
+            collectonData.add(storyItemModel);
 
-                }
-                cursor.close();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                        progressBar.setVisibility(View.GONE);
-
-                    }
-                });
-            }
-        });
+        }
+        cursor.close();
+        adapter.notifyDataSetChanged();
+        progressBar.setVisibility(View.GONE);
 
     }
 
@@ -245,9 +234,7 @@ public class Collection_detail extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(getApplicationContext(), Collection_GridView.class);
-        intent.putExtra("Ads_Status", Ads_State);
-        startActivity(intent);
+      
     }
 
     private void actionBar() {
