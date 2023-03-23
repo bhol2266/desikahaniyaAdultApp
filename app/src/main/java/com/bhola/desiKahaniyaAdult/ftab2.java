@@ -8,6 +8,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,11 +64,12 @@ String TAG="TAGA";
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        try {
-            loadAudioDatabase(view);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadAudioDatabase(view);
+            }
+        },1000);
 
         if (!isInternetAvailable(getContext())) {
             Toast.makeText(getContext(), "Check Internet Connection!", Toast.LENGTH_SHORT).show();

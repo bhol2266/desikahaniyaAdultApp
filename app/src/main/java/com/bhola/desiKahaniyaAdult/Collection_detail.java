@@ -122,7 +122,12 @@ public class Collection_detail extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        getDataFromDB();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getDataFromDB();
+            }
+        },1000);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
