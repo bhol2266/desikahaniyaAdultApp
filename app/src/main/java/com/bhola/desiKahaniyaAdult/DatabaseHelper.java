@@ -134,7 +134,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor readAudioStories() {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query("StoryItems", null, "audio=?", new String[]{"1"}, null, null, "completeDate DESC", "20");
+        Cursor cursor = db.query("StoryItems", null, "audio=?", new String[]{"1"}, null, null, "completeDate DESC", null);
         return cursor;
 
     }

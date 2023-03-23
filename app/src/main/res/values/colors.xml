@@ -2,7 +2,6 @@
 <resources>
     <color name="colorAccent">#03DAC5</color>
     <color name="textcolor">#133855</color>
-    <color name="black">#000000</color>
     <color name="background_start">#E8F0FF</color>
     <color name="background_end">#E8F0FF</color>
     <color name="themeColor">#133855</color>

@@ -3,6 +3,7 @@ package com.bhola.desiKahaniyaAdult;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
@@ -176,9 +177,16 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
 
+
         ((Story_ROW_viewHolder) holder).title.setText(filename);
         ((Story_ROW_viewHolder) holder).date.setText(storyItemModel.getDate());
         ((Story_ROW_viewHolder) holder).views.setText(storyItemModel.getViews());
+
+        if (storyItemModel.getRead() == 1) {
+            ((Story_ROW_viewHolder) holder).title.setTextColor(Color.parseColor("#0E4C92"));
+        } else {
+            ((Story_ROW_viewHolder) holder).title.setTextColor(Color.parseColor("#BF171717"));
+        }
         ((Story_ROW_viewHolder) holder).recyclerview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,6 +197,7 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     Intent intent = new Intent(context, AudioPlayer.class);
                     intent.putExtra("storyURL", storyItemModel.getAudiolink());
                     intent.putExtra("storyName", filename);
+                    intent.putExtra("title",  storyItemModel.getTitle());
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     v.getContext().startActivity(intent);
                 } else {

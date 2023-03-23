@@ -9,13 +9,9 @@
 
     ADMOB Test Ads ID:
 
-        <string name="Rewarded_ADS_Unit_ID">.ca-app-pub-3940256099942544/5224354917</string>
-        <string name="Native_ADS_Unit_ID">ca-app-pub-3940256099942544/2247696110</string>
-        <string name="ad_Unit_ID">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="ad_Unit_ID">ca-app-pub-3940256099942544/6300978111</string>
 
     Fcebook Ads ID:
-    <string name="Facebbok_BannerAdUnit_1">773552330024929_773555740024588</string>
-    <string name="Facebbok_InterstitialAdUnit">773552330024929_773553246691504</string>
 
 
     <string name="facebook_app_id">[773552330024929]</string>

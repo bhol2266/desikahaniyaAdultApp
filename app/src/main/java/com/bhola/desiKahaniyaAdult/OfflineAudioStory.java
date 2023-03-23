@@ -47,9 +47,9 @@ public class OfflineAudioStory extends AppCompatActivity {
     com.facebook.ads.InterstitialAd facebook_IntertitialAds;
     com.facebook.ads.AdView facebook_adView;
 
-    OfflineAudioAdapter adapter2;
+    OfflineAudioAdapter adapter;
     RecyclerView recyclerView;
-    ProgressBar progressBar2;
+    LinearLayout progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,8 @@ public class OfflineAudioStory extends AppCompatActivity {
 
         actionBar();
 
-        progressBar2 = findViewById(R.id.progressBar2);
-        progressBar2.setVisibility(View.GONE);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
 
         collectionData = new ArrayList<AudioCategoryModel>();
         recyclerView = findViewById(R.id.recyclerView);
@@ -101,9 +101,9 @@ public class OfflineAudioStory extends AppCompatActivity {
             return;
         }
         recyclerView.setVisibility(View.VISIBLE);
-        adapter2 = new OfflineAudioAdapter(collectionData, this);
-        recyclerView.setAdapter(adapter2);
-        adapter2.notifyDataSetChanged();
+        adapter = new OfflineAudioAdapter(collectionData, this);
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -201,7 +201,6 @@ class OfflineAudioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         com.bhola.desiKahaniyaAdult.AudioOfflineModel model = (com.bhola.desiKahaniyaAdult.AudioOfflineModel) collectionData.get(holder.getAdapterPosition());
-        Log.d("onBindViewHolder", "onBindViewHolder: "+model);
         ((Story_ROW_viewHolder) holder).title.setText(model.getName().replaceAll("_", " ").replace(".mp3", ""));
         ((Story_ROW_viewHolder) holder).title.setTextSize(18);
         ((Story_ROW_viewHolder) holder).delete.setVisibility(View.VISIBLE);
@@ -214,8 +213,8 @@ class OfflineAudioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 File file = new File(directory, model.getName());
                 if (file.exists()) {
                     file.delete();
-                    collectionData.remove(holder.getAdapterPosition());
-                    notifyItemRemoved(holder.getAdapterPosition());
+                    collectionData.remove(holder.getBindingAdapterPosition());
+                    notifyItemRemoved(holder.getBindingAdapterPosition());
                     Toast.makeText(cw, "Story Deleted", Toast.LENGTH_SHORT).show();
                 }
 

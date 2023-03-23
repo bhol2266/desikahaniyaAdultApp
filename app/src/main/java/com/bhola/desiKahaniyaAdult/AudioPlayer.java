@@ -53,7 +53,7 @@ public class AudioPlayer extends AppCompatActivity {
     TextView loadingMessage;
     MediaPlayer mediaPlayer;
     int pausePosition = -1;
-    String storyURL, storyName;
+    String storyURL, storyName,title;
     SeekBar seekbar;
     Runnable runnable;
     Handler handler;
@@ -100,6 +100,7 @@ public class AudioPlayer extends AppCompatActivity {
         lottie = findViewById(R.id.lottie);
 
         storyURL = SplashScreen.decryption(getIntent().getStringExtra("storyURL"));
+        title = SplashScreen.decryption(getIntent().getStringExtra("title"));
         storyName = getIntent().getStringExtra("storyName");
         storyTitle.setText(storyName.replace("-", " ").trim());
 
@@ -211,6 +212,7 @@ public class AudioPlayer extends AppCompatActivity {
             }
         });
 
+        updateStoryread();
     }
 
 
@@ -443,6 +445,9 @@ public class AudioPlayer extends AppCompatActivity {
         dialog = builder.create();
     }
 
+    private void updateStoryread() {
+        new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updateStoryRead(title, 1);
+    }
 
 //Background Async Task to download story
 

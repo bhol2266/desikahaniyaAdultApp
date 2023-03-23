@@ -79,7 +79,7 @@ public class StoryPage extends AppCompatActivity {
             public void run() {
                 fetchStory();
             }
-        },100);
+        }, 100);
 
         checkfavourite();
 
@@ -371,6 +371,16 @@ public class StoryPage extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (activityComingFrom.equals("SplashScreen")) {
+            // This is because when clicking on notification it directly comes to storyPage and when backpressed the app closes
+            Intent intent = new Intent(getApplicationContext(), Collection_GridView.class);
+            startActivity(intent);
+        }
+        super.onBackPressed();
     }
 
     private void updateStoryread() {

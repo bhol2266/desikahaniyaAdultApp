@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,12 +51,18 @@ public class Download_Detail extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         collectonData = new ArrayList<Object>();
 
-        getDataFromDatabase();
-        checkCollectionDataEmpty();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getDataFromDatabase();
+                checkCollectionDataEmpty();
+                adapter.notifyDataSetChanged();
+
+            }
+        },20);
 
         adapter = new StoryDetails_Adapter(collectonData, this);
         recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
 
 
     }
