@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.media.Spatializer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
@@ -68,7 +69,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         Intent resultIntent = null;
         if (remoteMessage.getData().get("KEY1").matches("Notification_Story")) {
-//            resultIntent = new Intent(this, Notification_Story_Detail.class);
+            SplashScreen.Notification_Intent_Firebase = "active";
+            resultIntent = new Intent(this, SplashScreen.class);
 
         } else {
             resultIntent = new Intent(this, SplashScreen.class);

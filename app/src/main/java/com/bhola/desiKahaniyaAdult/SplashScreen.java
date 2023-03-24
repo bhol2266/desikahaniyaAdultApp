@@ -80,7 +80,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String apk_Downloadlink = "";
     public static String countryLocation = "";
     public static String countryCode = "";
-    public static boolean  update_Mandatory = false;
+    public static boolean update_Mandatory = false;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
@@ -185,7 +185,6 @@ public class SplashScreen extends AppCompatActivity {
                 App_updating = (String) snapshot.child("updatingApp_on_PLatStore").getValue();
                 Notification_ImageURL = (String) snapshot.child("Notification_ImageURL").getValue();
 
-
                 Firebase_Version_Code = snapshot.child("version_code").getValue(Integer.class);
                 apk_Downloadlink = (String) snapshot.child("apk_Downloadlink").getValue();
                 update_Mandatory = (boolean) snapshot.child("update_Mandatory").getValue();
@@ -203,7 +202,7 @@ public class SplashScreen extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d(TAG, "onCancelled: " + error.getMessage());
             }
 
         });

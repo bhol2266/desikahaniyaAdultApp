@@ -296,7 +296,6 @@ Collection_GridView extends AppCompatActivity {
     private void getUserLocaitonUsingIP() {
         String API_URL = " https://api.db-ip.com/v2/free/self";
 
-        Log.d(TAG, "getUserLocaitonUsingIP: ");
         StringRequest stringRequest = new StringRequest(Request.Method.GET, API_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -305,10 +304,6 @@ Collection_GridView extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             SplashScreen.countryLocation = jsonObject.getString("countryName");
                             SplashScreen.countryCode = jsonObject.getString("countryCode");
-
-                            Log.d(TAG, "countryCode: "+SplashScreen.countryCode);
-                            Log.d(TAG, "countryLocation: "+SplashScreen.countryLocation);
-
                             installsDB(); // record device id in firestore using android id
 
                         } catch (JSONException e) {

@@ -22,16 +22,23 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +53,8 @@ public class admin_panel extends AppCompatActivity {
     Switch switch_Exit_Nav, switch_Activate_Ads, switch_App_Updating;
     Button Ad_Network;
     static String uncensored_title = "";
+    FirebaseFirestore firestore;
+    TextView totalInstallsAllTime, totalInstallsToday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +66,7 @@ public class admin_panel extends AppCompatActivity {
         appControl();
         deleteNotification_Stories();
         Add_Stories_to_Notification_Buttons();
-
+        totalInstallsAlltime();
 
     }
 
@@ -77,8 +86,50 @@ public class admin_panel extends AppCompatActivity {
         dateTextview = findViewById(R.id.dateofstory);
         image_url = findViewById(R.id.image_url);
 
+        firestore = FirebaseFirestore.getInstance();
+        totalInstallsAllTime = findViewById(R.id.totalInstallsAllTime);
+        totalInstallsToday = findViewById(R.id.totalInstallsToday);
+
+
+
 
     }
+
+    private void totalInstallsAlltime() {
+        firestore.collection("Devices").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@androidx.annotation.NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<String> keywords = new ArrayList<>();
+                    int totalInstallsAlltimeCount = 0;
+                    int totalInstallsTodaycount = 0;
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        int date_fromDb = 0;
+                        int month_fromDb = 0;
+                        totalInstallsAlltimeCount = totalInstallsAlltimeCount + 1;
+                        Timestamp timestamp = (Timestamp) document.getData().get("Date");
+                        Date date = new Date(String.valueOf(timestamp.toDate()));
+                        date_fromDb = date.getDate();
+                        month_fromDb = date.getMonth() + 1;
+
+                        Date todaDate = new java.util.Date();
+                        int currentDate= todaDate.getDate() ;
+                        int currentMonth= todaDate.getMonth() + 1;
+
+                        if(date_fromDb==currentDate && month_fromDb==currentMonth){
+                            totalInstallsTodaycount = totalInstallsTodaycount + 1;
+                        }
+
+                    }
+                    totalInstallsAllTime.setText("Total Installs All Time:    " + totalInstallsAlltimeCount);
+                    totalInstallsToday.setText("Total Installs Today:       "+totalInstallsTodaycount);
+                } else {
+                    Log.d(SplashScreen.TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+ }
+
 
     private void Add_Stories_to_Notification_Buttons() {
 
