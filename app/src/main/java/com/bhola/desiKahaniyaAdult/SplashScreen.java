@@ -32,6 +32,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -75,6 +76,13 @@ public class SplashScreen extends AppCompatActivity {
     public static int DB_VERSION_INSIDE_TABLE = 1;
     Handler handlerr;
 
+    public static int Firebase_Version_Code = 0;
+    public static String apk_Downloadlink = "";
+    public static String countryLocation = "";
+    public static String countryCode = "";
+    public static boolean  update_Mandatory = false;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +92,8 @@ public class SplashScreen extends AppCompatActivity {
         bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_animation);
         textView = findViewById(R.id.textView_splashscreen);
         lottie = findViewById(R.id.lottie);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         copyDatabase();
         allUrl();
@@ -137,26 +147,6 @@ public class SplashScreen extends AppCompatActivity {
             e.printStackTrace();
 
         }
-
-//        for (int i = 7; i <=10 ; i++) {
-//
-//            ArrayList<String> id = new ArrayList<>();
-//            ArrayList<String> Datelist = new ArrayList<>();
-//            ArrayList<String> Headinglist = new ArrayList<>();
-//            ArrayList<String> Titlelist = new ArrayList<>();
-//
-////            Read Data
-//            Cursor cursor = new DatabaseHelper(this, "MCB_Story", SplashScreen.DB_VERSION, "Collection" + i).readalldata();
-//            while (cursor.moveToNext()) {
-//                String encrypted_paragrapg = encryption(cursor.getString(2));
-//                DatabaseHelper update_Encryption = new DatabaseHelper(getApplicationContext(), SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "Collection" + i);
-//                String ress = update_Encryption.updateEncryptStory(cursor.getInt(0), encrypted_paragrapg);
-//                Log.d(TAG, "UPDATED DATA: " + ress + cursor.getInt(0));
-//
-//            }
-//        }
-
-
     }
 
 
@@ -196,6 +186,11 @@ public class SplashScreen extends AppCompatActivity {
                 Notification_ImageURL = (String) snapshot.child("Notification_ImageURL").getValue();
 
 
+                Firebase_Version_Code = snapshot.child("version_code").getValue(Integer.class);
+                apk_Downloadlink = (String) snapshot.child("apk_Downloadlink").getValue();
+                update_Mandatory = (boolean) snapshot.child("update_Mandatory").getValue();
+
+
                 Handler handler2 = new Handler();
                 handler2.postDelayed(new Runnable() {
                     @Override
@@ -210,7 +205,6 @@ public class SplashScreen extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-
 
         });
 

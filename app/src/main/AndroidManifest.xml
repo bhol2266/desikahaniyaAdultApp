@@ -13,7 +13,6 @@
         tools:ignore="ScopedStorage" />
 
     <application
-        android:name=".OfflineData"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/app_icon"

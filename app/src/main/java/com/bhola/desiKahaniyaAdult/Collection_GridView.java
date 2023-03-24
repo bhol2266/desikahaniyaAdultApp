@@ -1,12 +1,20 @@
 package com.bhola.desiKahaniyaAdult;
 
+import static com.facebook.ads.internal.api.AdViewConstructorParams.CONTEXT;
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -16,16 +24,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.multidex.BuildConfig;
 import androidx.viewpager.widget.ViewPager;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
@@ -33,6 +55,9 @@ import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +69,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import android.Manifest;
 
 public class
 Collection_GridView extends AppCompatActivity {
@@ -65,6 +93,7 @@ Collection_GridView extends AppCompatActivity {
     TabItem tabItem1, tabItem2;
     PageAdapter pageAdapter;
     private ReviewManager reviewManager;
+    final int PERMISSION_REQUEST_CODE = 112;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,16 +101,70 @@ Collection_GridView extends AppCompatActivity {
         setContentView(R.layout.activity_collection__grid_view);
 
 
-
         navigationDrawer();
         tabview();
+        askForNotificationPermission(); //Android 13 and higher
 //        insertDataIN_Database();
-
-
+        checkForAppUpdate();
+        if (SplashScreen.Login_Times < 3) {
+            getUserLocaitonUsingIP();
+        }
 
     }
 
+    private void askForNotificationPermission() {
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(Collection_GridView.this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(Collection_GridView.this, "Allow Notification for Daily new Stories ", Toast.LENGTH_LONG).show();
+                    }
+                }, 1000);
+            }
+        }
+    }
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // Permission is granted. Continue the action or workflow in your
+                    // app.
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // feature requires a permission that the user has denied. At the
+                    // same time, respect the user's decision. Don't link to system
+                    // settings in an effort to convince the user to change their
+                    // decision.
+                }
+            });
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission is granted. Continue the action or workflow
+                    // in your app.
+                } else {
+                    // Explain to the user that the feature is unavailable because
+                    // the feature requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                }
+                return;
+        }
+        // Other 'case' lines to check for other
+        // permissions this app might request.
+    }
 
 
     private void tabview() {
@@ -118,9 +201,131 @@ Collection_GridView extends AppCompatActivity {
 
     }
 
+    private void checkForAppUpdate() {
+        int VersionCode  = 0;
+        try {
+            PackageInfo pInfo = Collection_GridView.this.getPackageManager().getPackageInfo(Collection_GridView.this.getPackageName(), PackageManager.GET_META_DATA);
+            VersionCode=pInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (SplashScreen.Firebase_Version_Code != VersionCode) {
+
+            Button updateBtn;
+            TextView yourVersion, latestVersion;
+            final androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(Collection_GridView.this);
+            LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+            View promptView = inflater.inflate(R.layout.appupdate, null);
+            builder.setView(promptView);
+            if (SplashScreen.update_Mandatory) {
+                builder.setCancelable(false);
+            } else {
+                builder.setCancelable(true);
+            }
 
 
+            updateBtn = promptView.findViewById(R.id.UpdateBtn);
+            yourVersion = promptView.findViewById(R.id.currentVersion);
+            yourVersion.setText("Your Version: " + BuildConfig.VERSION_CODE);
+            latestVersion = promptView.findViewById(R.id.NewerVersion);
+            latestVersion.setText("Latest Version: " + SplashScreen.Firebase_Version_Code);
+            updateBtn = promptView.findViewById(R.id.UpdateBtn);
 
+            updateBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(SplashScreen.apk_Downloadlink));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        Log.d(TAG, "Exception: " + e.getMessage());
+                    }
+                }
+            });
+
+
+            AlertDialog dialog2 = builder.create();
+            dialog2.show();
+        }
+    }
+
+    private void installsDB() {
+        String android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        final boolean[] idMatched = {false};
+
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("ANDROID_ID", android_id);
+        data.put("Location", SplashScreen.countryLocation);
+        data.put("Date", new java.util.Date());
+
+        firestore.collection("Devices").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (android_id.equals(document.getData().get("ANDROID_ID").toString())) {
+                            idMatched[0] = true;
+                        }
+                    }
+                    if (!idMatched[0]) {
+                        firestore.collection("Devices").document(android_id).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(Collection_GridView.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+
+    }
+
+    private void getUserLocaitonUsingIP() {
+        String API_URL = " https://api.db-ip.com/v2/free/self";
+
+        Log.d(TAG, "getUserLocaitonUsingIP: ");
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, API_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            SplashScreen.countryLocation = jsonObject.getString("countryName");
+                            SplashScreen.countryCode = jsonObject.getString("countryCode");
+
+                            Log.d(TAG, "countryCode: "+SplashScreen.countryCode);
+                            Log.d(TAG, "countryLocation: "+SplashScreen.countryLocation);
+
+                            installsDB(); // record device id in firestore using android id
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            installsDB(); // record device id in firestore using android id
+                            Log.d(TAG, "JSONException: " + e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(Collection_GridView.this);
+        requestQueue.add(stringRequest);
+    }
 
     @Override
     public void onBackPressed() {
