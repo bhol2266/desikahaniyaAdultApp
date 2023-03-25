@@ -39,6 +39,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.startapp.sdk.adsbase.AutoInterstitialPreferences;
+import com.startapp.sdk.adsbase.StartAppAd;
+import com.startapp.sdk.adsbase.StartAppSDK;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,7 +89,9 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        showAds();
         setContentView(R.layout.splash_screen);
+
 
         topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation);
         bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_animation);
@@ -98,7 +103,7 @@ public class SplashScreen extends AppCompatActivity {
         copyDatabase();
         allUrl();
         sharedPrefrences();
-        updateStoriesInDB();
+//        updateStoriesInDB();
 
 
         textView.setAnimation(bottomAnim);
@@ -132,6 +137,12 @@ public class SplashScreen extends AppCompatActivity {
 
         generateNotification();
         generateFCMToken();
+
+    }
+
+    private void showAds() {
+        StartAppSDK.setTestAdsEnabled(BuildConfig.DEBUG);
+        StartAppAd.disableSplash();
 
     }
 

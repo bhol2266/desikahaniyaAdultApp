@@ -9,6 +9,7 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="match_parent"
         android:layout_height="190dp"
+        android:background="@drawable/background2"
         android:scaleType="fitXY"
         app:srcCompat="@mipmap/app_icon"
         />

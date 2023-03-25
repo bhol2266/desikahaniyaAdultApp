@@ -1,14 +1,11 @@
 package com.bhola.desiKahaniyaAdult;
 
-import static com.facebook.ads.internal.api.AdViewConstructorParams.CONTEXT;
-
+import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +27,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -58,6 +53,10 @@ import com.google.android.play.core.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.startapp.sdk.adsbase.Ad;
+import com.startapp.sdk.adsbase.StartAppAd;
+import com.startapp.sdk.adsbase.VideoListener;
+import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,14 +64,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-
-import android.Manifest;
 
 public class
 Collection_GridView extends AppCompatActivity {
@@ -82,7 +77,6 @@ Collection_GridView extends AppCompatActivity {
     DrawerLayout drawerLayout;
     AlertDialog dialog;
 
-    Context context;
     com.facebook.ads.InterstitialAd facebook_IntertitialAds;
     com.facebook.ads.AdView facebook_adView;
     String TAG = "TAGA";
@@ -100,7 +94,9 @@ Collection_GridView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection__grid_view);
 
-
+        if (SplashScreen.Ads_State.equals("active")) {
+            showAds();
+        }
         navigationDrawer();
         tabview();
         askForNotificationPermission(); //Android 13 and higher
@@ -112,8 +108,41 @@ Collection_GridView extends AppCompatActivity {
 
     }
 
-    private void askForNotificationPermission() {
+    private void showAds() {
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(Collection_GridView.this, "ads showing", Toast.LENGTH_SHORT).show();
+                StartAppAd.showAd(Collection_GridView.this);
+            }
+        },5000);
+
+        final StartAppAd rewardedVideo = new StartAppAd(this);
+
+        rewardedVideo.setVideoListener(new VideoListener() {
+            @Override
+            public void onVideoCompleted() {
+                Toast.makeText(getApplicationContext(), "Grant the reward to user", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        rewardedVideo.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
+            @Override
+            public void onReceiveAd(Ad ad) {
+                rewardedVideo.showAd();
+            }
+
+            @Override
+            public void onFailedToReceiveAd(Ad ad) {
+                Log.d(TAG, "onFailedToReceiveAd: "+ad.errorMessage);
+            }
+        });
+    }
+
+
+
+    private void askForNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(Collection_GridView.this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
@@ -168,10 +197,10 @@ Collection_GridView extends AppCompatActivity {
 
 
     private void tabview() {
-        tabLayout = (TabLayout) findViewById(R.id.tablayout1);
-        tabItem1 = (TabItem) findViewById(R.id.tab1);
-        tabItem2 = (TabItem) findViewById(R.id.tab2);
-        viewPager = (ViewPager) findViewById(R.id.vpager);
+        tabLayout = findViewById(R.id.tablayout1);
+        tabItem1 = findViewById(R.id.tab1);
+        tabItem2 = findViewById(R.id.tab2);
+        viewPager = findViewById(R.id.vpager);
 
         pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pageAdapter);
@@ -202,10 +231,10 @@ Collection_GridView extends AppCompatActivity {
     }
 
     private void checkForAppUpdate() {
-        int VersionCode  = 0;
+        int VersionCode = 0;
         try {
             PackageInfo pInfo = Collection_GridView.this.getPackageManager().getPackageInfo(Collection_GridView.this.getPackageName(), PackageManager.GET_META_DATA);
-            VersionCode=pInfo.versionCode;
+            VersionCode = pInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -218,11 +247,7 @@ Collection_GridView extends AppCompatActivity {
             LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             View promptView = inflater.inflate(R.layout.appupdate, null);
             builder.setView(promptView);
-            if (SplashScreen.update_Mandatory) {
-                builder.setCancelable(false);
-            } else {
-                builder.setCancelable(true);
-            }
+            builder.setCancelable(!SplashScreen.update_Mandatory);
 
 
             updateBtn = promptView.findViewById(R.id.UpdateBtn);
@@ -349,7 +374,10 @@ Collection_GridView extends AppCompatActivity {
 
     private void exit_dialog() {
 
-
+        if (SplashScreen.Ads_State.equals("active")) {
+            Toast.makeText(Collection_GridView.this, "show ads", Toast.LENGTH_SHORT).show();
+            StartAppAd.onBackPressed(Collection_GridView.this);
+        }
         Button exit, exit2;
         final androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(nav.getContext());
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
@@ -414,12 +442,12 @@ Collection_GridView extends AppCompatActivity {
 
 
     private void navigationDrawer() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        nav = (NavigationView) findViewById(R.id.navmenu);
+        nav = findViewById(R.id.navmenu);
         nav.setItemIconTintList(null);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        drawerLayout = findViewById(R.id.drawer);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -464,7 +492,7 @@ Collection_GridView extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText("label", "bhola2266@gmail.com");
+                                ClipData clip = ClipData.newPlainText("label", "ukdevelopers007@gmail.com");
                                 clipboard.setPrimaryClip(clip);
                                 Toast.makeText(v.getContext(), "COPIED EMAIL", Toast.LENGTH_SHORT).show();
                             }
@@ -558,7 +586,7 @@ Collection_GridView extends AppCompatActivity {
     private void init() {
         reviewManager = ReviewManagerFactory.create(this);
         // Referencing the button
-        showRateApp();
+//        showRateApp();
     }
 
 
@@ -666,7 +694,7 @@ Collection_GridView extends AppCompatActivity {
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            json = new String(buffer, "UTF-8");
+            json = new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException ex) {
             ex.printStackTrace();
             return null;
@@ -674,6 +702,7 @@ Collection_GridView extends AppCompatActivity {
 
         return json;
     }
+
 
 }
 
