@@ -141,7 +141,7 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void showAds() {
-        StartAppSDK.setTestAdsEnabled(BuildConfig.DEBUG);
+//        StartAppSDK.setTestAdsEnabled(BuildConfig.DEBUG);
         StartAppAd.disableSplash();
 
     }

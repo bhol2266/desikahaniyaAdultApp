@@ -109,35 +109,30 @@ Collection_GridView extends AppCompatActivity {
     }
 
     private void showAds() {
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(Collection_GridView.this, "ads showing", Toast.LENGTH_SHORT).show();
-                StartAppAd.showAd(Collection_GridView.this);
-            }
-        },5000);
-
-        final StartAppAd rewardedVideo = new StartAppAd(this);
-
-        rewardedVideo.setVideoListener(new VideoListener() {
-            @Override
-            public void onVideoCompleted() {
-                Toast.makeText(getApplicationContext(), "Grant the reward to user", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        rewardedVideo.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
-            @Override
-            public void onReceiveAd(Ad ad) {
-                rewardedVideo.showAd();
-            }
-
-            @Override
-            public void onFailedToReceiveAd(Ad ad) {
-                Log.d(TAG, "onFailedToReceiveAd: "+ad.errorMessage);
-            }
-        });
+//
+//        Toast.makeText(Collection_GridView.this, "ads showing", Toast.LENGTH_SHORT).show();
+//        StartAppAd.showAd(Collection_GridView.this);
+//
+//        final StartAppAd rewardedVideo = new StartAppAd(this);
+//
+//        rewardedVideo.setVideoListener(new VideoListener() {
+//            @Override
+//            public void onVideoCompleted() {
+//                Toast.makeText(getApplicationContext(), "Grant the reward to user", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        rewardedVideo.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
+//            @Override
+//            public void onReceiveAd(Ad ad) {
+//                rewardedVideo.showAd();
+//            }
+//
+//            @Override
+//            public void onFailedToReceiveAd(Ad ad) {
+//                Log.d(TAG, "onFailedToReceiveAd: "+ad.errorMessage);
+//            }
+//        });
     }
 
 
