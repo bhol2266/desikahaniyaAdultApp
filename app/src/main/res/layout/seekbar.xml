@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background2">
 
 
@@ -9,10 +10,16 @@
         android:id="@+id/your_dialog_seekbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:progressBackgroundTint="@color/themeColor"
+        android:progressTint="@color/themeColor"
+        android:thumbTint="@color/themeColor"
         android:max="50"
         android:min="20"
-        android:progress="18"/>
+        android:progress="18" />
 
     <TextView
         android:id="@+id/textSize"
@@ -21,9 +28,12 @@
         android:layout_below="@+id/your_dialog_seekbar"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_margin="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:text="20"
-        android:textColor="#000000"
+        android:textColor="@color/textcolor"
         android:textSize="30dp" />
 
     <soup.neumorphism.NeumorphButton
@@ -36,6 +46,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
+        app:neumorph_shadowColorDark="@color/neuro_shadowcolor"
         android:layout_marginBottom="10dp"
         android:background="@drawable/hooverffext"
         android:fontFamily="@font/robotoslab_regular"

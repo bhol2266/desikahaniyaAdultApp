@@ -508,7 +508,7 @@ public class StoryPage extends AppCompatActivity {
             String tagKey = storiesInsideParagraphList.get(i).trim();
             View view = getLayoutInflater().inflate(R.layout.tag, null);
             TextView tag = view.findViewById(R.id.tag);
-            tag.setText(i + 1 + ". " + tagKey);
+            tag.setText(i + 1 + ". " + tagKey+"   ->");
             tag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -542,7 +542,7 @@ public class StoryPage extends AppCompatActivity {
 
             View view = getLayoutInflater().inflate(R.layout.tag, null);
             TextView relatedStoryText = view.findViewById(R.id.tag);
-            relatedStoryText.setText(i + 1 + ". " + tagKey);
+            relatedStoryText.setText(i + 1 + ". " + tagKey+"   ->");
 
             relatedStoryText.setOnClickListener(new View.OnClickListener() {
                 @Override

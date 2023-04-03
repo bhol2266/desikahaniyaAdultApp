@@ -183,10 +183,12 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ((Story_ROW_viewHolder) holder).views.setText(storyItemModel.getViews());
 
         if (storyItemModel.getRead() == 1) {
-            ((Story_ROW_viewHolder) holder).title.setTextColor(Color.parseColor("#0E4C92"));
+            ((Story_ROW_viewHolder) holder).title.setTextColor(Color.parseColor("#9A3412"));
         } else {
-            ((Story_ROW_viewHolder) holder).title.setTextColor(Color.parseColor("#BF171717"));
+            ((Story_ROW_viewHolder) holder).title.setTextColor(Color.parseColor("#374151"));
         }
+
+
         ((Story_ROW_viewHolder) holder).recyclerview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

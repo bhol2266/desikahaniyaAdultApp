@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:neumorph_shadowColorDark="@color/neuro_shadowcolor"
+    app:neumorph_shadowColorLight="#FFF7ED"
+    android:outlineSpotShadowColor="#FFF7ED"
+    android:outlineAmbientShadowColor="#FFF7ED"
     android:layout_marginBottom="10dp"
     app:cardCornerRadius="15dp">
 
@@ -43,10 +47,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:textFontWeight="500"
                     android:text="Ek Purani Kahani"
-                    android:textColor="@color/semi_black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textColor="#9A3412"
+                    android:textSize="22sp"
+                  />
 
 
                 <LinearLayout

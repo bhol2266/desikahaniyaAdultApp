@@ -16,9 +16,13 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
-            android:layout_margin="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             android:clickable="true"
             android:focusable="true"
+            app:tint="#9A3412"
             app:srcCompat="@drawable/back_arrow" />
 
         <TextView
@@ -33,7 +37,7 @@
             android:gravity="center"
             android:longClickable="true"
             android:text="Detail View"
-            android:textColor="@color/themeColor"
+            android:textColor="#454545"
             android:textFontWeight="700"
             android:textSize="27sp" />
 
@@ -96,7 +100,7 @@
                 android:layout_height="34dp"
                 android:layout_gravity="center"
                 android:layout_marginRight="10dp"
-                android:indeterminateTint="#FF0000"
+                android:indeterminateTint="#9A3412"
                 android:backgroundTint="#FF0000"
              />
 
@@ -117,7 +121,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="120dp"
             android:text="No stories Downloaded..."
-            android:textColor="@color/themeColor"
+            android:textColor="#454545"
             android:textSize="20dp"
             android:visibility="gone" />
 

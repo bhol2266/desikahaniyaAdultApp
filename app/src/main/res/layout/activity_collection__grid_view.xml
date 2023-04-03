@@ -53,17 +53,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone" />
+
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tablayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="10dp"
-            app:tabIndicatorColor="#FF0000"
+            app:tabIndicatorColor="#9A3412"
             app:tabBackground="@drawable/hooverffext"
             app:tabRippleColor="@null"
-            app:tabSelectedTextColor="#950000"
+            app:tabSelectedTextColor="#9A3412"
             app:tabTextAppearance="@style/tabText"
-            app:tabTextColor="@color/textcolor"
+            app:tabTextColor="@color/semi_black"
             app:tabUnboundedRipple="false">
 
             <com.google.android.material.tabs.TabItem

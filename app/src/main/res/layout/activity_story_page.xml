@@ -30,10 +30,14 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
-                android:layout_margin="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:srcCompat="@drawable/back_arrow" />
+                app:srcCompat="@drawable/back_arrow"
+                app:tint="#9A3412" />
 
             <TextView
                 android:id="@+id/title_collection"
@@ -45,7 +49,7 @@
                 android:fontFamily="@font/robotoslab_regular"
                 android:longClickable="true"
                 android:text="Full Story"
-                android:textColor="@color/themeColor"
+                android:textColor="#454545"
                 android:textFontWeight="700"
                 android:textSize="27sp" />
 
@@ -108,7 +112,7 @@
                 android:fontFamily="@font/kalam_regular"
                 android:gravity="center"
                 android:text="Story Title"
-                android:textColor="#292929"
+                android:textColor="#9A3412"
                 android:textSize="25dp"
                 android:textStyle="bold" />
 
@@ -133,7 +137,7 @@
                         android:layout_marginBottom="10dp"
                         android:fontFamily="@font/jaldi"
                         android:text="                                                                                                                                                                                                                                                              Loading........"
-                        android:textColor="@color/textcolor"
+                        android:textColor="#434F5A"
                         android:textSize="20dp" />
 
                     <LinearLayout
@@ -152,7 +156,7 @@
                             android:fontFamily="@font/kalam_regular"
                             android:gravity="center"
                             android:text="ईश कहानी के कुछ और भाग"
-                            android:textColor="#1C31AA"
+                            android:textColor="#9A3412"
                             android:textSize="20dp"
                             android:textStyle="bold" />
 
@@ -174,7 +178,7 @@
                             android:fontFamily="@font/kalam_regular"
                             android:gravity="center"
                             android:text="ऐसी ही कुछ और कहानियाँ"
-                            android:textColor="#1C31AA"
+                            android:textColor="#9A3412"
                             android:textSize="20dp"
                             android:textStyle="bold" />
 
@@ -197,7 +201,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        android:backgroundTint="@color/startcolor"
+        android:backgroundTint="#FED7AA"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -210,8 +214,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/startcolor"
-
+        android:backgroundTint="#FED7AA"
         android:clickable="true"
         android:focusable="true"
         android:visibility="invisible"
@@ -226,7 +229,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/startcolor"
+        android:backgroundTint="#FED7AA"
 
         android:clickable="true"
         android:focusable="true"
@@ -242,7 +245,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/startcolor"
+        android:backgroundTint="#FED7AA"
         android:clickable="true"
         android:focusable="true"
         android:visibility="invisible"
@@ -257,7 +260,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/startcolor"
+        android:backgroundTint="#FED7AA"
         android:clickable="true"
         android:focusable="true"
         android:visibility="invisible"

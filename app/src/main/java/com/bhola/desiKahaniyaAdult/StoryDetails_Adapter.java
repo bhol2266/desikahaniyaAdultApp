@@ -56,9 +56,9 @@ public class StoryDetails_Adapter extends RecyclerView.Adapter<RecyclerView.View
         storyRowViewHolder.date.setText(storyItemModel.getDate());
         storyRowViewHolder.views.setText(storyItemModel.getViews());
         if (storyItemModel.getRead() == 1) {
-            storyRowViewHolder.title.setTextColor(Color.parseColor("#0E4C92"));
+            storyRowViewHolder.title.setTextColor(Color.parseColor("#9A3412"));
         } else {
-            storyRowViewHolder.title.setTextColor(Color.parseColor("#BF171717"));
+            storyRowViewHolder.title.setTextColor(Color.parseColor("#374151"));
         }
 
 

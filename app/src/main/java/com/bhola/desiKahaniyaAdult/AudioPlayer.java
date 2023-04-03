@@ -186,10 +186,15 @@ public class AudioPlayer extends AppCompatActivity {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 URL_notWorking = true;
-                loadingMessage.setText("Audio link not working, Please try another story");
-                loadingMessage.setTextColor(Color.parseColor("#FF0000"));
-                loadingMessage.setTextSize(20);
-                progressbarUnit.setVisibility(View.GONE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadingMessage.setText("Audio link not working, Please try another story");
+                        loadingMessage.setTextSize(20);
+                        progressbarUnit.setVisibility(View.GONE);
+                    }
+                },1000);
+
                 mp.stop();
 
                 return false;

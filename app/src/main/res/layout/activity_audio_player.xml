@@ -34,6 +34,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:onClick="backBtn"
+                app:tint="#9A3412"
                 app:srcCompat="@drawable/back_arrow" />
 
             <TextView
@@ -48,9 +49,9 @@
                 android:gravity="center"
                 android:longClickable="true"
                 android:text="Audio Player"
-                android:textColor="@color/textcolor2"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textColor="#454545"
+                android:textFontWeight="700"
+                android:textSize="27sp" />
 
             <ImageView
                 android:id="@+id/downloadBtn"
