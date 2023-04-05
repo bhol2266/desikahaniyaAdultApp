@@ -39,6 +39,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.applovin.mediation.MaxAd;
+import com.applovin.mediation.MaxAdListener;
+import com.applovin.mediation.MaxError;
+import com.applovin.mediation.ads.MaxInterstitialAd;
+import com.applovin.sdk.AppLovinSdk;
+import com.applovin.sdk.AppLovinSdkConfiguration;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -53,10 +59,7 @@ import com.google.android.play.core.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.startapp.sdk.adsbase.Ad;
-import com.startapp.sdk.adsbase.StartAppAd;
-import com.startapp.sdk.adsbase.VideoListener;
-import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,7 +91,8 @@ Collection_GridView extends AppCompatActivity {
     PageAdapter pageAdapter;
     private ReviewManager reviewManager;
     final int PERMISSION_REQUEST_CODE = 112;
-
+    private MaxInterstitialAd interstitialAd;
+    private int retryAttempt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,30 +113,41 @@ Collection_GridView extends AppCompatActivity {
     }
 
     private void showAds() {
-//
-//        Toast.makeText(Collection_GridView.this, "ads showing", Toast.LENGTH_SHORT).show();
-//        StartAppAd.showAd(Collection_GridView.this);
-//
-//        final StartAppAd rewardedVideo = new StartAppAd(this);
-//
-//        rewardedVideo.setVideoListener(new VideoListener() {
-//            @Override
-//            public void onVideoCompleted() {
-//                Toast.makeText(getApplicationContext(), "Grant the reward to user", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        rewardedVideo.loadAd(StartAppAd.AdMode.REWARDED_VIDEO, new AdEventListener() {
-//            @Override
-//            public void onReceiveAd(Ad ad) {
-//                rewardedVideo.showAd();
-//            }
-//
-//            @Override
-//            public void onFailedToReceiveAd(Ad ad) {
-//                Log.d(TAG, "onFailedToReceiveAd: "+ad.errorMessage);
-//            }
-//        });
+        interstitialAd = new MaxInterstitialAd( "9eb7b9c540898c34", Collection_GridView.this );
+        interstitialAd.setListener(new MaxAdListener() {
+            @Override
+            public void onAdLoaded(MaxAd maxAd) {
+                interstitialAd.showAd();
+            }
+
+            @Override
+            public void onAdDisplayed(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdHidden(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdClicked(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdLoadFailed(String s, MaxError maxError) {
+
+            }
+
+            @Override
+            public void onAdDisplayFailed(MaxAd maxAd, MaxError maxError) {
+
+            }
+        });
+
+        // Load the first ad
+        interstitialAd.loadAd();
     }
 
 
@@ -370,8 +385,7 @@ Collection_GridView extends AppCompatActivity {
     private void exit_dialog() {
 
         if (SplashScreen.Ads_State.equals("active")) {
-            Toast.makeText(Collection_GridView.this, "show ads", Toast.LENGTH_SHORT).show();
-            StartAppAd.onBackPressed(Collection_GridView.this);
+
         }
         Button exit, exit2;
         final androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(nav.getContext());

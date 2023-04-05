@@ -29,10 +29,6 @@
         android:theme="@style/Theme.App"
         tools:targetApi="n">
 
-        <meta-data
-            android:name="com.startapp.sdk.APPLICATION_ID"
-            android:value="202154278" />
-
         <activity android:name=".TermsAndConditions" />
         <activity android:name=".AudioPlayer" />
         <activity
@@ -79,6 +75,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
+        <meta-data android:name="applovin.sdk.key"
+            android:value="FftQNf_cEFGsMB5TkXObBGZ2aFhaAJVo3RaRbHWuENLkgOrVJS6AaNld8MH3mG24w7BSSLmAwdApO6B86v8imD"/>
 
 
         <service

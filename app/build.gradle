@@ -58,7 +58,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
 
-    implementation 'com.google.android.gms:play-services-ads:21.5.0'
+    implementation 'com.google.android.gms:play-services-ads:22.0.0'
     implementation 'com.facebook.android:audience-network-sdk:6.13.7'
     implementation 'com.google.ads.mediation:facebook:6.13.7.0'
     implementation 'com.google.android.ads:mediation-test-suite:3.0.0'
@@ -82,6 +82,7 @@ dependencies {
     implementation "com.google.android.play:core:1.10.3"
 
 //start io Ads
-    implementation 'com.startapp:inapp-sdk:4.10.8'
+    implementation 'com.applovin:applovin-sdk:11.8.2'
+
 
 }

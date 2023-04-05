@@ -34,6 +34,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.applovin.mediation.MaxAd;
+import com.applovin.mediation.MaxAdListener;
+import com.applovin.mediation.MaxError;
+import com.applovin.mediation.ads.MaxInterstitialAd;
+import com.applovin.sdk.AppLovinSdk;
+import com.applovin.sdk.AppLovinSdkConfiguration;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
@@ -42,9 +48,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.startapp.sdk.adsbase.AutoInterstitialPreferences;
-import com.startapp.sdk.adsbase.StartAppAd;
-import com.startapp.sdk.adsbase.StartAppSDK;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -92,9 +96,9 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        showAds();
         fullscreenMode();
         setContentView(R.layout.splash_screen);
+        initializeApplovin();
 
 
         topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation);
@@ -143,11 +147,18 @@ public class SplashScreen extends AppCompatActivity {
 
     }
 
-    private void showAds() {
-//        StartAppSDK.setTestAdsEnabled(BuildConfig.DEBUG);
-        StartAppAd.disableSplash();
+    private void initializeApplovin() {
+        AppLovinSdk.initializeSdk( SplashScreen.this, new AppLovinSdk.SdkInitializationListener() {
+            @Override
+            public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
+            {
 
+
+            }
+        } );
     }
+
+
 
 
     private void copyDatabase() {
