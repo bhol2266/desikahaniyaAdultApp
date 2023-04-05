@@ -46,8 +46,7 @@ import java.util.Map;
 public class admin_panel extends AppCompatActivity {
     public static int counter = 0;
 
-    DatabaseReference mref, notificationMref;
-    TextView Users_Counters;
+    DatabaseReference mref, notificationMref;  TextView Users_Counters;
     EditText title_story, pragraphofstory, dateTextview, image_url;
     Button selectStory, insertBTN, Refer_App_url_BTN, STory_Switch_Active_BTN;
     Switch switch_Exit_Nav, switch_Activate_Ads, switch_App_Updating;
@@ -272,9 +271,9 @@ public class admin_panel extends AppCompatActivity {
         switch_Activate_Ads.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if (isChecked) {
                     mref.child("Ads").setValue("active");
+
                 } else {
                     mref.child("Ads").setValue("inactive");
                 }
@@ -288,8 +287,12 @@ public class admin_panel extends AppCompatActivity {
 
                 if (isChecked) {
                     mref.child("updatingApp_on_PLatStore").setValue("active");
+                    mref.child("Send_Notification").setValue("inactive");
+
                 } else {
                     mref.child("updatingApp_on_PLatStore").setValue("inactive");
+                    mref.child("Send_Notification").setValue("active");
+
                 }
 
             }

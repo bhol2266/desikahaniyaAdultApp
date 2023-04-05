@@ -41,7 +41,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.applovin.mediation.MaxAd;
 import com.applovin.mediation.MaxAdListener;
+import com.applovin.mediation.MaxAdViewAdListener;
 import com.applovin.mediation.MaxError;
+import com.applovin.mediation.ads.MaxAdView;
 import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.applovin.sdk.AppLovinSdk;
 import com.applovin.sdk.AppLovinSdkConfiguration;
@@ -91,8 +93,7 @@ Collection_GridView extends AppCompatActivity {
     PageAdapter pageAdapter;
     private ReviewManager reviewManager;
     final int PERMISSION_REQUEST_CODE = 112;
-    private MaxInterstitialAd interstitialAd;
-    private int retryAttempt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,43 +114,48 @@ Collection_GridView extends AppCompatActivity {
     }
 
     private void showAds() {
-        interstitialAd = new MaxInterstitialAd( "9eb7b9c540898c34", Collection_GridView.this );
-        interstitialAd.setListener(new MaxAdListener() {
-            @Override
-            public void onAdLoaded(MaxAd maxAd) {
-                interstitialAd.showAd();
-            }
 
-            @Override
-            public void onAdDisplayed(MaxAd maxAd) {
+        if (!SplashScreen.homepageAdShown) {
+            MaxInterstitialAd interstitialAd = new MaxInterstitialAd(getString(R.string.Interstitial), Collection_GridView.this);
+            interstitialAd.setListener(new MaxAdListener() {
+                @Override
+                public void onAdLoaded(MaxAd maxAd) {
+                    interstitialAd.showAd();
+                }
 
-            }
+                @Override
+                public void onAdDisplayed(MaxAd maxAd) {
 
-            @Override
-            public void onAdHidden(MaxAd maxAd) {
+                }
 
-            }
+                @Override
+                public void onAdHidden(MaxAd maxAd) {
 
-            @Override
-            public void onAdClicked(MaxAd maxAd) {
+                }
 
-            }
+                @Override
+                public void onAdClicked(MaxAd maxAd) {
 
-            @Override
-            public void onAdLoadFailed(String s, MaxError maxError) {
+                }
 
-            }
+                @Override
+                public void onAdLoadFailed(String s, MaxError maxError) {
 
-            @Override
-            public void onAdDisplayFailed(MaxAd maxAd, MaxError maxError) {
+                }
 
-            }
-        });
+                @Override
+                public void onAdDisplayFailed(MaxAd maxAd, MaxError maxError) {
 
-        // Load the first ad
-        interstitialAd.loadAd();
+                }
+            });
+            interstitialAd.loadAd();
+            SplashScreen.homepageAdShown = true;
+        }
+        MaxAdView adView = findViewById(R.id.ad_view);
+        adView.loadAd();
+
+
     }
-
 
 
     private void askForNotificationPermission() {
@@ -241,15 +247,8 @@ Collection_GridView extends AppCompatActivity {
     }
 
     private void checkForAppUpdate() {
-        int VersionCode = 0;
-        try {
-            PackageInfo pInfo = Collection_GridView.this.getPackageManager().getPackageInfo(Collection_GridView.this.getPackageName(), PackageManager.GET_META_DATA);
-            VersionCode = pInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
 
-        if (SplashScreen.Firebase_Version_Code != VersionCode) {
+        if (SplashScreen.Firebase_Version_Code != SplashScreen.currentApp_Version) {
 
             Button updateBtn;
             TextView yourVersion, latestVersion;
@@ -384,9 +383,7 @@ Collection_GridView extends AppCompatActivity {
 
     private void exit_dialog() {
 
-        if (SplashScreen.Ads_State.equals("active")) {
 
-        }
         Button exit, exit2;
         final androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(nav.getContext());
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
@@ -405,7 +402,10 @@ Collection_GridView extends AppCompatActivity {
         exit = promptView.findViewById(R.id.exit_button2);
         exit2 = promptView.findViewById(R.id.exit_button1);
 
-
+        if (SplashScreen.Ads_State.equals("active")) {
+            MaxAdView adView = promptView.findViewById(R.id.ad_view);
+            adView.loadAd();
+        }
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

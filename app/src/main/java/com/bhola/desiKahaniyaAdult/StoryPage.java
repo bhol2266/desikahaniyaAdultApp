@@ -33,6 +33,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.applovin.mediation.MaxAd;
+import com.applovin.mediation.MaxAdListener;
+import com.applovin.mediation.MaxError;
+import com.applovin.mediation.ads.MaxAdView;
+import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -71,6 +76,9 @@ public class StoryPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story_page);
 
+        if (SplashScreen.Ads_State.equals("active")) {
+//            showAds();
+        }
 
         Intents_and_InitViews();
         actionBar();
@@ -192,6 +200,46 @@ public class StoryPage extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void showAds() {
+
+        MaxInterstitialAd interstitialAd = new MaxInterstitialAd(getString(R.string.Interstitial), StoryPage.this);
+        interstitialAd.setListener(new MaxAdListener() {
+            @Override
+            public void onAdLoaded(MaxAd maxAd) {
+                interstitialAd.showAd();
+            }
+
+            @Override
+            public void onAdDisplayed(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdHidden(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdClicked(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdLoadFailed(String s, MaxError maxError) {
+
+            }
+
+            @Override
+            public void onAdDisplayFailed(MaxAd maxAd, MaxError maxError) {
+
+            }
+        });
+        interstitialAd.loadAd();
+        MaxAdView adView = findViewById(R.id.ad_view);
+        adView.loadAd();
 
     }
 
@@ -380,6 +428,9 @@ public class StoryPage extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), Collection_GridView.class);
             startActivity(intent);
         }
+        if (SplashScreen.Ads_State.equals("active")) {
+            showAds();
+        }
         super.onBackPressed();
     }
 
@@ -508,7 +559,7 @@ public class StoryPage extends AppCompatActivity {
             String tagKey = storiesInsideParagraphList.get(i).trim();
             View view = getLayoutInflater().inflate(R.layout.tag, null);
             TextView tag = view.findViewById(R.id.tag);
-            tag.setText(i + 1 + ". " + tagKey+"   ->");
+            tag.setText(i + 1 + ". " + tagKey + "   ->");
             tag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -542,7 +593,7 @@ public class StoryPage extends AppCompatActivity {
 
             View view = getLayoutInflater().inflate(R.layout.tag, null);
             TextView relatedStoryText = view.findViewById(R.id.tag);
-            relatedStoryText.setText(i + 1 + ". " + tagKey+"   ->");
+            relatedStoryText.setText(i + 1 + ". " + tagKey + "   ->");
 
             relatedStoryText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -584,6 +635,5 @@ public class StoryPage extends AppCompatActivity {
         }
 
     }
-
 
 }

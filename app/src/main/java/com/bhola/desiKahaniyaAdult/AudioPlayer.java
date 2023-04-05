@@ -34,6 +34,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.applovin.mediation.MaxAd;
+import com.applovin.mediation.MaxAdListener;
+import com.applovin.mediation.MaxError;
+import com.applovin.mediation.ads.MaxAdView;
+import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.material.snackbar.Snackbar;
@@ -86,6 +91,9 @@ public class AudioPlayer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player);
 
+        if (SplashScreen.Ads_State.equals("active")) {
+            showAds();
+        }
         downloadAudio();
 
         progressbar = findViewById(R.id.progressbar);
@@ -388,6 +396,9 @@ public class AudioPlayer extends AppCompatActivity {
         } catch (Exception e) {
             Log.d("TAGA", "onBackPressed: " + e.getMessage());
         }
+        if (SplashScreen.Ads_State.equals("active")) {
+            showAds();
+        }
 
     }
 
@@ -416,6 +427,47 @@ public class AudioPlayer extends AppCompatActivity {
         }
     }
 
+    private void showAds() {
+
+        MaxInterstitialAd interstitialAd = new MaxInterstitialAd(getString(R.string.Interstitial), AudioPlayer.this);
+        interstitialAd.setListener(new MaxAdListener() {
+            @Override
+            public void onAdLoaded(MaxAd maxAd) {
+                interstitialAd.showAd();
+            }
+
+            @Override
+            public void onAdDisplayed(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdHidden(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdClicked(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdLoadFailed(String s, MaxError maxError) {
+
+            }
+
+            @Override
+            public void onAdDisplayFailed(MaxAd maxAd, MaxError maxError) {
+
+            }
+        });
+        interstitialAd.loadAd();
+
+        MaxAdView adView = findViewById(R.id.ad_view);
+        adView.loadAd();
+
+
+    }
 
     private void downloadDialog() {
 

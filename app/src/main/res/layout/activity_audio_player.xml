@@ -70,22 +70,13 @@
 
         </RelativeLayout>
 
-
-        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
+        <com.applovin.mediation.ads.MaxAdView
+            android:id="@+id/ad_view"
+            xmlns:maxads="http://schemas.applovin.com/android/1.0"
+            maxads:adUnitId="1df2db2231bef30f"
+            android:background="@drawable/background"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background2"
-            android:visibility="gone"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/ad_Unit_ID" />
-
-        <LinearLayout
-            android:id="@+id/banner_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible" />
+            android:layout_height="50dp" />
 
     </LinearLayout>
 

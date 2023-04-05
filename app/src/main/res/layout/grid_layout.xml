@@ -1,120 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<soup.neumorphism.NeumorphCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:neumorph_shadowColorDark="@color/neuro_shadowcolor"
-    app:neumorph_shadowColorLight="#FFF7ED"
-    android:outlineSpotShadowColor="#FFF7ED"
-    android:outlineAmbientShadowColor="#FFF7ED"
-    android:layout_marginBottom="10dp"
-    app:cardCornerRadius="15dp">
+    android:orientation="vertical">
 
-
-    <LinearLayout
-        android:id="@+id/recyclerviewLayout"
+    <soup.neumorphism.NeumorphCardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/hooverffext"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp">
 
-        android:paddingStart="10dp">
-
-        <ImageView
-            android:id="@+id/imageview"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginStart="2dp"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/love_book" />
 
         <LinearLayout
+            android:id="@+id/recyclerviewLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:background="@drawable/hooverffext"
+            android:gravity="center"
+            android:orientation="horizontal"
+
+            android:paddingStart="10dp">
+
+            <ImageView
+                android:id="@+id/imageview"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginStart="2dp"
+                android:padding="10dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/love_book" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/titlee"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:textFontWeight="500"
-                    android:text="Ek Purani Kahani"
-                    android:textColor="#9A3412"
-                    android:textSize="22sp"
-                  />
-
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-
-                    <TextView
-                        android:id="@+id/date_recyclerview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:layout_marginRight="10dp"
-                        android:text="2022-20-18"
-                        android:textSize="13dp" />
-
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginStart="2dp"
-                        android:scaleType="centerCrop"
-                        android:alpha="0.7"
-                        app:srcCompat="@drawable/view" />
+                    android:layout_weight="3"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/views"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/titlee"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:maxLines="1"
-                        android:text="99,999"
-                        android:textSize="13dp" />
+                        android:textFontWeight="500"
+                        android:text="Ek Purani Kahani"
+                        android:textColor="#9A3412"
+                        android:textSize="22sp"
+                        />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+
+                        <TextView
+                            android:id="@+id/date_recyclerview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:layout_marginRight="10dp"
+                            android:text="2022-20-18"
+                            android:textSize="13dp" />
+
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_marginStart="2dp"
+                            android:scaleType="centerCrop"
+                            android:alpha="0.7"
+                            app:srcCompat="@drawable/view" />
+
+                        <TextView
+                            android:id="@+id/views"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:maxLines="1"
+                            android:text="99,999"
+                            android:textSize="13dp" />
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end">
 
-            </LinearLayout>
+                    <ImageView
+                        android:id="@+id/delete"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="right"
+                        android:layout_marginEnd="4dp"
+                        android:padding="10dp"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/delete" />
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end">
-
-                <ImageView
-                    android:id="@+id/delete"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="right"
-                    android:layout_marginEnd="4dp"
-                    android:padding="10dp"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone"
-                    app:srcCompat="@drawable/delete" />
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+
+    </soup.neumorphism.NeumorphCardView>
 
 
-</soup.neumorphism.NeumorphCardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        app:cardCornerRadius="10dp">
 
+
+        <com.applovin.mediation.ads.MaxAdView
+            android:id="@+id/ad_view"
+            android:visibility="gone"
+            xmlns:maxads="http://schemas.applovin.com/android/1.0"
+            maxads:adUnitId="1df2db2231bef30f"
+            android:background="@drawable/background"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

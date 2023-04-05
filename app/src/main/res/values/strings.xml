@@ -3,15 +3,10 @@
     <string name="app_ID">ca-app-pub-8226562131234590~7133484445</string>
 
 
-    ADMOB Real Ads ID :
-<!--    <string name="ad_Unit_ID">ca-app-pub-8226562131234590/4469997350</string>-->
-<!--    <string name="Rewarded_ADS_Unit_ID">ca-app-pub-8226562131234590/6116497115</string>-->
-
-    ADMOB Test Ads ID:
-
-    <string name="ad_Unit_ID">ca-app-pub-3940256099942544/6300978111</string>
-
-    Fcebook Ads ID:
+    Applovin Ads ID :
+    <string name="Interstitial">5a97cc26c107611c</string>
+    <string name="Banner">1df2db2231bef30f</string>
+    <string name="ad_Unit_ID">1df2db2231bef30f</string>
 
 
     <string name="facebook_app_id">[773552330024929]</string>

@@ -78,6 +78,8 @@ public class SplashScreen extends AppCompatActivity {
     public static String Notification_ImageURL = "https://hotdesipics.co/wp-content/uploads/2022/06/Hot-Bangla-Boudi-Ki-Big-Boobs-Nangi-Selfies-_002.jpg";
     DatabaseReference url_mref;
     public static int Login_Times = 0;
+    public static boolean homepageAdShown = false;
+    public static int Native_Ad_Interval = 5;
 
     com.facebook.ads.InterstitialAd facebook_IntertitialAds;
     RewardedInterstitialAd mRewardedVideoAd;
@@ -91,6 +93,8 @@ public class SplashScreen extends AppCompatActivity {
     public static String countryLocation = "";
     public static String countryCode = "";
     public static boolean update_Mandatory = false;
+    public static int currentApp_Version = 2;
+
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
@@ -138,9 +142,6 @@ public class SplashScreen extends AppCompatActivity {
 
             }
         });
-
-
-
 
         generateNotification();
         generateFCMToken();

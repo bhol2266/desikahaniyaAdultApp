@@ -1,6 +1,7 @@
 package com.bhola.desiKahaniyaAdult;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -21,7 +22,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.applovin.mediation.ads.MaxAdView;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
+import com.facebook.ads.AudienceNetworkAds;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.nativead.NativeAd;
+
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class StoryDetails_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -128,9 +140,32 @@ public class StoryDetails_Adapter extends RecyclerView.Adapter<RecyclerView.View
             }
         });
 
-
+        if (SplashScreen.Ads_State.equals("active")) {
+            loadNativeAds(((Story_ROW_viewHolder) holder).adView,holder.getAbsoluteAdapterPosition());
+        }
     }
 
+
+    private void loadNativeAds(MaxAdView adView, int absoluteAdapterPosition) {
+
+        if (absoluteAdapterPosition % SplashScreen.Native_Ad_Interval == 0) {
+
+            adView.setVisibility(View.VISIBLE);
+
+            ExecutorService service = Executors.newSingleThreadExecutor();
+            service.execute(new Runnable() {
+                @Override
+                public void run() {
+                    adView.loadAd();
+                }
+            });
+        } else {
+            adView.setVisibility(View.GONE);
+        }
+
+
+
+    }
 
     @Override
     public int getItemCount() {
@@ -141,7 +176,7 @@ public class StoryDetails_Adapter extends RecyclerView.Adapter<RecyclerView.View
     public class Story_ROW_viewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView index, heading, date, views;
-
+        MaxAdView adView ;
         LinearLayout recyclerview;
 
         public Story_ROW_viewHolder(@NonNull View itemView) {
@@ -151,6 +186,7 @@ public class StoryDetails_Adapter extends RecyclerView.Adapter<RecyclerView.View
             title = itemView.findViewById(R.id.titlee);
             date = itemView.findViewById(R.id.date_recyclerview);
             views = itemView.findViewById(R.id.views);
+            adView = itemView.findViewById(R.id.ad_view);
 
 
         }

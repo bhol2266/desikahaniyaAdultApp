@@ -16,6 +16,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.applovin.mediation.MaxAd;
+import com.applovin.mediation.MaxAdListener;
+import com.applovin.mediation.MaxError;
+import com.applovin.mediation.ads.MaxAdView;
+import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 
@@ -42,6 +47,10 @@ public class AudioPlayerOffline extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player_offline);
+
+        if (SplashScreen.Ads_State.equals("active")) {
+            showAds();
+        }
 
         progressbar = findViewById(R.id.progressbar);
         playBtn_and_SeekbarLayout = findViewById(R.id.playBtn_and_SeekbarLayout);
@@ -197,7 +206,47 @@ public class AudioPlayerOffline extends AppCompatActivity {
         onBackPressed();
     }
 
+    private void showAds() {
 
+        MaxInterstitialAd interstitialAd = new MaxInterstitialAd(getString(R.string.Interstitial), AudioPlayerOffline.this);
+        interstitialAd.setListener(new MaxAdListener() {
+            @Override
+            public void onAdLoaded(MaxAd maxAd) {
+                interstitialAd.showAd();
+            }
+
+            @Override
+            public void onAdDisplayed(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdHidden(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdClicked(MaxAd maxAd) {
+
+            }
+
+            @Override
+            public void onAdLoadFailed(String s, MaxError maxError) {
+
+            }
+
+            @Override
+            public void onAdDisplayFailed(MaxAd maxAd, MaxError maxError) {
+
+            }
+        });
+        interstitialAd.loadAd();
+
+        MaxAdView adView = findViewById(R.id.ad_view);
+        adView.loadAd();
+
+
+    }
 
     @Override
     public void onBackPressed() {

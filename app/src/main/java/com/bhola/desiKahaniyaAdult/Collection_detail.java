@@ -28,6 +28,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.applovin.mediation.MaxAd;
+import com.applovin.mediation.MaxAdListener;
+import com.applovin.mediation.MaxError;
+import com.applovin.mediation.ads.MaxAdView;
+import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.facebook.ads.InterstitialAd;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdView;
@@ -73,10 +78,12 @@ public class Collection_detail extends AppCompatActivity {
         setContentView(R.layout.activity_collection_detail);
 
 
+
         initviews_Check_Internet_Connectivity_Actionbar();
 
-
     }
+
+
 
 
     private void initviews_Check_Internet_Connectivity_Actionbar() {
@@ -127,7 +134,7 @@ public class Collection_detail extends AppCompatActivity {
             public void run() {
                 getDataFromDB();
             }
-        },50);
+        }, 50);
 
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -234,7 +241,7 @@ public class Collection_detail extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-      
+
     }
 
     private void actionBar() {
@@ -286,7 +293,7 @@ public class Collection_detail extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               onBackPressed();
+                onBackPressed();
             }
         });
         share_ap = findViewById(R.id.share_app);
