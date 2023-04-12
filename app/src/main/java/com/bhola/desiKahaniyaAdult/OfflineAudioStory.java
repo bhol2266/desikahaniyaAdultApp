@@ -27,7 +27,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.applovin.mediation.ads.MaxAdView;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 
@@ -239,29 +238,6 @@ class OfflineAudioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        if (SplashScreen.Ads_State.equals("active")) {
-            loadNativeAds(((Story_ROW_viewHolder) holder).adView,holder.getAbsoluteAdapterPosition());
-        }
-    }
-
-    private void loadNativeAds(MaxAdView adView, int absoluteAdapterPosition) {
-
-        if (absoluteAdapterPosition % SplashScreen.Native_Ad_Interval == 0) {
-
-            adView.setVisibility(View.VISIBLE);
-
-            ExecutorService service = Executors.newSingleThreadExecutor();
-            service.execute(new Runnable() {
-                @Override
-                public void run() {
-                    adView.loadAd();
-                }
-            });
-        } else {
-            adView.setVisibility(View.GONE);
-        }
-
-
 
     }
 
@@ -279,7 +255,6 @@ class OfflineAudioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         ImageView imageview, delete;
         LinearLayout recyclerview;
-        MaxAdView adView ;
 
 
         public Story_ROW_viewHolder(@NonNull View itemView) {
@@ -290,7 +265,6 @@ class OfflineAudioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             delete = itemView.findViewById(R.id.delete);
             title = itemView.findViewById(R.id.titlee);
             date = itemView.findViewById(R.id.date_recyclerview);
-            adView = itemView.findViewById(R.id.ad_view);
 
         }
     }

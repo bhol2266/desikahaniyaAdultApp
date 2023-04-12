@@ -34,13 +34,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.applovin.mediation.MaxAd;
-import com.applovin.mediation.MaxAdListener;
-import com.applovin.mediation.MaxError;
-import com.applovin.mediation.ads.MaxInterstitialAd;
-import com.applovin.sdk.AppLovinSdk;
-import com.applovin.sdk.AppLovinSdkConfiguration;
+
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
+
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,17 +48,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import com.google.mlkit.common.model.DownloadConditions;
+import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.Translation;
+import com.google.mlkit.nl.translate.Translator;
+import com.google.mlkit.nl.translate.TranslatorOptions;
+
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -97,12 +101,16 @@ public class SplashScreen extends AppCompatActivity {
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
+    private Translator translatorHindi;
+    private Boolean booleanHindi = false;
+    int index = 0;
+    ArrayList<Object> tempData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fullscreenMode();
         setContentView(R.layout.splash_screen);
-        initializeApplovin();
 
 
         topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation);
@@ -115,7 +123,10 @@ public class SplashScreen extends AppCompatActivity {
         copyDatabase();
         allUrl();
         sharedPrefrences();
-//        updateStoriesInDB();
+
+        if (SplashScreen.Login_Times > 5) {
+            updateStoriesInDB();
+        }
 
 
         textView.setAnimation(bottomAnim);
@@ -148,19 +159,6 @@ public class SplashScreen extends AppCompatActivity {
 
     }
 
-    private void initializeApplovin() {
-        AppLovinSdk.initializeSdk( SplashScreen.this, new AppLovinSdk.SdkInitializationListener() {
-            @Override
-            public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
-            {
-
-
-            }
-        } );
-    }
-
-
-
 
     private void copyDatabase() {
 
@@ -173,6 +171,95 @@ public class SplashScreen extends AppCompatActivity {
             e.printStackTrace();
 
         }
+
+
+//        downloadModel();
+//
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.d(TAG, "run: "+booleanHindi);
+//                trasferData();
+//
+//
+//
+//            }
+//        }, 2000);
+
+
+    }
+
+
+    private void trasferData() {
+
+        tempData = new ArrayList<>();
+        Cursor cursor = new DatabaseHelper(SplashScreen.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readFakeStory("category");
+        while (cursor.moveToNext()) {
+            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
+            tempData.add(storyItemModel);
+
+        }
+        cursor.close();
+
+        translator(tempData.get(index));
+
+    }
+
+    private void translator(Object obj) {
+
+        StoryItemModel item = (StoryItemModel) obj;
+
+        if (booleanHindi) {
+            translatorHindi.translate(item.getStory())
+                    .addOnSuccessListener(new OnSuccessListener<String>() {
+                        @Override
+                        public void onSuccess(String convertedString) {
+                            Log.d(TAG, "Title: " + item.getTitle());
+                            Log.d(TAG, "convertedString: " + convertedString);
+                            String res = new DatabaseHelper(SplashScreen.this, DB_NAME, DB_VERSION, "FakeStory").updateTitle(item.getTitle(), convertedString);
+                            Log.d(TAG, "onSuccess: " + res);
+                            if (index < tempData.size() - 1) {
+                                translator(tempData.get(index++));
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onSuccess: " + e.getMessage());
+                        }
+                    });
+        }
+
+    }
+
+
+    private void downloadModel() {
+        TranslatorOptions translatorOptionsHindi = new TranslatorOptions.Builder()
+                .setSourceLanguage(TranslateLanguage.ENGLISH)
+                .setTargetLanguage(TranslateLanguage.HINDI)
+                .build();
+        translatorHindi = Translation.getClient(translatorOptionsHindi);
+
+        DownloadConditions downloadConditions = new DownloadConditions.Builder()
+                .requireWifi()
+                .build();
+
+        translatorHindi.downloadModelIfNeeded(downloadConditions)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        booleanHindi = true;
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        booleanHindi = false;
+                    }
+                });
+
     }
 
 

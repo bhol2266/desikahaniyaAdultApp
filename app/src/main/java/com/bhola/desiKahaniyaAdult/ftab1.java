@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,7 @@ public class ftab1 extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_ftab1, container, false);
@@ -42,9 +42,27 @@ public class ftab1 extends Fragment {
 
 
     private void gridItems(View view) {
+        if (SplashScreen.App_updating.equals("active")) {
+            //fake content while upadting app
+            String[] Category_List = {"प्रेम कहानी 1", "प्रेम कहानी 2", "प्रेम कहानी 3", "प्रेम कहानी 4", "प्रेम कहानी 5", "प्रेम कहानी 6"};
+            createGridItems(Category_List, view);
+        } else {
 
-        String[] Category_List = {"Latest Stories", "Aunty Sex Story", "Bhabhi Sex", "Desi Kahani", "Family Sex Stories", "First Time Sex", "Gay Sex Stories", "Group Sex Stories", "Indian Sex Stories", "Sali Sex", "Teacher Sex", "Teenage Girl", "XXX Kahani", "अन्तर्वासना", "हिंदी सेक्स स्टोरीज"};
-        createGridItems(Category_List, view);
+            if (SplashScreen.Login_Times < 4) {
+                //Mixed content
+                String[] Category_List = {"प्रेम कहानी 1", "प्रेम कहानी 2", "प्रेम कहानी 3", "देसी कहानी 1", "देसी कहानी 2", "प्रेम कहानी 6"};
+                createGridItems(Category_List, view);
+            } else if (SplashScreen.Login_Times >= 4) {
+                // censored Content
+                String[] Category_List = {"देसी कहानी 1", "देसी कहानी 2", "देसी कहानी 3", "देसी कहानी 4", "देसी कहानी 5", "देसी कहानी 6"};
+                createGridItems(Category_List, view);
+            } else if (SplashScreen.Login_Times > 6) {
+                // full Content
+                String[] Category_List = {"Latest Stories", "Aunty Sex Story", "Bhabhi Sex", "Desi Kahani", "Family Sex Stories", "First Time Sex", "Gay Sex Stories", "Group Sex Stories", "Indian Sex Stories", "Sali Sex", "Teacher Sex", "Teenage Girl", "XXX Kahani", "अन्तर्वासना", "हिंदी सेक्स स्टोरीज"};
+                createGridItems(Category_List, view);
+            }
+        }
+
     }
 
     private void createGridItems(String[] Category_List, View view) {
@@ -54,7 +72,8 @@ public class ftab1 extends Fragment {
         for (int i = 0; i < Category_List.length; i++) {
 
 
-            String category = Category_List[i];
+            String category = Category_List[i].replace("Sex", "").replace("सेक्स", "").replace("XXX", "");
+
 
             View vieww = getLayoutInflater().inflate(R.layout.homepage_griditem, null);
             TextView categoryTextView = vieww.findViewById(R.id.Textview1);

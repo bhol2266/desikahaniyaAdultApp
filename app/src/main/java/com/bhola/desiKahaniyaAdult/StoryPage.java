@@ -33,14 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.applovin.mediation.MaxAd;
-import com.applovin.mediation.MaxAdListener;
-import com.applovin.mediation.MaxError;
-import com.applovin.mediation.ads.MaxAdView;
-import com.applovin.mediation.ads.MaxInterstitialAd;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.nativead.NativeAd;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -205,46 +198,19 @@ public class StoryPage extends AppCompatActivity {
 
     private void showAds() {
 
-        MaxInterstitialAd interstitialAd = new MaxInterstitialAd(getString(R.string.Interstitial), StoryPage.this);
-        interstitialAd.setListener(new MaxAdListener() {
-            @Override
-            public void onAdLoaded(MaxAd maxAd) {
-                interstitialAd.showAd();
-            }
-
-            @Override
-            public void onAdDisplayed(MaxAd maxAd) {
-
-            }
-
-            @Override
-            public void onAdHidden(MaxAd maxAd) {
-
-            }
-
-            @Override
-            public void onAdClicked(MaxAd maxAd) {
-
-            }
-
-            @Override
-            public void onAdLoadFailed(String s, MaxError maxError) {
-
-            }
-
-            @Override
-            public void onAdDisplayFailed(MaxAd maxAd, MaxError maxError) {
-
-            }
-        });
-        interstitialAd.loadAd();
-        MaxAdView adView = findViewById(R.id.ad_view);
-        adView.loadAd();
 
     }
 
     private void fetchStory() {
-
+        if (SplashScreen.App_updating.equals("active")) {
+            Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "FakeStory").readsingleRow(title);
+            cursor.moveToFirst();
+            if (cursor.getCount() != 0) {
+                String story = cursor.getString(10);
+                storyText.setText(story.toString().trim().replaceAll("\\/", ""));
+            }
+            cursor.close();
+        }
 
         Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readsingleRow(title);
         try {
@@ -429,7 +395,7 @@ public class StoryPage extends AppCompatActivity {
             startActivity(intent);
         }
         if (SplashScreen.Ads_State.equals("active")) {
-            showAds();
+//            showAds();
         }
         super.onBackPressed();
     }

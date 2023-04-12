@@ -28,11 +28,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.applovin.mediation.MaxAd;
-import com.applovin.mediation.MaxAdListener;
-import com.applovin.mediation.MaxError;
-import com.applovin.mediation.ads.MaxAdView;
-import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.facebook.ads.InterstitialAd;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdView;
@@ -78,12 +73,9 @@ public class Collection_detail extends AppCompatActivity {
         setContentView(R.layout.activity_collection_detail);
 
 
-
         initviews_Check_Internet_Connectivity_Actionbar();
 
     }
-
-
 
 
     private void initviews_Check_Internet_Connectivity_Actionbar() {
@@ -132,40 +124,49 @@ public class Collection_detail extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getDataFromDB();
+                if (SplashScreen.App_updating.equals("inactive") && SplashScreen.Login_Times > 6) {
+                    getDataFromDB();
+                } else {
+                    getfakeStories();
+
+                }
             }
         }, 50);
 
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    isScrolling = true;
+        if (!SplashScreen.App_updating.equals("active")) {
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                        isScrolling = true;
+                    }
                 }
-            }
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                currentItems = layoutManager.getChildCount();
-                totalItems = layoutManager.getItemCount();
-                scrollOutItems = layoutManager.findFirstVisibleItemPosition();
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    currentItems = layoutManager.getChildCount();
+                    totalItems = layoutManager.getItemCount();
+                    scrollOutItems = layoutManager.findFirstVisibleItemPosition();
 
-                if (isScrolling && (currentItems + scrollOutItems == totalItems)) {
-                    isScrolling = false;
-                    progressBar.setVisibility(View.VISIBLE);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            page++;
-                            getDataFromDB();
-                        }
-                    }, 1000);
+                    if (isScrolling && (currentItems + scrollOutItems == totalItems)) {
+                        isScrolling = false;
+                        progressBar.setVisibility(View.VISIBLE);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                page++;
+                                getDataFromDB();
+
+                            }
+                        }, 1000);
+                    }
                 }
-            }
-        });
+            });
+        }
+
 
     }
 
@@ -186,17 +187,16 @@ public class Collection_detail extends AppCompatActivity {
 
 
     private void getfakeStories() {
-        progressBar.setVisibility(View.GONE);
-        Cursor cursor = (new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "FakeStory")).readFakeStory();
-        try {
-            while (cursor.moveToNext()) {
-                StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
-                collectonData.add(storyItemModel);
-            }
-            return;
-        } finally {
-            cursor.close();
+        String category=getIntent().getStringExtra("category");
+        Cursor cursor = (new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "FakeStory")).readFakeStory(category);
+
+        while (cursor.moveToNext()) {
+            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
+            collectonData.add(storyItemModel);
         }
+        cursor.close();
+        adapter.notifyDataSetChanged();
+        progressBar.setVisibility(View.GONE);
     }
 
 

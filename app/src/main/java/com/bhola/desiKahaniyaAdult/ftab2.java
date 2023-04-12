@@ -26,7 +26,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.applovin.mediation.ads.MaxAdView;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
@@ -249,32 +248,10 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
 
-        if (SplashScreen.Ads_State.equals("active")) {
-            loadNativeAds(((Story_ROW_viewHolder) holder).adView,holder.getAbsoluteAdapterPosition());
-        }
-
-    }
-
-    private void loadNativeAds(MaxAdView adView, int absoluteAdapterPosition) {
-
-        if (absoluteAdapterPosition % SplashScreen.Native_Ad_Interval == 0) {
-
-            adView.setVisibility(View.VISIBLE);
-
-            ExecutorService service = Executors.newSingleThreadExecutor();
-            service.execute(new Runnable() {
-                @Override
-                public void run() {
-                    adView.loadAd();
-                }
-            });
-        } else {
-            adView.setVisibility(View.GONE);
-        }
-
 
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -289,7 +266,6 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         ImageView imageview;
         LinearLayout recyclerview;
-        MaxAdView adView ;
 
         public Story_ROW_viewHolder(@NonNull View itemView) {
             super(itemView);
@@ -299,7 +275,6 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
             title = itemView.findViewById(R.id.titlee);
             date = itemView.findViewById(R.id.date_recyclerview);
             views = itemView.findViewById(R.id.views);
-            adView = itemView.findViewById(R.id.ad_view);
 
         }
     }
