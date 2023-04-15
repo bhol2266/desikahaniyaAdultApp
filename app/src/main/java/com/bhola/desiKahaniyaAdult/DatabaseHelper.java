@@ -49,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             String path = DbPath + DbName;
             SQLiteDatabase.openDatabase(path, null, 0);
-            db_delete();
+//            db_delete();
             //Database file is Copied here
         } catch (Exception e) {
             this.getReadableDatabase();
@@ -108,7 +108,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor readFakeStory(String category) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         Cursor cursor = db.query("FakeStory", null, "category=?", new String[]{category}, null, null, null, "10");
         return cursor;
 
@@ -132,16 +131,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public Cursor readAudioStories() {
-
+    public Cursor readAudioStories(String category) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query("StoryItems", null, "audio=?", new String[]{"1"}, null, null, "completeDate DESC", null);
+        Cursor cursor;
+        if (category.equals("AdultContent")) {
+            //all means full adunt contents from StoryItems table
+
+            cursor = db.query(Database_tableNo, null, "audio=?", new String[]{"1"}, null, null, "completeDate DESC", null);
+        } else {
+
+            if (category.equals("mix")) {
+                //all means both "Audio_Story_Fake" and "Audio_Story"
+                cursor = db.query(Database_tableNo, null, "audio=?", new String[]{"1"}, null, null, null, "30");
+            } else {
+                cursor = db.query(Database_tableNo, null, "category=?", new String[]{category}, null, null, null, null);
+            }
+        }
+
         return cursor;
 
     }
 
+
     public Cursor readLikedStories() {
-        return getWritableDatabase().query("StoryItems", null, "like=?", new String[]{String.valueOf(1)}, null, null, "completeDate DESC", null);
+        return getWritableDatabase().query(Database_tableNo, null, "like=?", new String[]{String.valueOf(1)}, null, null, "completeDate DESC", null);
     }
 
 
@@ -149,8 +162,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         page = (page - 1) * 15;
         SQLiteDatabase sQLiteDatabase = getWritableDatabase();
         if (category.equals("Latest Stories"))
-            return sQLiteDatabase.query("StoryItems", null, null, null, null, null, "completeDate DESC", String.valueOf(page) + ",15");
-        return sQLiteDatabase.query("StoryItems", null, "category=?", new String[]{category}, null, null, "completeDate DESC", String.valueOf(page) + ",15");
+            return sQLiteDatabase.query(Database_tableNo, null, null, null, null, null, "completeDate DESC", String.valueOf(page) + ",15");
+        return sQLiteDatabase.query(Database_tableNo, null, "category=?", new String[]{category}, null, null, "completeDate DESC", String.valueOf(page) + ",15");
     }
 
 
@@ -159,7 +172,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put("like", like_value);
 
-        float res = sQLiteDatabase.update("StoryItems", contentValues, "Title = ?", new String[]{encryption(title)});
+        float res = sQLiteDatabase.update(Database_tableNo, contentValues, "Title = ?", new String[]{encryption(title)});
         if (res == -1)
             return "Failed";
         else
@@ -171,7 +184,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put("story", story);
 
-        float res = db.update("StoryItems", cv, "Title = ?", new String[]{encryption(title)});
+        float res = db.update(Database_tableNo, cv, "Title = ?", new String[]{encryption(title)});
         if (res == -1)
             return "Failed";
         else
@@ -182,7 +195,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sQLiteDatabase = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("read", Integer.valueOf(paramInt));
-        return (sQLiteDatabase.update("StoryItems", contentValues, "Title = ?", new String[]{encryption(paramString)}) == -1.0F) ? "Failed" : "Liked";
+        return (sQLiteDatabase.update(Database_tableNo, contentValues, "Title = ?", new String[]{encryption(paramString)}) == -1.0F) ? "Failed" : "Liked";
     }
 
 
@@ -190,12 +203,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("Title", m_li.get("Title"));
-        values.put("href", m_li.get("href"));
+        values.put("Title", encryption(m_li.get("Title")));
+        values.put("href", encryption(m_li.get("href")));
         values.put("date", m_li.get("date"));
         values.put("views", m_li.get("views"));
         values.put("description", m_li.get("description"));
-        values.put("audiolink", m_li.get("audiolink"));
+        values.put("audiolink", encryption(m_li.get("audiolink")));
         values.put("category", m_li.get("category"));
         values.put("tags", m_li.get("tags"));
         values.put("relatedStories", m_li.get("relatedStories"));
@@ -249,7 +262,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("story", encryption(translatedTitle));
+        cv.put("story", translatedTitle);
 
         float res = db.update(Database_tableNo, cv, "Title = ?", new String[]{title});
         if (res == -1)

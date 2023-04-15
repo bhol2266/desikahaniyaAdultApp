@@ -10,12 +10,6 @@
     android:paddingTop="20dp"
     android:paddingBottom="20dp">
 
-    <com.applovin.mediation.ads.MaxAdView xmlns:maxads="http://schemas.applovin.com/android/1.0"
-        android:id="@+id/ad_view"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/background"
-        maxads:adUnitId="1df2db2231bef30f" />
 
 
     <TextView
@@ -27,7 +21,7 @@
         android:gravity="center"
         android:text="If you Like the app. Please give us a Good Rating"
         android:textColor="@color/textcolor"
-        android:visibility="gone" />
+      />
 
 
     <LinearLayout

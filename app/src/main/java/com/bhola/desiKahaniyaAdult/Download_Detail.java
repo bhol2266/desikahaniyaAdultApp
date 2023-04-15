@@ -59,7 +59,7 @@ public class Download_Detail extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
 
             }
-        },20);
+        }, 20);
 
         adapter = new StoryDetails_Adapter(collectonData, this);
         recyclerView.setAdapter(adapter);
@@ -68,18 +68,22 @@ public class Download_Detail extends AppCompatActivity {
     }
 
 
-
     private void getDataFromDatabase() {
 
         Cursor cursor = (new DatabaseHelper((Context) this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems")).readLikedStories();
-        try {
-            while (cursor.moveToNext()) {
-                StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), "cursor.getString(10)", cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
-                collectonData.add(storyItemModel);
-            }
-        } finally {
-            cursor.close();
+        while (cursor.moveToNext()) {
+            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), "cursor.getString(10)", cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
+            collectonData.add(storyItemModel);
         }
+        cursor.close();
+
+        Cursor cursor2 = (new DatabaseHelper((Context) this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "FakeStory")).readLikedStories();
+        while (cursor2.moveToNext()) {
+            StoryItemModel storyItemModel = new StoryItemModel(cursor2.getString(0), cursor2.getString(1), cursor2.getString(2), cursor2.getString(3), cursor2.getString(4), cursor2.getString(5), cursor2.getString(6), cursor2.getString(7), cursor2.getString(8), cursor2.getInt(9), "cursor2.getString(10)", cursor2.getInt(11), cursor2.getInt(12), cursor2.getString(13), cursor2.getInt(14));
+            collectonData.add(storyItemModel);
+        }
+        cursor2.close();
+
         progressBar.setVisibility(View.GONE);
 
 
@@ -102,10 +106,10 @@ public class Download_Detail extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             onBackPressed();
+                onBackPressed();
             }
         });
-        TextView title_collection=findViewById(R.id.title_collection);
+        TextView title_collection = findViewById(R.id.title_collection);
         title_collection.setText("Offline Stories");
 
 
@@ -115,7 +119,7 @@ public class Download_Detail extends AppCompatActivity {
     private void initViews() {
         message = findViewById(R.id.message);
         recyclerView = findViewById(R.id.recyclerView);
-        progressBar =findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
 
     }
 

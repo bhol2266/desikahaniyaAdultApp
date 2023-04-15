@@ -1,6 +1,5 @@
 package com.bhola.desiKahaniyaAdult;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -45,8 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class StoryPage extends AppCompatActivity {
     ImageView back;
@@ -112,8 +109,14 @@ public class StoryPage extends AppCompatActivity {
                     Toast.makeText(StoryPage.this, "To Remove From Download LongPress From Downloads Screen", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (activityComingFrom.equals("Notification_Story_Detail")) {
+                    final Vibrator vibe = (Vibrator) v.getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                    vibe.vibrate(80);//80 represents the milliseconds (the duration of the vibration)
+                    Toast.makeText(StoryPage.this, "Notification Story can not be saved", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                Cursor cursor = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readsingleRow(title);
+                Cursor cursor = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readsingleRow(title);
                 try {
                     if (cursor.getCount() > 0) {
                         cursor.moveToFirst();
@@ -121,13 +124,13 @@ public class StoryPage extends AppCompatActivity {
 
                         if (liked == 0) {
                             favourite_button.setImageResource(R.drawable.favourite_active);
-                            String res = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updaterecord(title, 1);
+                            String res = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).updaterecord(title, 1);
                             Toast.makeText(StoryPage.this, "Downloaded to Offline Stories", Toast.LENGTH_SHORT).show();
 
                         } else {
 
                             favourite_button.setImageResource(R.drawable.favourite_inactive);
-                            String res = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updaterecord(title, 0);
+                            String res = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).updaterecord(title, 0);
                             Toast.makeText(StoryPage.this, "Removed from Offline Stories", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -202,17 +205,13 @@ public class StoryPage extends AppCompatActivity {
     }
 
     private void fetchStory() {
-        if (SplashScreen.App_updating.equals("active")) {
-            Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "FakeStory").readsingleRow(title);
-            cursor.moveToFirst();
-            if (cursor.getCount() != 0) {
-                String story = cursor.getString(10);
-                storyText.setText(story.toString().trim().replaceAll("\\/", ""));
-            }
-            cursor.close();
+
+        if (activityComingFrom.equals("Notification_Story_Detail")) {
+            storyText.setText(getIntent().getStringExtra("story").toString().trim().replaceAll("\\/", ""));
+            return;
         }
 
-        Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readsingleRow(title);
+        Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readsingleRow(title);
         try {
             cursor.moveToFirst();
             if (cursor.getCount() != 0) {
@@ -223,19 +222,17 @@ public class StoryPage extends AppCompatActivity {
                 }
                 storyText.setText(story.toString().trim().replaceAll("\\/", ""));
             }
-
         } finally {
             cursor.close();
         }
+
 
         updateStoryread();
     }
 
     private void fetchStoryAPI() {
-
-        String API_URL = "https://clownfish-app-jn7w9.ondigitalocean.app/storiesDetails";
         RequestQueue requestQueue = Volley.newRequestQueue(StoryPage.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, API_URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, SplashScreen.API_URL + "storiesDetails", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -252,7 +249,7 @@ public class StoryPage extends AppCompatActivity {
 //                   storiesInsideparagraphLayout.setVisibility(View);
 //               relatedStoriesLayout.setVisibility(0);
 
-                    new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updateStoryParagraph(title, str);
+                    new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).updateStoryParagraph(title, str);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -314,6 +311,8 @@ public class StoryPage extends AppCompatActivity {
 
 //Set Story and Tile
         title_textview.setText(title);
+
+
         setStoriesLinksInLayout();
     }
 
@@ -323,7 +322,7 @@ public class StoryPage extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Cursor cursor = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readsingleRow(title);
+                Cursor cursor = new DatabaseHelper(StoryPage.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readsingleRow(title);
                 if (cursor.getCount() > 0) {
                     cursor.moveToFirst();
                     int liked = cursor.getInt(11);
@@ -401,7 +400,7 @@ public class StoryPage extends AppCompatActivity {
     }
 
     private void updateStoryread() {
-        new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updateStoryRead(title, 1);
+        new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).updateStoryRead(title, 1);
     }
 
     private void text2Speech() {
@@ -518,6 +517,9 @@ public class StoryPage extends AppCompatActivity {
 
     private void setStoriesLinksInLayout() {
 
+        if (activityComingFrom.equals("Notification_Story_Detail")) {
+            return;
+        }
 
         List<String> storiesInsideParagraphList = new ArrayList<String>(Arrays.asList(storiesInsideParagraph.split(",")));
         LinearLayout storiesInsideparagraphLayout = findViewById(R.id.storiesInsideparagraph);
@@ -542,6 +544,7 @@ public class StoryPage extends AppCompatActivity {
                     intent.putExtra("href", SplashScreen.decryption(storyItemModel.getHref()));
                     intent.putExtra("relatedStories", storyItemModel.getRelatedStories());
                     intent.putExtra("storiesInsideParagraph", storyItemModel.getStoriesInsideParagraph());
+                    intent.putExtra("activityComingFrom", StoryPage.this.getClass().getSimpleName());
 
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     v.getContext().startActivity(intent);
@@ -576,6 +579,7 @@ public class StoryPage extends AppCompatActivity {
                     intent.putExtra("href", SplashScreen.decryption(storyItemModel.getHref()));
                     intent.putExtra("relatedStories", storyItemModel.getRelatedStories());
                     intent.putExtra("storiesInsideParagraph", storyItemModel.getStoriesInsideParagraph());
+                    intent.putExtra("activityComingFrom", StoryPage.this.getClass().getSimpleName());
 
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     v.getContext().startActivity(intent);
@@ -583,10 +587,16 @@ public class StoryPage extends AppCompatActivity {
             });
             relatedStoriesLayout.addView(view);
         }
+
+
+        if (!SplashScreen.DB_TABLE_NAME.equals("StoryItems")) {
+            storiesInsideparagraphLayout.setVisibility(View.GONE);
+            relatedStoriesLayout.setVisibility(View.GONE);
+        }
     }
 
     private StoryItemModel getDataFROM_DB(String Title) {
-        Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readsingleRow(Title);
+        Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readsingleRow(Title);
 
         if (cursor.getCount() == 0) {
             return null;

@@ -46,7 +46,7 @@ public class ftab2 extends Fragment {
     ProgressBar progressBar2;
     RecyclerView recyclerView;
     FirebaseAuth mAuth;
-String TAG="TAGA";
+    String TAG = "TAGA";
     int currentPositonTime;
 
     public ftab2() {
@@ -78,26 +78,41 @@ String TAG="TAGA";
 
 
     private void loadAudioDatabase(View view) {
+
         ArrayList<Object> collectionData = new ArrayList<Object>();
-        Cursor cursor = new DatabaseHelper(getActivity(), SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readAudioStories();
-        try {
-            try {
-                while (cursor.moveToNext()) {
-                    if (cursor.getString(5).trim().length() != 0) {
-                        StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), "cursor.getString(10)", cursor.getInt(11), cursor.getInt(12), cursor.getString(13),cursor.getInt(14));
-                        collectionData.add(storyItemModel);
-                    }
-                }
+        Cursor cursor;
+        if (SplashScreen.App_updating.equals("active")) {
+            //fake content while upadting app
+            cursor = new DatabaseHelper(getActivity(), SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readAudioStories("Audio_Story_Fake");
 
-            } finally {
-                cursor.close();
+        } else {
+
+            if (SplashScreen.Login_Times < 4) {
+                //Mixed content
+                cursor = new DatabaseHelper(getActivity(), SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readAudioStories("mix");
+
+            } else if (SplashScreen.Login_Times < 6) {
+                // censored Content
+                cursor = new DatabaseHelper(getActivity(), SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readAudioStories("Audio_Story");
+
+            } else {
+                // full Content
+                cursor = new DatabaseHelper(getActivity(), SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readAudioStories("AdultContent");
+
             }
-
-        } catch (Exception ignored) {
-
         }
 
+        while (cursor.moveToNext()) {
+            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), "cursor.getString(10)", cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
+            collectionData.add(storyItemModel);
+        }
 
+        cursor.close();
+
+        Collections.shuffle(collectionData);
+        if (SplashScreen.App_updating.equals("active")) {
+            collectionData.clear();
+        }
         adapter2 = new AudioStory_Details_Adapter(collectionData, getActivity());
         recyclerView.setAdapter(adapter2);
         progressBar2.setVisibility(View.GONE);
@@ -178,8 +193,6 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ((Story_ROW_viewHolder) holder).imageview.setImageResource(R.drawable.mp3);
 
 
-
-
         ((Story_ROW_viewHolder) holder).title.setText(filename);
         ((Story_ROW_viewHolder) holder).date.setText(storyItemModel.getDate());
         ((Story_ROW_viewHolder) holder).views.setText(storyItemModel.getViews());
@@ -196,12 +209,11 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
             public void onClick(View v) {
 
 
-
                 if (isInternetAvailable()) {
                     Intent intent = new Intent(context, AudioPlayer.class);
                     intent.putExtra("storyURL", storyItemModel.getAudiolink());
                     intent.putExtra("storyName", filename);
-                    intent.putExtra("title",  storyItemModel.getTitle());
+                    intent.putExtra("title", storyItemModel.getTitle());
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     v.getContext().startActivity(intent);
                 } else {
@@ -247,7 +259,6 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 return false;
             }
         });
-
 
 
     }

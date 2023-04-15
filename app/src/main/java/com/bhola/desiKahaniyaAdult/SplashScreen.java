@@ -98,13 +98,10 @@ public class SplashScreen extends AppCompatActivity {
     public static String countryCode = "";
     public static boolean update_Mandatory = false;
     public static int currentApp_Version = 2;
-
+    public static String DB_TABLE_NAME = "";  //This is a table name "StoryItems or FakeStory"
+    public static String API_URL =  "https://clownfish-app-jn7w9.ondigitalocean.app/";
     private FirebaseAnalytics mFirebaseAnalytics;
 
-    private Translator translatorHindi;
-    private Boolean booleanHindi = false;
-    int index = 0;
-    ArrayList<Object> tempData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,95 +169,62 @@ public class SplashScreen extends AppCompatActivity {
 
         }
 
-
-//        downloadModel();
+//              Check For Database is Available in Device or not
+//        DatabaseLoveStory databaseLoveStory = new DatabaseLoveStory(this, "MCB_Story", 5, "Collection1");
+//        try {
+//            databaseLoveStory.CheckDatabases();
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.d(TAG, "run: "+booleanHindi);
-//                trasferData();
-//
-//
-//
-//            }
-//        }, 2000);
+//        }
 
 
+
+
+//        trasferData();
     }
 
 
     private void trasferData() {
 
-        tempData = new ArrayList<>();
-        Cursor cursor = new DatabaseHelper(SplashScreen.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readFakeStory("category");
-        while (cursor.moveToNext()) {
-            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
-            tempData.add(storyItemModel);
+        String[] Category_List = {"Audio_Story_Fake", "Audio_Story"};
 
-        }
-        cursor.close();
+        for (int i = 0; i < Category_List.length; i++) {
+            ArrayList<Map<String, String>> tempData = new ArrayList<>();
 
-        translator(tempData.get(index));
+            Cursor cursor = new DatabaseLoveStory(SplashScreen.this, "MCB_Story", 5, Category_List[i]).readalldata();
+            while (cursor.moveToNext()) {
+                Map<String,String> mapObj=new HashMap<>();
+                mapObj.put("Title",cursor.getString(1));
+                mapObj.put("story","");
+                mapObj.put("href", cursor.getString(1));
+                mapObj.put("date", "04-02-2023");
+                mapObj.put("views", "6541");
+                mapObj.put("description","");
+                mapObj.put("audiolink", decryption(cursor.getString(2)));
+                mapObj.put("category", Category_List[i]);
+                mapObj.put("tags","");
+                mapObj.put("completeDate", "20230204");
+                mapObj.put("storiesInsideParagraph", "");
+                mapObj.put("relatedStories", "");
 
-    }
+                tempData.add(mapObj);
 
-    private void translator(Object obj) {
+            }
+            cursor.close();
 
-        StoryItemModel item = (StoryItemModel) obj;
+            for (int j = 0; j <= 19; j++) {
+                Map<String,String> mapOb =  tempData.get(j);
 
-        if (booleanHindi) {
-            translatorHindi.translate(item.getStory())
-                    .addOnSuccessListener(new OnSuccessListener<String>() {
-                        @Override
-                        public void onSuccess(String convertedString) {
-                            Log.d(TAG, "Title: " + item.getTitle());
-                            Log.d(TAG, "convertedString: " + convertedString);
-                            String res = new DatabaseHelper(SplashScreen.this, DB_NAME, DB_VERSION, "FakeStory").updateTitle(item.getTitle(), convertedString);
-                            Log.d(TAG, "onSuccess: " + res);
-                            if (index < tempData.size() - 1) {
-                                translator(tempData.get(index++));
-                            }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "onSuccess: " + e.getMessage());
-                        }
-                    });
+                String res = new DatabaseHelper(SplashScreen.this, DB_NAME, DB_VERSION, "FakeStory").addstories((HashMap<String, String>) mapOb);
+                Log.d(TAG, "onSuccess: " + res);
+            }
         }
 
     }
 
 
-    private void downloadModel() {
-        TranslatorOptions translatorOptionsHindi = new TranslatorOptions.Builder()
-                .setSourceLanguage(TranslateLanguage.ENGLISH)
-                .setTargetLanguage(TranslateLanguage.HINDI)
-                .build();
-        translatorHindi = Translation.getClient(translatorOptionsHindi);
 
-        DownloadConditions downloadConditions = new DownloadConditions.Builder()
-                .requireWifi()
-                .build();
-
-        translatorHindi.downloadModelIfNeeded(downloadConditions)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        booleanHindi = true;
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        booleanHindi = false;
-                    }
-                });
-
-    }
 
 
     private void allUrl() {
@@ -458,9 +422,8 @@ public class SplashScreen extends AppCompatActivity {
 
         int completeDate = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readLatestStoryDate();
 
-        String API_URL = "https://clownfish-app-jn7w9.ondigitalocean.app/updateStories_inDB";
         RequestQueue requestQueue = Volley.newRequestQueue(SplashScreen.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, API_URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, SplashScreen.API_URL +"updateStories_inDB", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

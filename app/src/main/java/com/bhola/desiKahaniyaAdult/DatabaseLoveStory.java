@@ -91,7 +91,7 @@ public class DatabaseLoveStory extends SQLiteOpenHelper {
     public Cursor readalldata() {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query(Database_tableNo, null, null, null, null, null, null, null);
+        Cursor cursor = db.query(Database_tableNo, null, null, null, null, null, null, "20");
         return cursor;
 
     }

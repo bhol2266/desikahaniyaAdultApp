@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -46,20 +47,27 @@ public class ftab1 extends Fragment {
             //fake content while upadting app
             String[] Category_List = {"प्रेम कहानी 1", "प्रेम कहानी 2", "प्रेम कहानी 3", "प्रेम कहानी 4", "प्रेम कहानी 5", "प्रेम कहानी 6"};
             createGridItems(Category_List, view);
+            SplashScreen.DB_TABLE_NAME="FakeStory";
         } else {
 
             if (SplashScreen.Login_Times < 4) {
                 //Mixed content
                 String[] Category_List = {"प्रेम कहानी 1", "प्रेम कहानी 2", "प्रेम कहानी 3", "देसी कहानी 1", "देसी कहानी 2", "प्रेम कहानी 6"};
                 createGridItems(Category_List, view);
-            } else if (SplashScreen.Login_Times >= 4) {
+                SplashScreen.DB_TABLE_NAME="FakeStory";
+
+            } else if (SplashScreen.Login_Times < 6) {
                 // censored Content
                 String[] Category_List = {"देसी कहानी 1", "देसी कहानी 2", "देसी कहानी 3", "देसी कहानी 4", "देसी कहानी 5", "देसी कहानी 6"};
                 createGridItems(Category_List, view);
-            } else if (SplashScreen.Login_Times > 6) {
+                SplashScreen.DB_TABLE_NAME="FakeStory";
+
+            } else {
                 // full Content
                 String[] Category_List = {"Latest Stories", "Aunty Sex Story", "Bhabhi Sex", "Desi Kahani", "Family Sex Stories", "First Time Sex", "Gay Sex Stories", "Group Sex Stories", "Indian Sex Stories", "Sali Sex", "Teacher Sex", "Teenage Girl", "XXX Kahani", "अन्तर्वासना", "हिंदी सेक्स स्टोरीज"};
                 createGridItems(Category_List, view);
+                SplashScreen.DB_TABLE_NAME="StoryItems";
+
             }
         }
 
@@ -88,12 +96,13 @@ public class ftab1 extends Fragment {
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams((int) requiredWidth, 250);
             cardView.setLayoutParams(params);
 
+            int finalI = i;
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getActivity(), Collection_detail.class);
                     intent.putExtra("category", category);
-                    intent.putExtra("href", category);
+                    intent.putExtra("href", Category_List[finalI]);
                     startActivity(intent);
                 }
             });

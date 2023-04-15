@@ -145,7 +145,7 @@ public class StoryDetails_Adapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
 
-    public class Story_ROW_viewHolder extends RecyclerView.ViewHolder {
+    public static class Story_ROW_viewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView index, heading, date, views;
         LinearLayout recyclerview;

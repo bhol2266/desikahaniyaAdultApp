@@ -70,13 +70,7 @@
 
         </RelativeLayout>
 
-        <com.applovin.mediation.ads.MaxAdView
-            android:id="@+id/ad_view"
-            xmlns:maxads="http://schemas.applovin.com/android/1.0"
-            maxads:adUnitId="1df2db2231bef30f"
-            android:background="@drawable/background"
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
+
 
     </LinearLayout>
 

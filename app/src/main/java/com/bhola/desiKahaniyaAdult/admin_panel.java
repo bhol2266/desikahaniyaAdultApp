@@ -47,8 +47,7 @@ public class admin_panel extends AppCompatActivity {
     public static int counter = 0;
 
     DatabaseReference mref, notificationMref;  TextView Users_Counters;
-    EditText title_story, pragraphofstory, dateTextview, image_url;
-    Button selectStory, insertBTN, Refer_App_url_BTN, STory_Switch_Active_BTN;
+    Button   Refer_App_url_BTN, STory_Switch_Active_BTN;
     Switch switch_Exit_Nav, switch_Activate_Ads, switch_App_Updating;
     Button Ad_Network;
     static String uncensored_title = "";
@@ -64,7 +63,6 @@ public class admin_panel extends AppCompatActivity {
         initViews();
         appControl();
         deleteNotification_Stories();
-        Add_Stories_to_Notification_Buttons();
         totalInstallsAlltime();
 
     }
@@ -74,16 +72,12 @@ public class admin_panel extends AppCompatActivity {
 
         mref = FirebaseDatabase.getInstance().getReference().child("Hindi_desi_Kahani_Adult");
         notificationMref = FirebaseDatabase.getInstance().getReference();
-        selectStory = findViewById(R.id.selectStory);
-        insertBTN = findViewById(R.id.insert);
+
         switch_Activate_Ads = findViewById(R.id.Activate_Ads);
         switch_App_Updating = findViewById(R.id.App_updating_Switch);
         switch_Exit_Nav = findViewById(R.id.switch_Exit_Nav);
         Refer_App_url_BTN = findViewById(R.id.Refer_App_url_BTN);
-        title_story = findViewById(R.id.title_story);
-        pragraphofstory = findViewById(R.id.pragraphofstory);
-        dateTextview = findViewById(R.id.dateofstory);
-        image_url = findViewById(R.id.image_url);
+
 
         firestore = FirebaseFirestore.getInstance();
         totalInstallsAllTime = findViewById(R.id.totalInstallsAllTime);
@@ -130,56 +124,6 @@ public class admin_panel extends AppCompatActivity {
  }
 
 
-    private void Add_Stories_to_Notification_Buttons() {
-
-
-        selectStory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                title_story.setText("");
-                pragraphofstory.setText("loading...");
-                List<String> title = new ArrayList<>();
-                List<String> href = new ArrayList<>();
-                List<String> date = new ArrayList<>();
-
-                try {
-                    Cursor cursor = new DatabaseHelper(admin_panel.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readalldata();
-                    while (cursor.moveToNext()) {
-                        title.add(cursor.getString(0));
-                        href.add(cursor.getString(1));
-                        date.add(cursor.getString(2));
-
-
-                    }
-                } catch (Exception ignored) {
-
-                }
-
-                int randomNum = (int) (Math.random() * (title.size() - 1 - 0 + 1) + 0);
-
-                fetchStoryAPI(SplashScreen.decryption(href.get(randomNum)));
-                title_story.setText(SplashScreen.decryption(title.get(randomNum)));
-                dateTextview.setText(date.get(randomNum));
-                uncensored_title = SplashScreen.decryption(title.get(randomNum));
-            }
-        });
-
-
-        insertBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!image_url.getText().toString().isEmpty() && !pragraphofstory.getText().toString().isEmpty() && !title_story.getText().toString().isEmpty() && !dateTextview.getText().toString().isEmpty()) {
-                    pasteAndRuncode();
-                    FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all", uncensored_title, "पूरी कहानी पढ़ें", image_url.getText().toString(), "Notification_Story", admin_panel.this);
-                    fcmNotificationsSender.SendNotifications();
-                } else {
-                    Toast.makeText(admin_panel.this, "Enter data", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
-    }
 
 
 
@@ -218,24 +162,6 @@ public class admin_panel extends AppCompatActivity {
 
     }
 
-    void pasteAndRuncode() {
-
-        String titlee = title_story.getText().toString();
-        String paragrapg = pragraphofstory.getText().toString();
-        String datee = dateTextview.getText().toString();
-
-        String Push_ID = notificationMref.push().getKey();
-        notificationMref.child("Notification").child(Push_ID).child("Title").setValue(titlee);
-        notificationMref.child("Notification").child(Push_ID).child("Heading").setValue(paragrapg);
-        notificationMref.child("Notification").child(Push_ID).child("Date").setValue(datee);
-        mref.child("Notification_ImageURL").setValue(image_url.getText().toString());
-        Toast.makeText(getApplicationContext(), "Data is Successfully Added", Toast.LENGTH_SHORT).show();
-
-        title_story.getText().clear();
-        dateTextview.getText().clear();
-        pragraphofstory.getText().clear();
-
-    }
 
     private void appControl() {
         checkButtonState();
@@ -306,7 +232,6 @@ public class admin_panel extends AppCompatActivity {
         mref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                image_url.setText((String) snapshot.child("Notification_ImageURL").getValue().toString().trim());
                 String match = (String) snapshot.child("switch_Exit_Nav").getValue().toString().trim();
 
                 if (match.equals("active")) {
@@ -357,9 +282,8 @@ public class admin_panel extends AppCompatActivity {
 
     private void fetchStoryAPI(String href) {
 
-        String API_URL = "https://clownfish-app-jn7w9.ondigitalocean.app/storiesDetails";
         RequestQueue requestQueue = Volley.newRequestQueue(admin_panel.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, API_URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, SplashScreen.API_URL +"storiesDetails", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -371,7 +295,7 @@ public class admin_panel extends AppCompatActivity {
                     }
 
                     String str = String.join("\n\n", arrayList);
-                    pragraphofstory.setText(str.toString().trim().replaceAll("\\/", ""));
+//                    pragraphofstory.setText(str.toString().trim().replaceAll("\\/", ""));
 
 
                 } catch (Exception e) {
