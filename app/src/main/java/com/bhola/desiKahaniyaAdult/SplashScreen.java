@@ -309,25 +309,8 @@ public class SplashScreen extends AppCompatActivity {
     private void handler_forIntent() {
         lottie.cancelAnimation();
         if (Notification_Intent_Firebase.equals("active")) {
-            FirebaseData firebaseData = (FirebaseData) collectonData.get(collectonData.size() - 1);
-            Cursor cursor = new DatabaseHelper(SplashScreen.this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readsingleRow(firebaseData.getTitle());
-            cursor.moveToFirst();
-            if (cursor.getCount() != 0) {
-                StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), "cursor.getString(10)", cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
-                Intent intent = new Intent(SplashScreen.this, StoryPage.class);
-                intent.putExtra("category", storyItemModel.getCategory());
-                intent.putExtra("title", SplashScreen.decryption(storyItemModel.getTitle()));
-                intent.putExtra("date", storyItemModel.getDate());
-                intent.putExtra("href", SplashScreen.decryption(storyItemModel.getHref()));
-                intent.putExtra("relatedStories", storyItemModel.getRelatedStories());
-                intent.putExtra("storiesInsideParagraph", storyItemModel.getStoriesInsideParagraph());
-                intent.putExtra("activityComingFrom", SplashScreen.this.getClass().getSimpleName());
-                SplashScreen.this.startActivity(intent);
-            } else {
-                Intent intent = new Intent(getApplicationContext(), Collection_GridView.class);
-                startActivity(intent);
-            }
-
+            Intent intent = new Intent(getApplicationContext(), Notification_Story_Detail.class);
+            startActivity(intent);
         } else {
             Intent intent = new Intent(getApplicationContext(), Collection_GridView.class);
             startActivity(intent);
@@ -343,27 +326,7 @@ public class SplashScreen extends AppCompatActivity {
                 Notification_Intent_Firebase = "active";
             }
         }
-        collectonData = new ArrayList<Object>();
-        DatabaseReference mref = FirebaseDatabase.getInstance().getReference().child("Notification");
-        mref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    FirebaseData firebaseData = ds.getValue(FirebaseData.class);
-                    collectonData.add(firebaseData);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
     }
-
 
     boolean isInternetAvailable(Context context) {
         if (context == null) return false;

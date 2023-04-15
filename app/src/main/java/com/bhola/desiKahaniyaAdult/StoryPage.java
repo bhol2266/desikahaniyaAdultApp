@@ -318,7 +318,9 @@ public class StoryPage extends AppCompatActivity {
 
 
     private void checkfavourite() {
-
+        if (activityComingFrom.equals("Notification_Story_Detail")) {
+            return;
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -388,11 +390,7 @@ public class StoryPage extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (activityComingFrom.equals("SplashScreen")) {
-            // This is because when clicking on notification it directly comes to storyPage and when backpressed the app closes
-            Intent intent = new Intent(getApplicationContext(), Collection_GridView.class);
-            startActivity(intent);
-        }
+
         if (SplashScreen.Ads_State.equals("active")) {
 //            showAds();
         }

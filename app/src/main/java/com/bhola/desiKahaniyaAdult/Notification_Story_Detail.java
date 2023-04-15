@@ -42,7 +42,7 @@ public class Notification_Story_Detail extends AppCompatActivity {
 
     ImageView back, share_ap;
     LinearLayout progressBar;
-
+    String activityComingFrom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class Notification_Story_Detail extends AppCompatActivity {
                 }
                 Collections.reverse(collectonData);
 
-                if (SplashScreen.App_updating.equals("active") ) {
+                if (SplashScreen.App_updating.equals("active")) {
                     collectonData.clear();
                 }
                 adapter2 = new Notification_Story_Adapter(collectonData, Notification_Story_Detail.this);
@@ -92,8 +92,10 @@ public class Notification_Story_Detail extends AppCompatActivity {
         TextView title = findViewById(R.id.title_collection);
         title.setText("Notifications");
 
+        activityComingFrom = getIntent().getStringExtra("activityComingFrom");
+
         back = findViewById(R.id.back_arrow);
-        back.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), Collection_GridView.class)));
+        back.setOnClickListener(v -> onBackPressed());
         share_ap = findViewById(R.id.share_app);
         share_ap.setOnClickListener(v -> {
             share_ap.setImageResource(R.drawable.favourite_active);
@@ -101,10 +103,15 @@ public class Notification_Story_Detail extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(),Collection_GridView.class));
+        super.onBackPressed();
+    }
 }
 
 
- class Notification_Story_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class Notification_Story_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<Object> collectonData;
     Context context;
@@ -140,7 +147,7 @@ public class Notification_Story_Detail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), StoryPage.class);
-                intent.putExtra("title",storyItemModel.getTitle());
+                intent.putExtra("title", storyItemModel.getTitle());
                 intent.putExtra("story", storyItemModel.getHeading());
                 intent.putExtra("date", storyItemModel.getDate());
                 intent.putExtra("activityComingFrom", context.getClass().getSimpleName());
@@ -151,10 +158,7 @@ public class Notification_Story_Detail extends AppCompatActivity {
         });
 
 
-
     }
-
-
 
 
     @Override
