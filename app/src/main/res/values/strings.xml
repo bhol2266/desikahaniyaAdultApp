@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">Desi Kahaniya</string>
-    <string name="app_ID">ca-app-pub-8226562131234590~7133484445</string>
+    <string name="app_ID">ca-app-pub-8226562131234590~7133414465</string>
 
 
     Applovin Ads ID :
-    <string name="Interstitial">5a97cc26c107611c</string>
 
 
     <string name="facebook_app_id">[773552330024929]</string>

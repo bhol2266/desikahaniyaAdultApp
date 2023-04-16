@@ -48,11 +48,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import com.google.mlkit.common.model.DownloadConditions;
-import com.google.mlkit.nl.translate.TranslateLanguage;
-import com.google.mlkit.nl.translate.Translation;
-import com.google.mlkit.nl.translate.Translator;
-import com.google.mlkit.nl.translate.TranslatorOptions;
+
 
 
 import org.json.JSONArray;
@@ -70,7 +66,6 @@ public class SplashScreen extends AppCompatActivity {
     Animation topAnim, bottomAnim;
     TextView textView;
     LottieAnimationView lottie;
-    ArrayList<Object> collectonData;
     public static String TAG = "TAGA";
     public static String Notification_Intent_Firebase = "inactive";
     public static String Main_App_url1 = "https://play.google.com/store/apps/details?id=com.bhola.desiKahaniyaAdult";
@@ -78,7 +73,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String Ads_State = "inactive";
     public static String DB_NAME = "desikahaniya";
     public static String exit_Refer_appNavigation = "inactive";
-    public static String App_updating = "inactive";
+    public static String App_updating = "active";
     public static String Notification_ImageURL = "https://hotdesipics.co/wp-content/uploads/2022/06/Hot-Bangla-Boudi-Ki-Big-Boobs-Nangi-Selfies-_002.jpg";
     DatabaseReference url_mref;
     public static int Login_Times = 0;
@@ -97,7 +92,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String countryLocation = "";
     public static String countryCode = "";
     public static boolean update_Mandatory = false;
-    public static int currentApp_Version = 2;
+    public static int currentApp_Version = 3;
     public static String DB_TABLE_NAME = "";  //This is a table name "StoryItems or FakeStory"
     public static String API_URL =  "https://clownfish-app-jn7w9.ondigitalocean.app/";
     private FirebaseAnalytics mFirebaseAnalytics;

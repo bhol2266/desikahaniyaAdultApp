@@ -99,7 +99,7 @@ Collection_GridView extends AppCompatActivity {
         tabview();
         askForNotificationPermission(); //Android 13 and higher
 //        insertDataIN_Database();
-        checkForAppUpdate();
+//        checkForAppUpdate();
         if (SplashScreen.Login_Times < 3) {
             getUserLocaitonUsingIP();
         }
@@ -282,7 +282,7 @@ Collection_GridView extends AppCompatActivity {
     }
 
     private void getUserLocaitonUsingIP() {
-        String API_URL = " https://api.db-ip.com/v2/free/self";
+        String API_URL = "https://api.db-ip.com/v2/free/self";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, API_URL,
                 new Response.Listener<String>() {

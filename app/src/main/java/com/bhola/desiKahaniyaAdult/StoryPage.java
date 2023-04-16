@@ -197,6 +197,8 @@ public class StoryPage extends AppCompatActivity {
         });
 
 
+
+
     }
 
     private void showAds() {
