@@ -36,7 +36,7 @@ public class AudioPlayerOffline extends AppCompatActivity {
     LottieAnimationView lottie;
     // Ads Stuff
     AdView mAdView;
-    RewardedInterstitialAd mRewardedVideoAd;
+    RewardedInterstitialAd mRewardedInterstitial;
     com.facebook.ads.InterstitialAd facebook_IntertitialAds;
     com.facebook.ads.AdView facebook_adView;
     @Override
@@ -44,9 +44,8 @@ public class AudioPlayerOffline extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player_offline);
 
-        if (SplashScreen.Ads_State.equals("active")) {
-            showAds();
-        }
+        loadAds();
+
 
         progressbar = findViewById(R.id.progressbar);
         playBtn_and_SeekbarLayout = findViewById(R.id.playBtn_and_SeekbarLayout);
@@ -162,6 +161,11 @@ public class AudioPlayerOffline extends AppCompatActivity {
         }
     }
 
+    private void loadAds() {
+        if (SplashScreen.Ads_State.equals("active")) {
+            showAds();
+        }
+    }
 
     private void setCurrentTime() {
         int currentProgressinSeconds = mediaPlayer.getCurrentPosition() / 1000;
@@ -205,6 +209,18 @@ public class AudioPlayerOffline extends AppCompatActivity {
     private void showAds() {
 
 
+        if (SplashScreen.Ad_Network_Name.equals("admob")) {
+            mAdView = findViewById(R.id.adView);
+            ADS_ADMOB.BannerAd(this, mAdView);
+
+            ADS_ADMOB.Interstitial_Ad(this);
+
+        } else {
+            LinearLayout facebook_bannerAd_layput;
+            facebook_bannerAd_layput = findViewById(R.id.banner_container);
+            ADS_FACEBOOK.interstitialAd(this, facebook_IntertitialAds, getString(R.string.Facebook_InterstitialAdUnit));
+            ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebook_BannerAdUnit));
+        }
 
 
     }
@@ -213,6 +229,7 @@ public class AudioPlayerOffline extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         try {
+            loadAds();
             handler.removeCallbacks(runnable);
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 Toast.makeText(AudioPlayerOffline.this, "Stopped", Toast.LENGTH_SHORT).show();

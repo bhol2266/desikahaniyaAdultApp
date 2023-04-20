@@ -33,6 +33,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -58,7 +60,11 @@ public class StoryPage extends AppCompatActivity {
     SeekBar seekBar;
     Button button;
     String activityComingFrom;
+    private AdView mAdView;
+    RewardedInterstitialAd mRewardedInterstitial;
 
+    com.facebook.ads.InterstitialAd facebook_IntertitialAds;
+    com.facebook.ads.AdView facebook_adView;
     String TAG = "TAGA";
 
     @Override
@@ -67,7 +73,7 @@ public class StoryPage extends AppCompatActivity {
         setContentView(R.layout.activity_story_page);
 
         if (SplashScreen.Ads_State.equals("active")) {
-//            showAds();
+            showAds();
         }
 
         Intents_and_InitViews();
@@ -204,8 +210,21 @@ public class StoryPage extends AppCompatActivity {
     private void showAds() {
 
 
-    }
+        if (SplashScreen.Ad_Network_Name.equals("admob")) {
+            mAdView = findViewById(R.id.adView);
+            ADS_ADMOB.BannerAd(this, mAdView);
 
+            ADS_ADMOB.Interstitial_Ad(this);
+
+        } else {
+            LinearLayout facebook_bannerAd_layput;
+            facebook_bannerAd_layput = findViewById(R.id.banner_container);
+            ADS_FACEBOOK.interstitialAd(this, facebook_IntertitialAds, getString(R.string.Facebook_InterstitialAdUnit));
+            ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebook_BannerAdUnit));
+        }
+
+
+    }
     private void fetchStory() {
 
         if (activityComingFrom.equals("Notification_Story_Detail")) {
@@ -392,11 +411,17 @@ public class StoryPage extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        if (SplashScreen.Ads_State.equals("active")) {
-//            showAds();
-        }
         super.onBackPressed();
+        if (SplashScreen.Ads_State.equals("active")) {
+            if (SplashScreen.Ad_Network_Name.equals("admob")) {
+                ADS_ADMOB.Interstitial_Ad(this);
+
+            } else {
+                ADS_FACEBOOK.interstitialAd(this, facebook_IntertitialAds, getString(R.string.Facebook_InterstitialAdUnit));
+
+            }
+        }
+
     }
 
     private void updateStoryread() {

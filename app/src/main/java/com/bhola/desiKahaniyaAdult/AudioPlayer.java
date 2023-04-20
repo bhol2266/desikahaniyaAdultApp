@@ -65,7 +65,7 @@ public class AudioPlayer extends AppCompatActivity {
 
     // Ads Stuff
     AdView mAdView;
-    RewardedInterstitialAd mRewardedVideoAd;
+    RewardedInterstitialAd mRewardedInterstitial;
     com.facebook.ads.InterstitialAd facebook_IntertitialAds;
     com.facebook.ads.AdView facebook_adView;
     final boolean[] isPlayingBoolean = {true};
@@ -87,9 +87,7 @@ public class AudioPlayer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player);
 
-        if (SplashScreen.Ads_State.equals("active")) {
-            showAds();
-        }
+        loadAds();
         downloadAudio();
 
         progressbar = findViewById(R.id.progressbar);
@@ -260,6 +258,11 @@ public class AudioPlayer extends AppCompatActivity {
         }
     }
 
+    private void loadAds() {
+        if (SplashScreen.Ads_State.equals("active")) {
+            showAds();
+        }
+    }
 
     private void setCurrentTime() {
         int currentProgressinSeconds = mediaPlayer.getCurrentPosition() / 1000;
@@ -364,6 +367,7 @@ public class AudioPlayer extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         try {
+            loadAds();
             handler.removeCallbacks(runnable); // Seekbar handler
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 Toast.makeText(AudioPlayer.this, "Stopped", Toast.LENGTH_SHORT).show();
@@ -374,9 +378,6 @@ public class AudioPlayer extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.d("TAGA", "onBackPressed: " + e.getMessage());
-        }
-        if (SplashScreen.Ads_State.equals("active")) {
-            showAds();
         }
 
     }
@@ -409,8 +410,22 @@ public class AudioPlayer extends AppCompatActivity {
     private void showAds() {
 
 
+        if (SplashScreen.Ad_Network_Name.equals("admob")) {
+            mAdView = findViewById(R.id.adView);
+            ADS_ADMOB.BannerAd(this, mAdView);
+
+            ADS_ADMOB.Interstitial_Ad(this);
+
+        } else {
+            LinearLayout facebook_bannerAd_layput;
+            facebook_bannerAd_layput = findViewById(R.id.banner_container);
+            ADS_FACEBOOK.interstitialAd(this, facebook_IntertitialAds, getString(R.string.Facebook_InterstitialAdUnit));
+            ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebook_BannerAdUnit));
+        }
+
 
     }
+
 
     private void downloadDialog() {
 

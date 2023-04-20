@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -75,7 +77,6 @@ Collection_GridView extends AppCompatActivity {
     DrawerLayout drawerLayout;
     AlertDialog dialog;
 
-    com.facebook.ads.InterstitialAd facebook_IntertitialAds;
     com.facebook.ads.AdView facebook_adView;
     String TAG = "TAGA";
     AdView mAdView;
@@ -85,6 +86,7 @@ Collection_GridView extends AppCompatActivity {
     TabItem tabItem1, tabItem2;
     PageAdapter pageAdapter;
     private ReviewManager reviewManager;
+    com.facebook.ads.InterstitialAd facebook_IntertitialAds;
     final int PERMISSION_REQUEST_CODE = 112;
 
     @Override
@@ -108,7 +110,25 @@ Collection_GridView extends AppCompatActivity {
     private void showAds() {
 
 
+        if (SplashScreen.Ad_Network_Name.equals("admob")) {
 
+            mAdView = findViewById(R.id.adView);
+            ADS_ADMOB.BannerAd(this, mAdView);
+            if (!SplashScreen.homepageAdShown) {
+                ADS_ADMOB.Interstitial_Ad(this);
+
+                SplashScreen.homepageAdShown = true;
+            }
+
+        } else {
+            LinearLayout facebook_bannerAd_layput;
+            facebook_bannerAd_layput = findViewById(R.id.banner_container);
+            if (!SplashScreen.homepageAdShown) {
+                ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebook_BannerAdUnit));
+                ADS_FACEBOOK.interstitialAd(this, facebook_IntertitialAds, getString(R.string.Facebook_InterstitialAdUnit));
+                SplashScreen.homepageAdShown = true;
+            }
+        }
     }
 
 
@@ -333,7 +353,9 @@ Collection_GridView extends AppCompatActivity {
             facebook_IntertitialAds.destroy();
 
         }
+
     }
+
 
     private void exit_dialog() {
 
@@ -350,6 +372,17 @@ Collection_GridView extends AppCompatActivity {
             exitMSG = promptView.findViewById(R.id.exitMSG);
             exitMSG.setVisibility(View.VISIBLE);
             init(); // Show PLay store Review option
+        }
+
+        if ((SplashScreen.Ads_State.equals("active") && SplashScreen.Ad_Network_Name.equals("admob"))) {
+            AdView mAdView2;
+            mAdView2 = promptView.findViewById(R.id.adView2);
+            ADS_ADMOB.BannerAd(this, mAdView2);
+        }
+        if ((SplashScreen.Ads_State.equals("active") && SplashScreen.Ad_Network_Name.equals("facebook"))) {
+            LinearLayout facebook_bannerAd_layput;
+            facebook_bannerAd_layput = promptView.findViewById(R.id.banner_container);
+            ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebook_BannerAdUnit));
         }
 
 

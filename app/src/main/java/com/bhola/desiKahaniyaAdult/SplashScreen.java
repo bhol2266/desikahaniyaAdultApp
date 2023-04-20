@@ -71,6 +71,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String Main_App_url1 = "https://play.google.com/store/apps/details?id=com.bhola.desiKahaniyaAdult";
     public static String Refer_App_url2 = "https://play.google.com/store/apps/developer?id=UK+DEVELOPERS";
     public static String Ads_State = "inactive";
+    public static String Ad_Network_Name = "admob";
     public static String DB_NAME = "desikahaniya";
     public static String exit_Refer_appNavigation = "inactive";
     public static String App_updating = "active";
@@ -78,10 +79,9 @@ public class SplashScreen extends AppCompatActivity {
     DatabaseReference url_mref;
     public static int Login_Times = 0;
     public static boolean homepageAdShown = false;
-    public static int Native_Ad_Interval = 5;
+    public static int Native_Ad_Interval = 4;
 
     com.facebook.ads.InterstitialAd facebook_IntertitialAds;
-    RewardedInterstitialAd mRewardedVideoAd;
 
     public static int DB_VERSION = 1;
     public static int DB_VERSION_INSIDE_TABLE = 1;
@@ -164,19 +164,6 @@ public class SplashScreen extends AppCompatActivity {
 
         }
 
-//              Check For Database is Available in Device or not
-//        DatabaseLoveStory databaseLoveStory = new DatabaseLoveStory(this, "MCB_Story", 5, "Collection1");
-//        try {
-//            databaseLoveStory.CheckDatabases();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//
-//        }
-
-
-
-
-//        trasferData();
     }
 
 
@@ -256,6 +243,7 @@ public class SplashScreen extends AppCompatActivity {
                 Ads_State = (String) snapshot.child("Ads").getValue();
                 App_updating = (String) snapshot.child("updatingApp_on_PLatStore").getValue();
                 Notification_ImageURL = (String) snapshot.child("Notification_ImageURL").getValue();
+                Ad_Network_Name = (String) snapshot.child("Ad_Network").getValue();
 
                 Firebase_Version_Code = snapshot.child("version_code").getValue(Integer.class);
                 apk_Downloadlink = (String) snapshot.child("apk_Downloadlink").getValue();

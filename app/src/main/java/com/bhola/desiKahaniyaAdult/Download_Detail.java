@@ -40,10 +40,19 @@ public class Download_Detail extends AppCompatActivity {
     TextView message;
     LinearLayout progressBar;
 
+    com.facebook.ads.InterstitialAd facebook_IntertitialAds;
+    com.facebook.ads.AdView facebook_adView;
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection_detail);
+
+        if (SplashScreen.Ads_State.equals("active")) {
+            showAds();
+        }
+
 
         actionBar();
         initViews();
@@ -67,6 +76,22 @@ public class Download_Detail extends AppCompatActivity {
 
     }
 
+    private void showAds() {
+
+        if (SplashScreen.Ad_Network_Name.equals("admob")) {
+            mAdView = findViewById(R.id.adView);
+            ADS_ADMOB.BannerAd(this, mAdView);
+        } else {
+
+            LinearLayout facebook_bannerAd_layput;
+            facebook_bannerAd_layput = findViewById(R.id.banner_container);
+
+            ADS_FACEBOOK.bannerAds(this, facebook_adView, facebook_bannerAd_layput, getString(R.string.Facebook_BannerAdUnit));
+
+        }
+
+
+    }
 
     private void getDataFromDatabase() {
 

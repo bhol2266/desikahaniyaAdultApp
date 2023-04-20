@@ -180,6 +180,20 @@
 
                 />
 
+            <Button
+                android:id="@+id/Ad_Network"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/hooverffext"
+                android:gravity="center"
+                android:text="Ad_Network"
+                android:textSize="15dp"
+
+                />
+
 
         </LinearLayout>
 

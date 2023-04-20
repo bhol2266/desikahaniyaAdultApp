@@ -1,6 +1,7 @@
 package com.bhola.desiKahaniyaAdult;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -62,6 +63,7 @@ public class admin_panel extends AppCompatActivity {
 
         initViews();
         appControl();
+        Ad_Network_Selection();
         deleteNotification_Stories();
         totalInstallsAlltime();
 
@@ -72,7 +74,7 @@ public class admin_panel extends AppCompatActivity {
 
         mref = FirebaseDatabase.getInstance().getReference().child("Hindi_desi_Kahani_Adult");
         notificationMref = FirebaseDatabase.getInstance().getReference();
-
+        Ad_Network = findViewById(R.id.Ad_Network);
         switch_Activate_Ads = findViewById(R.id.Activate_Ads);
         switch_App_Updating = findViewById(R.id.App_updating_Switch);
         switch_Exit_Nav = findViewById(R.id.switch_Exit_Nav);
@@ -123,6 +125,27 @@ public class admin_panel extends AppCompatActivity {
         });
  }
 
+    private void Ad_Network_Selection() {
+
+
+        Ad_Network.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Ad_Network.getText().toString().equals("admob")) {
+                    mref.child("Ad_Network").setValue("facebook");
+                    Ad_Network.setBackgroundColor(Color.parseColor("#D11A1A"));
+
+                } else {
+                    mref.child("Ad_Network").setValue("admob");
+                    Ad_Network.setBackgroundColor(Color.parseColor("#4267B2"));
+                }
+
+
+            }
+        });
+
+
+    }
 
 
 
@@ -255,6 +278,15 @@ public class admin_panel extends AppCompatActivity {
                     switch_App_Updating.setChecked(true);
                 } else {
                     switch_App_Updating.setChecked(false);
+                }
+
+                String Ad_Network_name = (String) snapshot.child("Ad_Network").getValue().toString().trim();
+
+                Ad_Network.setText(Ad_Network_name);
+                if (snapshot.child("Ad_Network").getValue().toString().trim().equals("admob")) {
+                    Ad_Network.setBackgroundColor(Color.parseColor("#D11A1A"));
+                } else {
+                    Ad_Network.setBackgroundColor(Color.parseColor("#4267B2"));
                 }
 
             }

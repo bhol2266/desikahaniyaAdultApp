@@ -22,7 +22,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
+import com.facebook.ads.AudienceNetworkAds;
+import com.google.android.ads.nativetemplates.NativeTemplateStyle;
+import com.google.android.ads.nativetemplates.TemplateView;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.nativead.NativeAd;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -133,9 +141,82 @@ public class StoryDetails_Adapter extends RecyclerView.Adapter<RecyclerView.View
             }
         });
 
+        if (SplashScreen.Ads_State.equals("active")) {
+            loadNativeAds(((Story_ROW_viewHolder) holder).template, ((Story_ROW_viewHolder) holder).facebook_BannerAd_layout, holder.getAbsoluteAdapterPosition());
+        }
 
     }
 
+    private void loadNativeAds(TemplateView template, LinearLayout facebook_BannerAd_layout, int absoluteAdapterPosition) {
+
+        if (SplashScreen.Ad_Network_Name.equals("admob") && absoluteAdapterPosition % SplashScreen.Native_Ad_Interval == 0) {
+
+            template.setVisibility(View.VISIBLE);
+            MobileAds.initialize(context);
+            ExecutorService service = Executors.newSingleThreadExecutor();
+            service.execute(new Runnable() {
+                @Override
+                public void run() {
+                    AdLoader adLoader = new AdLoader.Builder(context, context.getString(R.string.NativeAd))
+                            .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+                                @Override
+                                public void onNativeAdLoaded(NativeAd nativeAd) {
+
+                                    ((Activity) context).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            NativeTemplateStyle styles = new
+                                                    NativeTemplateStyle.Builder().build();
+                                            template.setStyles(styles);
+                                            template.setNativeAd(nativeAd);
+                                        }
+                                    });
+
+                                }
+                            })
+                            .build();
+                    adLoader.loadAd(new AdRequest.Builder().build());
+
+                }
+            });
+
+
+        } else {
+            template.setVisibility(View.GONE);
+        }
+        if (SplashScreen.Ad_Network_Name.equals("facebook") && absoluteAdapterPosition % SplashScreen.Native_Ad_Interval == 0) {
+            facebook_BannerAd_layout.setVisibility(View.VISIBLE);
+            AudienceNetworkAds.initialize(context);
+
+            ExecutorService service = Executors.newSingleThreadExecutor();
+            service.execute(new Runnable() {
+                @Override
+                public void run() {
+                    com.facebook.ads.AdView facebook_adView = new AdView(context, context.getString(R.string.Facebook_NativeAd_MediumRect), AdSize.BANNER_HEIGHT_50);
+                    facebook_adView.loadAd();
+
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            facebook_BannerAd_layout.addView(facebook_adView);
+                        }
+                    });
+                }
+            });
+
+
+            facebook_BannerAd_layout.setVisibility(View.VISIBLE);
+            AudienceNetworkAds.initialize(context);
+            AdView adView = new AdView(context, context.getString(R.string.Facebook_NativeAd_MediumRect), AdSize.BANNER_HEIGHT_50);
+            facebook_BannerAd_layout.addView(adView);
+            adView.loadAd();
+
+        } else {
+            facebook_BannerAd_layout.setVisibility(View.GONE);
+
+        }
+
+    }
 
 
 
@@ -147,8 +228,10 @@ public class StoryDetails_Adapter extends RecyclerView.Adapter<RecyclerView.View
 
     public static class Story_ROW_viewHolder extends RecyclerView.ViewHolder {
         TextView title;
-        TextView index, heading, date, views;
+        TextView views, date;
         LinearLayout recyclerview;
+        TemplateView template;
+        LinearLayout facebook_BannerAd_layout;
 
         public Story_ROW_viewHolder(@NonNull View itemView) {
             super(itemView);
@@ -157,6 +240,8 @@ public class StoryDetails_Adapter extends RecyclerView.Adapter<RecyclerView.View
             title = itemView.findViewById(R.id.titlee);
             date = itemView.findViewById(R.id.date_recyclerview);
             views = itemView.findViewById(R.id.views);
+            template = itemView.findViewById(R.id.my_template);
+            facebook_BannerAd_layout = itemView.findViewById(R.id.banner_container);
 
 
         }
