@@ -203,8 +203,6 @@ public class StoryPage extends AppCompatActivity {
         });
 
 
-
-
     }
 
     private void showAds() {
@@ -225,6 +223,7 @@ public class StoryPage extends AppCompatActivity {
 
 
     }
+
     private void fetchStory() {
 
         if (activityComingFrom.equals("Notification_Story_Detail")) {
@@ -550,6 +549,11 @@ public class StoryPage extends AppCompatActivity {
         LinearLayout storiesInsideparagraphLayout = findViewById(R.id.storiesInsideparagraph);
         for (int i = 0; i < storiesInsideParagraphList.size(); i++) {
             String tagKey = storiesInsideParagraphList.get(i).trim();
+
+            if (tagKey.contains(".com") || tagKey.length() == 0){
+                return;
+            }
+
             View view = getLayoutInflater().inflate(R.layout.tag, null);
             TextView tag = view.findViewById(R.id.tag);
             tag.setText(i + 1 + ". " + tagKey + "   ->");
@@ -559,7 +563,6 @@ public class StoryPage extends AppCompatActivity {
 
                     StoryItemModel storyItemModel = getDataFROM_DB(tagKey);
                     if (storyItemModel == null) {
-                        Toast.makeText(StoryPage.this, "Story not found", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Intent intent = new Intent(v.getContext(), StoryPage.class);
@@ -585,7 +588,11 @@ public class StoryPage extends AppCompatActivity {
 
             String tagKey = myList.get(i).trim();
 
-            View view = getLayoutInflater().inflate(R.layout.tag, null);
+            if (tagKey.contains(".com") || tagKey.length() == 0){
+                return;
+            }
+
+                View view = getLayoutInflater().inflate(R.layout.tag, null);
             TextView relatedStoryText = view.findViewById(R.id.tag);
             relatedStoryText.setText(i + 1 + ". " + tagKey + "   ->");
 
@@ -594,7 +601,6 @@ public class StoryPage extends AppCompatActivity {
                 public void onClick(View v) {
                     StoryItemModel storyItemModel = getDataFROM_DB(tagKey);
                     if (storyItemModel == null) {
-                        Toast.makeText(StoryPage.this, "Story not found", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Intent intent = new Intent(v.getContext(), StoryPage.class);
@@ -624,6 +630,7 @@ public class StoryPage extends AppCompatActivity {
         Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readsingleRow(Title);
 
         if (cursor.getCount() == 0) {
+            fetchStoryDetailsAPI(Title);
             return null;
         }
         try {
@@ -636,5 +643,135 @@ public class StoryPage extends AppCompatActivity {
         }
 
     }
+
+    private void fetchStoryDetailsAPI(String Title) {
+        RequestQueue requestQueue = Volley.newRequestQueue(StoryPage.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, SplashScreen.API_URL + "storiesDetailsByTitle", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+
+                    if (success) {
+                        JSONObject json_obj = jsonObject.getJSONObject("data");
+
+                        String Title = json_obj.getString("Title");
+                        String href = json_obj.getString("href");
+                        String date = json_obj.getString("date");
+                        String views = json_obj.getString("views");
+                        int completeDate = json_obj.getInt("completeDate");
+                        String audiolink = json_obj.getString("audiolink");
+
+
+                        JSONObject categoryObject = json_obj.getJSONObject("category");
+                        String category = categoryObject.getString("title");
+                        if (category.equals("Gay Sex Stories In Hindi")) {
+                            category = "Gay Sex Stories";
+                        }
+
+                        JSONArray storyArray = json_obj.getJSONArray("description");
+                        ArrayList<String> storyArrayList = new ArrayList();
+                        for (int j = 0; j < storyArray.length(); j++) {
+                            storyArrayList.add(storyArray.getString(j));
+                        }
+                        String description = String.join("\n\n", storyArrayList);
+
+
+                        JSONArray tagsArray = json_obj.getJSONArray("tagsArray");
+                        ArrayList<String> tagsList = new ArrayList();
+                        for (int j = 0; j < tagsArray.length(); j++) {
+                            tagsList.add(tagsArray.getString(j));
+                        }
+                        String tags = String.join(", ", tagsList);
+
+
+                        JSONArray relatedStoriesLinks_Array = json_obj.getJSONArray("relatedStoriesLinks");
+                        ArrayList<String> relatedStoriesList = new ArrayList();
+                        for (int j = 0; j < relatedStoriesLinks_Array.length(); j++) {
+                            JSONObject relatedStoriesLinksObject = (JSONObject) relatedStoriesLinks_Array.get(j);
+                            relatedStoriesList.add(relatedStoriesLinksObject.getString("title"));
+                        }
+                        String relatedStories = String.join(", ", relatedStoriesList);
+
+                        JSONArray storiesInsideParagraph_Array = json_obj.getJSONArray("storiesLink_insideParagrapgh");
+                        ArrayList<String> storiesInsideParagraphList = new ArrayList();
+                        for (int j = 0; j < storiesInsideParagraph_Array.length(); j++) {
+                            JSONObject obj = (JSONObject) storiesInsideParagraph_Array.get(j);
+                            storiesInsideParagraphList.add(obj.getString("title"));
+                        }
+                        String storiesInsideParagraph = String.join(", ", storiesInsideParagraphList);
+
+
+                        //Add your values in your `ArrayList` as below:
+                        HashMap<String, String> m_li = new HashMap<String, String>();
+                        m_li.put("Title", Title);
+                        m_li.put("href", href);
+                        m_li.put("date", date);
+                        m_li.put("views", views);
+                        m_li.put("description", description.substring(0, 100));
+                        m_li.put("story", description);
+                        m_li.put("audiolink", audiolink);
+                        m_li.put("category", category);
+                        m_li.put("tags", tags);
+                        m_li.put("relatedStories", relatedStories);
+                        m_li.put("completeDate", String.valueOf(completeDate));
+                        m_li.put("storiesInsideParagraph", storiesInsideParagraph);
+
+
+                        DatabaseHelper insertRecord = new DatabaseHelper(getApplicationContext(), SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems");
+                        String res = insertRecord.addstories(m_li);
+                        Log.d(TAG, "INSERT DATA: " + res);
+
+
+                        StoryItemModel storyItemModel = getDataFROM_DB(Title);
+
+                        Intent intent = new Intent(StoryPage.this, StoryPage.class);
+                        intent.putExtra("category", title_category);
+                        intent.putExtra("title", SplashScreen.decryption(storyItemModel.getTitle()));
+                        intent.putExtra("date", storyItemModel.getDate());
+                        intent.putExtra("href", SplashScreen.decryption(storyItemModel.getHref()));
+                        intent.putExtra("relatedStories", storyItemModel.getRelatedStories());
+                        intent.putExtra("storiesInsideParagraph", storyItemModel.getStoriesInsideParagraph());
+                        intent.putExtra("activityComingFrom", StoryPage.this.getClass().getSimpleName());
+
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        StoryPage.this.startActivity(intent);
+
+                    } else {
+                        Toast.makeText(StoryPage.this, "Story not found", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (Exception e) {
+                    Log.d(TAG, "onResponse: " + e.getMessage());
+
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Title", Title);
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
 
 }
