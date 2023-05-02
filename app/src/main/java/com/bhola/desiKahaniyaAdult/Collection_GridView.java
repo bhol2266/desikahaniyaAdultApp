@@ -105,6 +105,7 @@ Collection_GridView extends AppCompatActivity {
         if (SplashScreen.Login_Times < 3) {
             getUserLocaitonUsingIP();
         }
+
     }
 
     private void showAds() {
@@ -367,7 +368,7 @@ Collection_GridView extends AppCompatActivity {
         builder.setView(promptView);
         builder.setCancelable(true);
 
-        if (!(SplashScreen.Login_Times < 4)) {
+        if (SplashScreen.Login_Times > 5) {
             TextView exitMSG;
             exitMSG = promptView.findViewById(R.id.exitMSG);
             exitMSG.setVisibility(View.VISIBLE);
@@ -580,7 +581,7 @@ Collection_GridView extends AppCompatActivity {
     private void init() {
         reviewManager = ReviewManagerFactory.create(this);
         // Referencing the button
-//        showRateApp();
+        showRateApp();
     }
 
 

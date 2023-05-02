@@ -69,7 +69,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String TAG = "TAGA";
     public static String Notification_Intent_Firebase = "inactive";
     public static String Main_App_url1 = "https://play.google.com/store/apps/details?id=com.bhola.desiKahaniyaAdult";
-    public static String Refer_App_url2 = "https://play.google.com/store/apps/developer?id=UK+DEVELOPERS";
+    public static String Refer_App_url2 = "https://play.google.com/store/apps/developer?id=Marveltech+Apps";
     public static String Ads_State = "inactive";
     public static String Ad_Network_Name = "admob";
     public static String DB_NAME = "desikahaniya";
@@ -119,6 +119,15 @@ public class SplashScreen extends AppCompatActivity {
         if (SplashScreen.Login_Times > 5) {
             updateStoriesInDB();
         }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LinearLayout progressbar = findViewById(R.id.progressbar);
+                progressbar.setVisibility(View.VISIBLE);
+            }
+        },1500);
+
+
 
 
         textView.setAnimation(bottomAnim);
@@ -130,8 +139,6 @@ public class SplashScreen extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                LinearLayout progressbar = findViewById(R.id.progressbar);
-                progressbar.setVisibility(View.VISIBLE);
 
             }
 
@@ -257,7 +264,7 @@ public class SplashScreen extends AppCompatActivity {
                         handlerr.removeCallbacksAndMessages(null);
                         handler_forIntent();
                     }
-                }, 2500);
+                }, 1500);
             }
 
             @Override
