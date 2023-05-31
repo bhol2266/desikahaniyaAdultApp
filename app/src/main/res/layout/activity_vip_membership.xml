@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".VipMembership">
+
+    <RelativeLayout
+        android:id="@+id/deltaRelative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:srcCompat="@drawable/back_arrow"
+            app:tint="#9A3412" />
+
+        <TextView
+            android:id="@+id/title_collection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="0dp"
+            android:fontFamily="@font/robotoslab_regular"
+            android:longClickable="true"
+            android:text="VIP Membership"
+            android:textColor="#454545"
+            android:textFontWeight="700"
+            android:textSize="24sp" />
+
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+
+        android:src="@drawable/vip_banner" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="Member Features"
+        android:background="#C8C8C8"
+        android:textColor="#000000"
+        android:textSize="18sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/no_ads"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gnt_gray"
+                android:layout_gravity="center"
+                android:textSize="15dp"
+                android:paddingLeft="15dp"
+                android:text="No more Ads will be shown."/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/unlocked"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gnt_gray"
+                android:layout_gravity="center"
+                android:textSize="15dp"
+                android:paddingLeft="15dp"
+                android:text="Unlock latest stories with daily norification."/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/chat"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gnt_gray"
+                android:layout_gravity="center"
+                android:textSize="15dp"
+                android:paddingLeft="15dp"
+                android:text="Chat with story writers and give feedback."/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/telephone"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gnt_gray"
+                android:layout_gravity="center"
+                android:textSize="15dp"
+                android:paddingLeft="15dp"
+                android:text="Get aunties and bhabhi contact number."/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <soup.neumorphism.NeumorphCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        app:neumorph_shadowColorDark="@color/themeColorextralight">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/hooverffext"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingTop="7dp"
+            >
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
+                android:layout_marginRight="5dp"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/vip_lottie"
+                app:lottie_speed="0.9" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="VIP 1 Month"
+                    android:textColor="#9A3412"
+                    android:textFontWeight="500"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/vip_membership_textbg"
+                    android:maxLines="1"
+                    android:paddingLeft="4dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="4dp"
+                    android:paddingBottom="2dp"
+                    android:text="limited period"
+                    android:textColor="#ffffff"
+                    android:textFontWeight="500"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </soup.neumorphism.NeumorphCardView>
+    <soup.neumorphism.NeumorphCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        android:background="@drawable/hooverffext"
+        app:neumorph_shadowColorDark="@color/themeColorextralight">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/hooverffext"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingTop="7dp"
+            >
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
+                android:layout_marginRight="5dp"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/vip_lottie"
+                app:lottie_speed="0.8" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="VIP 3 Month"
+                    android:textColor="#9A3412"
+                    android:textFontWeight="500"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/vip_membership_textbg"
+                    android:maxLines="1"
+                    android:paddingLeft="4dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="4dp"
+                    android:paddingBottom="2dp"
+                    android:text="popular"
+                    android:textColor="#ffffff"
+                    android:textFontWeight="500"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </soup.neumorphism.NeumorphCardView>
+
+    <soup.neumorphism.NeumorphCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        app:neumorph_shadowColorDark="@color/themeColorextralight">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/hooverffext"
+            android:paddingStart="10dp"
+            android:paddingTop="7dp"
+            >
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
+                android:layout_marginRight="5dp"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/vip_lottie"
+                app:lottie_speed="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="VIP 12 Month"
+                    android:textColor="#9A3412"
+                    android:textFontWeight="500"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/vip_membership_textbg"
+                    android:maxLines="1"
+                    android:paddingLeft="4dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="4dp"
+                    android:paddingBottom="2dp"
+                    android:text="special offer"
+                    android:textColor="#ffffff"
+                    android:textFontWeight="500"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </soup.neumorphism.NeumorphCardView>
+
+
+
+
+
+</LinearLayout>

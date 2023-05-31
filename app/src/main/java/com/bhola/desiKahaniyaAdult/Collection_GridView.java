@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.multidex.BuildConfig;
 import androidx.viewpager.widget.ViewPager;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -106,6 +108,13 @@ Collection_GridView extends AppCompatActivity {
             getUserLocaitonUsingIP();
         }
 
+        ImageView VipMembership=findViewById(R.id.VipLottie);
+        VipMembership.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Collection_GridView.this, VipMembership.class));
+            }
+        });
     }
 
     private void showAds() {

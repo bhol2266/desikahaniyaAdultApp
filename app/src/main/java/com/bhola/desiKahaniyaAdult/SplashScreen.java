@@ -217,7 +217,7 @@ public class SplashScreen extends AppCompatActivity {
             handler2.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (Login_Times > 6) {
+                    if (Login_Times > 5) {
                         App_updating="inactive";
                         Ads_State="active";
                         Ad_Network_Name="admob";
@@ -268,7 +268,7 @@ public class SplashScreen extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                if (Login_Times > 4) {
+                if (Login_Times > 5) {
                     App_updating="inactive";
                     Ads_State="active";
                     Ad_Network_Name="admob";

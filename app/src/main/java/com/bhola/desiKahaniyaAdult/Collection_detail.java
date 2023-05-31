@@ -268,14 +268,11 @@ public class Collection_detail extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        share_ap = findViewById(R.id.share_app);
-        share_ap.setOnClickListener(new View.OnClickListener() {
+        ImageView VipMembership=findViewById(R.id.VipLottie);
+        VipMembership.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                share_ap.setImageResource(R.drawable.favourite_active);
-                Intent intent = new Intent(getApplicationContext(), Download_Detail.class);
-                intent.putExtra("Ads_Status", Ads_State);
-                startActivity(intent);
+            public void onClick(View view) {
+                startActivity(new Intent(Collection_detail.this, VipMembership.class));
             }
         });
     }
