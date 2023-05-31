@@ -49,8 +49,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 
-
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -84,7 +82,6 @@ public class SplashScreen extends AppCompatActivity {
     com.facebook.ads.InterstitialAd facebook_IntertitialAds;
 
 
-
     public static int DB_VERSION = 1;//manual set
     public static int currentApp_Version = 3;//manual set
     public static int Firebase_Version_Code = 1;//manual set
@@ -96,7 +93,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String countryCode = "";
     public static boolean update_Mandatory = false;
     public static String DB_TABLE_NAME = "";  //This is a table name "StoryItems or FakeStory"
-    public static String API_URL =  "https://clownfish-app-jn7w9.ondigitalocean.app/";
+    public static String API_URL = "https://clownfish-app-jn7w9.ondigitalocean.app/";
     private FirebaseAnalytics mFirebaseAnalytics;
 
 
@@ -127,9 +124,7 @@ public class SplashScreen extends AppCompatActivity {
                 LinearLayout progressbar = findViewById(R.id.progressbar);
                 progressbar.setVisibility(View.VISIBLE);
             }
-        },1500);
-
-
+        }, 1500);
 
 
         textView.setAnimation(bottomAnim);
@@ -185,16 +180,16 @@ public class SplashScreen extends AppCompatActivity {
 
             Cursor cursor = new DatabaseLoveStory(SplashScreen.this, "MCB_Story", 5, Category_List[i]).readalldata();
             while (cursor.moveToNext()) {
-                Map<String,String> mapObj=new HashMap<>();
-                mapObj.put("Title",cursor.getString(1));
-                mapObj.put("story","");
+                Map<String, String> mapObj = new HashMap<>();
+                mapObj.put("Title", cursor.getString(1));
+                mapObj.put("story", "");
                 mapObj.put("href", cursor.getString(1));
                 mapObj.put("date", "04-02-2023");
                 mapObj.put("views", "6541");
-                mapObj.put("description","");
+                mapObj.put("description", "");
                 mapObj.put("audiolink", decryption(cursor.getString(2)));
                 mapObj.put("category", Category_List[i]);
-                mapObj.put("tags","");
+                mapObj.put("tags", "");
                 mapObj.put("completeDate", "20230204");
                 mapObj.put("storiesInsideParagraph", "");
                 mapObj.put("relatedStories", "");
@@ -205,7 +200,7 @@ public class SplashScreen extends AppCompatActivity {
             cursor.close();
 
             for (int j = 0; j <= 19; j++) {
-                Map<String,String> mapOb =  tempData.get(j);
+                Map<String, String> mapOb = tempData.get(j);
 
                 String res = new DatabaseHelper(SplashScreen.this, DB_NAME, DB_VERSION, "FakeStory").addstories((HashMap<String, String>) mapOb);
                 Log.d(TAG, "onSuccess: " + res);
@@ -215,9 +210,6 @@ public class SplashScreen extends AppCompatActivity {
     }
 
 
-
-
-
     private void allUrl() {
         if (!isInternetAvailable(SplashScreen.this)) {
 
@@ -225,6 +217,11 @@ public class SplashScreen extends AppCompatActivity {
             handler2.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    if (Login_Times > 6) {
+                        App_updating="inactive";
+                        Ads_State="active";
+                        Ad_Network_Name="admob";
+                    }
                     handler_forIntent();
                 }
             }, 2000);
@@ -271,6 +268,11 @@ public class SplashScreen extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                if (Login_Times > 4) {
+                    App_updating="inactive";
+                    Ads_State="active";
+                    Ad_Network_Name="admob";
+                }
                 Log.d(TAG, "onCancelled: " + error.getMessage());
             }
 
@@ -320,7 +322,7 @@ public class SplashScreen extends AppCompatActivity {
         }
     }
 
-    boolean isInternetAvailable(Context context) {
+    static boolean isInternetAvailable(Context context) {
         if (context == null) return false;
 
 
@@ -378,7 +380,7 @@ public class SplashScreen extends AppCompatActivity {
         int completeDate = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readLatestStoryDate();
 
         RequestQueue requestQueue = Volley.newRequestQueue(SplashScreen.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, SplashScreen.API_URL +"updateStories_inDB", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, SplashScreen.API_URL + "updateStories_inDB", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

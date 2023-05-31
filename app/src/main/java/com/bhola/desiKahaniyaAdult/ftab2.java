@@ -79,9 +79,10 @@ public class ftab2 extends Fragment {
 
         loadAudioDatabase(view);
 
-        if (!isInternetAvailable(getContext())) {
+        if (!SplashScreen.isInternetAvailable(getContext())) {
             Toast.makeText(getContext(), "Check Internet Connection!", Toast.LENGTH_SHORT).show();
         } else {
+
         }
         return view;
     }
@@ -132,41 +133,7 @@ public class ftab2 extends Fragment {
     }
 
 
-    boolean isInternetAvailable(Context context) {
-        if (context == null) return false;
 
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        if (connectivityManager != null) {
-
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
-                if (capabilities != null) {
-                    if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                        return true;
-                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                        return true;
-                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                        return true;
-                    }
-                }
-            } else {
-
-                try {
-                    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-                    if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-                        Log.i("update_statut", "Network is available : true");
-                        return true;
-                    }
-                } catch (Exception e) {
-                    Log.i("aaaaaaaaaaaaaaaaa", "" + e.getMessage());
-                }
-            }
-        }
-        return false;
-    }
 
 }
 
@@ -219,7 +186,7 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
             public void onClick(View v) {
 
 
-                if (isInternetAvailable()) {
+                if (SplashScreen.isInternetAvailable(v.getContext())) {
                     Intent intent = new Intent(context, AudioPlayer.class);
                     intent.putExtra("storyURL", storyItemModel.getAudiolink());
                     intent.putExtra("storyName", filename);
@@ -233,41 +200,6 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             }
 
-            boolean isInternetAvailable() {
-                if (context == null) return false;
-
-
-                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                if (connectivityManager != null) {
-
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
-                        if (capabilities != null) {
-                            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                                return true;
-                            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                                return true;
-                            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                                return true;
-                            }
-                        }
-                    } else {
-
-                        try {
-                            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-                            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-                                Log.i("update_statut", "Network is available : true");
-                                return true;
-                            }
-                        } catch (Exception e) {
-                            Log.i("update_statut", "" + e.getMessage());
-                        }
-                    }
-                }
-                Log.i("update_statut", "Network is available : FALSE ");
-                return false;
-            }
         });
 
         if (SplashScreen.Ads_State.equals("active")) {

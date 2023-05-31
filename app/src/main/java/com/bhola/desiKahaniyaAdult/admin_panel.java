@@ -312,51 +312,5 @@ public class admin_panel extends AppCompatActivity {
         return decryptedText;
     }
 
-    private void fetchStoryAPI(String href) {
-
-        RequestQueue requestQueue = Volley.newRequestQueue(admin_panel.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, SplashScreen.API_URL +"storiesDetails", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jSONArray = jsonObject.getJSONObject("data").getJSONArray("description");
-                    ArrayList<String> arrayList = new ArrayList();
-                    for (int i = 0; i <jSONArray.length() ; i++) {
-                        arrayList.add((String) jSONArray.get(i));
-                    }
-
-                    String str = String.join("\n\n", arrayList);
-//                    pragraphofstory.setText(str.toString().trim().replaceAll("\\/", ""));
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(SplashScreen.TAG, "onErrorResponse: " + error.getMessage());
-
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("href", href);
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/x-www-form-urlencoded");
-                return params;
-            }
-        };
-
-        requestQueue.add(stringRequest);
-    }
 
 }

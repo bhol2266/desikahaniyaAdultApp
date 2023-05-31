@@ -91,6 +91,9 @@ public class StoryPage extends AppCompatActivity {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (share.getVisibility() == View.INVISIBLE) {
+                    return;
+                }
                 final Vibrator vibe = (Vibrator) v.getContext().getSystemService(Context.VIBRATOR_SERVICE);
                 vibe.vibrate(80);//80 represents the milliseconds (the duration of the vibration)
                 Intent intent = new Intent();
@@ -105,8 +108,9 @@ public class StoryPage extends AppCompatActivity {
         favourite_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
+                if (favourite_button.getVisibility() == View.INVISIBLE) {
+                    return;
+                }
                 final MediaPlayer mp = MediaPlayer.create(v.getContext(), R.raw.sound);
                 mp.start();
                 if (activityComingFrom.equals("Download_Detail")) {
@@ -151,6 +155,9 @@ public class StoryPage extends AppCompatActivity {
         copy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (copy.getVisibility() == View.INVISIBLE) {
+                    return;
+                }
                 final Vibrator vibe = (Vibrator) v.getContext().getSystemService(Context.VIBRATOR_SERVICE);
                 vibe.vibrate(80);//80 represents the milliseconds (the duration of the vibration)
                 ClipboardManager clipboard = (ClipboardManager) v.getContext().getSystemService(CLIPBOARD_SERVICE);
@@ -163,7 +170,9 @@ public class StoryPage extends AppCompatActivity {
         textsixe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (textsixe.getVisibility() == View.INVISIBLE) {
+                    return;
+                }
 
                 loadAlertdialog();
 
@@ -231,8 +240,8 @@ public class StoryPage extends AppCompatActivity {
             return;
         }
 
-        Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readsingleRow(title);
         try {
+            Cursor cursor = new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readsingleRow(title);
             cursor.moveToFirst();
             if (cursor.getCount() != 0) {
                 String story = cursor.getString(10);
@@ -242,8 +251,11 @@ public class StoryPage extends AppCompatActivity {
                 }
                 storyText.setText(story.toString().trim().replaceAll("\\/", ""));
             }
-        } finally {
             cursor.close();
+
+        } catch (Exception e) {
+            storyText.setText(e.getMessage());
+
         }
 
 
@@ -279,6 +291,8 @@ public class StoryPage extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                storyText.setText("server busy...");
+
 
             }
         }) {
@@ -424,7 +438,10 @@ public class StoryPage extends AppCompatActivity {
     }
 
     private void updateStoryread() {
-        new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).updateStoryRead(title, 1);
+        try {
+            new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).updateStoryRead(title, 1);
+        } catch (Exception e) {
+        }
     }
 
     private void text2Speech() {
@@ -550,7 +567,7 @@ public class StoryPage extends AppCompatActivity {
         for (int i = 0; i < storiesInsideParagraphList.size(); i++) {
             String tagKey = storiesInsideParagraphList.get(i).trim();
 
-            if (tagKey.contains(".com") || tagKey.length() == 0){
+            if (tagKey.contains(".com") || tagKey.length() == 0) {
                 return;
             }
 
@@ -588,11 +605,11 @@ public class StoryPage extends AppCompatActivity {
 
             String tagKey = myList.get(i).trim();
 
-            if (tagKey.contains(".com") || tagKey.length() == 0){
+            if (tagKey.contains(".com") || tagKey.length() == 0) {
                 return;
             }
 
-                View view = getLayoutInflater().inflate(R.layout.tag, null);
+            View view = getLayoutInflater().inflate(R.layout.tag, null);
             TextView relatedStoryText = view.findViewById(R.id.tag);
             relatedStoryText.setText(i + 1 + ". " + tagKey + "   ->");
 
@@ -743,7 +760,7 @@ public class StoryPage extends AppCompatActivity {
                     }
 
                 } catch (Exception e) {
-                    Log.d(TAG, "onResponse: " + e.getMessage());
+                    Toast.makeText(StoryPage.this, "something went wrong", Toast.LENGTH_SHORT).show();
 
                     e.printStackTrace();
                 }

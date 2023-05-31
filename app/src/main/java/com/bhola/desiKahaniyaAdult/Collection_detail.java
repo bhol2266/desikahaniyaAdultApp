@@ -89,7 +89,7 @@ public class Collection_detail extends AppCompatActivity {
         retryBtn = findViewById(R.id.retryBtn);
 
 
-        if (isInternetAvailable(Collection_detail.this)) {
+        if (SplashScreen.isInternetAvailable(Collection_detail.this)) {
 //
             Send_ALL_DATA_TO_RECYCLERVIEW();
 
@@ -195,7 +195,11 @@ public class Collection_detail extends AppCompatActivity {
             collectonData.add(storyItemModel);
         }
         if(SplashScreen.App_updating.equals("active")){
-            collectonData.subList(1,collectonData.size()-1).clear();
+            try {
+                collectonData.subList(1,collectonData.size()-1).clear();
+            } catch (Exception e) {
+                collectonData.clear();
+            }
         }
 
         cursor.close();
@@ -204,42 +208,6 @@ public class Collection_detail extends AppCompatActivity {
     }
 
 
-    boolean isInternetAvailable(Context context) {
-        if (context == null) return false;
-
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        if (connectivityManager != null) {
-
-
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
-                if (capabilities != null) {
-                    if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                        return true;
-                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                        return true;
-                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                        return true;
-                    }
-                }
-            } else {
-
-                try {
-                    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-                    if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-                        Log.i("update_statut", "Network is available : true");
-                        return true;
-                    }
-                } catch (Exception e) {
-                    Log.i("update_statut", "" + e.getMessage());
-                }
-            }
-        }
-        Log.i("update_statut", "Network is available : FALSE ");
-        return false;
-    }
 
 
     @Override

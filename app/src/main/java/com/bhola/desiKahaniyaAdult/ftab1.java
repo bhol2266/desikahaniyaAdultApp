@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,18 +83,65 @@ public class ftab1 extends Fragment {
 
             String category = Category_List[i].replace("Sex", "").replace("सेक्स", "").replace("XXX", "");
 
-
             View vieww = getLayoutInflater().inflate(R.layout.homepage_griditem, null);
             TextView categoryTextView = vieww.findViewById(R.id.Textview1);
+            ImageView auntyImageView = vieww.findViewById(R.id.auntyImageView);
             NeumorphCardView cardView = vieww.findViewById(R.id.cardview);
 
             categoryTextView.setText(category);
 
+            switch (i) {
+                case 0:
+                    auntyImageView.setImageResource(R.drawable.aunty1);
+                    break;
+                case 1:
+                    auntyImageView.setImageResource(R.drawable.aunty2);
+                    break;
+                case 2:
+                    auntyImageView.setImageResource(R.drawable.aunty3);
+                    break;
+                case 3:
+                    auntyImageView.setImageResource(R.drawable.aunty4);
+                    break;
+                case 4:
+                    auntyImageView.setImageResource(R.drawable.aunty5);
+                    break;
+                case 5:
+                    auntyImageView.setImageResource(R.drawable.aunty6);
+                    break;
+                case 6:
+                    auntyImageView.setImageResource(R.drawable.aunty7);
+                    break;
+                case 7:
+                    auntyImageView.setImageResource(R.drawable.aunty8);
+                    break;
+                case 8:
+                    auntyImageView.setImageResource(R.drawable.aunty9);
+                    break;
+                case 9:
+                    auntyImageView.setImageResource(R.drawable.aunty10);
+                    break;
+                case 10:
+                    auntyImageView.setImageResource(R.drawable.aunty11);
+                    break;
+                case 11:
+                    auntyImageView.setImageResource(R.drawable.aunty12);
+                    break;
+                case 12:
+                    auntyImageView.setImageResource(R.drawable.aunty13);
+                    break;
+                case 13:
+                    auntyImageView.setImageResource(R.drawable.aunty14);
+                    break;
+                case 14:
+                    auntyImageView.setImageResource(R.drawable.aunty15);
+                    break;
+            }
             DisplayMetrics displayMetrics = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
             float requiredWidth = (float) (displayMetrics.widthPixels / 2.2);
 
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams((int) requiredWidth, 250);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams((int) requiredWidth, 600);
             cardView.setLayoutParams(params);
 
             int finalI = i;
