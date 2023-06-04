@@ -306,7 +306,7 @@ public class SplashScreen extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), Notification_Story_Detail.class);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(getApplicationContext(), Collection_GridView.class);
+            Intent intent = new Intent(getApplicationContext(), VipMembership.class);
             startActivity(intent);
         }
         finish();

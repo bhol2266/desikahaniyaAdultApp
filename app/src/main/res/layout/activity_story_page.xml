@@ -139,6 +139,18 @@
                         android:textColor="#434F5A"
                         android:textSize="20dp" />
 
+                    <Button
+                        android:id="@+id/speakWithWriter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/vip_membership_textbg"
+                        android:fontFamily="@font/inter"
+                        android:textSize="20dp"
+                        android:text="लेखक के साथ बात करे"
+                        android:textColor="@color/white"/>
+
                     <LinearLayout
                         android:id="@+id/storiesInsideparagraph"
                         android:layout_width="match_parent"

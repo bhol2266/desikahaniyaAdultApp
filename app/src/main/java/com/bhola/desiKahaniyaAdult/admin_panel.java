@@ -65,7 +65,7 @@ public class admin_panel extends AppCompatActivity {
         appControl();
         Ad_Network_Selection();
         deleteNotification_Stories();
-        totalInstallsAlltime();
+//        totalInstallsAlltime();
 
     }
 

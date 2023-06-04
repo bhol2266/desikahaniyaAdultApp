@@ -420,6 +420,14 @@ public class StoryPage extends AppCompatActivity {
             }
         });
 
+        Button speakWithWriter=findViewById(R.id.speakWithWriter);
+        speakWithWriter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(StoryPage.this,VipMembership.class));
+            }
+        });
+
     }
 
     @Override

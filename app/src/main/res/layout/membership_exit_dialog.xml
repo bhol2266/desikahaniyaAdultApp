@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="30dp"
+    app:cardCornerRadius="30dp"
+
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/neuro_shadowcolor"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/exitMSG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/inter"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="20dp"
+            android:gravity="center"
+            android:text="Are you sure want to cancel your VIP Membership?"
+            android:textColor="#000000"
+            android:textSize="18dp" />
+
+
+        <LinearLayout
+            android:id="@+id/paymentSupport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/exit_textview2"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:gravity="left"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/getVip"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/vip_membership_textbg"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:text="GET VIP"
+                android:textColor="#ffffff"
+                android:textSize="18dp"
+                android:textStyle="bold"
+
+                app:neumorph_shadowColorDark="@color/neuro_shadowcolor" />
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/vip_membership_textbg"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:text="CANCEL"
+                android:textColor="#ffffff"
+                android:textSize="18dp"
+
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
+
