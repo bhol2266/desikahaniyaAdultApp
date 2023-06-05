@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.InsetDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,7 @@ public class VipMembership extends AppCompatActivity {
     AlertDialog dialog;
     private BillingClient billingClient;
     LinearLayout progressBar;
+    Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class VipMembership extends AppCompatActivity {
                                     verifyPurchase(purchase);
                                     progressBar.setVisibility(View.GONE);
                                     Toast.makeText(this, "Successfull", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(VipMembership.this,SplashScreen.class));
+                                    startActivity(new Intent(VipMembership.this, SplashScreen.class));
 
                                 }
                             } else {
@@ -92,6 +94,27 @@ public class VipMembership extends AppCompatActivity {
 
         //start the connection after initializing the billing client
         connectGooglePlayBilling();
+
+
+        handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                TextView price2 = findViewById(R.id.price2);
+                Button refreshBtn=findViewById(R.id.refreshBtn);
+
+                if (price2.getText().equals("not set")) {
+                    refreshBtn.setVisibility(View.VISIBLE);
+                    refreshBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            connectGooglePlayBilling();
+                        }
+                    });
+
+                }
+            }
+        }, 2000);
 
     }
 
@@ -278,7 +301,7 @@ public class VipMembership extends AppCompatActivity {
 
         }
 
-        savePurchaseDetails_inSharedPreference(purchase.getPurchaseToken(),Validity_period,purchase.getPurchaseTime());
+        savePurchaseDetails_inSharedPreference(purchase.getPurchaseToken(), Validity_period, purchase.getPurchaseTime());
 
         ConsumeParams consumeParams = ConsumeParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
         billingClient.consumeAsync(
@@ -449,6 +472,14 @@ public class VipMembership extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         exit_dialog();
+        handler.removeCallbacksAndMessages(null);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacksAndMessages(null);
 
     }
 }

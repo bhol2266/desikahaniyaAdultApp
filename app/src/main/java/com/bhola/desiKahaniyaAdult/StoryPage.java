@@ -428,9 +428,14 @@ public class StoryPage extends AppCompatActivity {
                     Toast.makeText(StoryPage.this, "Contact on E-mail", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    if(SplashScreen.isInternetAvailable(StoryPage.this)){
-                        startActivity(new Intent(StoryPage.this, VipMembership.class));
-                    }else{
+                    if (SplashScreen.isInternetAvailable(StoryPage.this)) {
+                        if (!SplashScreen.App_updating.equals("active")) {
+                            startActivity(new Intent(StoryPage.this, VipMembership.class));
+                        } else {
+                            Toast.makeText(StoryPage.this, "coming soon!", Toast.LENGTH_SHORT).show();
+
+                        }
+                    } else {
                         Toast.makeText(StoryPage.this, "Check Internet Connection!", Toast.LENGTH_SHORT).show();
                     }
                 }

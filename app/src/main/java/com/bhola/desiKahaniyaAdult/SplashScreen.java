@@ -308,6 +308,12 @@ public class SplashScreen extends AppCompatActivity {
 
     private void handler_forIntent() {
         lottie.cancelAnimation();
+
+        if (SplashScreen.Vip_Member) {
+            vipMemberPrivileges();
+        }
+
+
         if (Notification_Intent_Firebase.equals("active")) {
             Intent intent = new Intent(getApplicationContext(), Notification_Story_Detail.class);
             startActivity(intent);
@@ -385,8 +391,8 @@ public class SplashScreen extends AppCompatActivity {
         int validity_period = sharedPreferences1.getInt("validity_period", 0);
         String purchase_date = sharedPreferences1.getString("purchase_date", "not set");
 
-        if(purchaseToken.equals("not set")){
-           return;
+        if (purchaseToken.equals("not set") || validity_period == 0) {
+            return;
         }
 
 
@@ -410,7 +416,7 @@ public class SplashScreen extends AppCompatActivity {
             // Format the new date as a string
             String expirationDateString = dateFormat.format(newDate);
 
-            Log.d(TAG, "Membership Expiry Date: "+expirationDateString);
+            Log.d(TAG, "Membership Expiry Date: " + expirationDateString);
             // Get the current date
             Date currentDate = new Date();
             String currentDateString = dateFormat.format(currentDate);
@@ -418,19 +424,17 @@ public class SplashScreen extends AppCompatActivity {
 
             // Compare the new date with the current date
             if (expirationDateString.equals(currentDateString)) {
-                Vip_Member=false;
+                Vip_Member = false;
                 Toast.makeText(this, "Your Membership has expried", Toast.LENGTH_SHORT).show();
             } else if (newDate.after(currentDate)) {
 
-                Vip_Member=true;
-                vipMemberPrivileges();
+                Vip_Member = true;
 
             } else if (newDate.before(currentDate)) {
                 Toast.makeText(this, "Your Membership has expried", Toast.LENGTH_SHORT).show();
-                Vip_Member=false;
+                Vip_Member = false;
 
             }
-
 
 
         } catch (ParseException | java.text.ParseException e) {
@@ -442,7 +446,6 @@ public class SplashScreen extends AppCompatActivity {
     private void vipMemberPrivileges() {
         App_updating = "inactive";
         Ads_State = "inactive";
-        Ad_Network_Name = "admob";
     }
 
     private void updateStoriesInDB() {

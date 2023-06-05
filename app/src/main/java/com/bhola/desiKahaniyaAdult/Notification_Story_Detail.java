@@ -108,18 +108,27 @@ public class Notification_Story_Detail extends AppCompatActivity {
 
         back = findViewById(R.id.back_arrow);
         back.setOnClickListener(v -> onBackPressed());
-        ImageView VipMembership=findViewById(R.id.VipLottie);
+        ImageView VipMembership = findViewById(R.id.VipLottie);
         VipMembership.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Notification_Story_Detail.this, VipMembership.class));
+                if (SplashScreen.isInternetAvailable(Notification_Story_Detail.this)) {
+                    if (!SplashScreen.App_updating.equals("active")) {
+                        startActivity(new Intent(Notification_Story_Detail.this, VipMembership.class));
+                    } else {
+                        Toast.makeText(Notification_Story_Detail.this, "coming soon!", Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    Toast.makeText(Notification_Story_Detail.this, "Check Internet Connection!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(),Collection_GridView.class));
+        startActivity(new Intent(getApplicationContext(), Collection_GridView.class));
         super.onBackPressed();
     }
 }
@@ -262,6 +271,7 @@ class Notification_Story_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
         LinearLayout recyclerview;
         TemplateView template;
         LinearLayout facebook_BannerAd_layout;
+
         public NotificitaionStory_ViewHolder(@NonNull View itemView) {
             super(itemView);
 
