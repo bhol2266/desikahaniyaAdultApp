@@ -420,11 +420,20 @@ public class StoryPage extends AppCompatActivity {
             }
         });
 
-        Button speakWithWriter=findViewById(R.id.speakWithWriter);
+        Button speakWithWriter = findViewById(R.id.speakWithWriter);
         speakWithWriter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(StoryPage.this,VipMembership.class));
+                if (SplashScreen.Vip_Member) {
+                    Toast.makeText(StoryPage.this, "Contact on E-mail", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    if(SplashScreen.isInternetAvailable(StoryPage.this)){
+                        startActivity(new Intent(StoryPage.this, VipMembership.class));
+                    }else{
+                        Toast.makeText(StoryPage.this, "Check Internet Connection!", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 

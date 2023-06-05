@@ -1,23 +1,30 @@
 package com.bhola.desiKahaniyaAdult;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.InsetDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.ConsumeResponseListener;
@@ -28,39 +35,57 @@ import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.common.collect.ImmutableList;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+
+import soup.neumorphism.NeumorphCardView;
 
 public class VipMembership extends AppCompatActivity {
 
 
     AlertDialog dialog;
     private BillingClient billingClient;
+    LinearLayout progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vip_membership);
         actionBar();
+        progressBar = findViewById(R.id.progressBar);
 
 
         billingClient = BillingClient.newBuilder(this)
                 .enablePendingPurchases()
                 .setListener(
                         (billingResult, list) -> {
+
                             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list != null) {
                                 for (Purchase purchase : list) {
                                     verifyPurchase(purchase);
+                                    progressBar.setVisibility(View.GONE);
+                                    Toast.makeText(this, "Successfull", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(VipMembership.this,SplashScreen.class));
+
                                 }
+                            } else {
+                                // Handle any other error codes.
+                                Toast.makeText(this, "Something went wrong try again!", Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.GONE);
+
                             }
+
                         }
                 ).build();
 
@@ -83,6 +108,7 @@ public class VipMembership extends AppCompatActivity {
 
             @Override
             public void onBillingServiceDisconnected() {
+                connectGooglePlayBilling();
 
                 // Try to restart the connection on the next request to
                 // Google Play by calling the startConnection() method.
@@ -125,14 +151,134 @@ public class VipMembership extends AppCompatActivity {
     }
 
     private void createListView(List<ProductDetails> productDetailsList) {
-        ListView listView = findViewById(R.id.listView);
-        Vip_CustomAdapter vipMembershipAdapter = new Vip_CustomAdapter(VipMembership.this, productDetailsList,billingClient);
-        listView.setAdapter(vipMembershipAdapter);
+        Log.d(SplashScreen.TAG, "createListView: " + productDetailsList);
+//        ListView listView = findViewById(R.id.listView);
+//        Vip_CustomAdapter vipMembershipAdapter = new Vip_CustomAdapter(VipMembership.this, productDetailsList,billingClient);
+//        listView.setAdapter(vipMembershipAdapter);
+
+        TextView title = findViewById(R.id.title);
+        TextView price = findViewById(R.id.price);
+        TextView membershipType = findViewById(R.id.membershipType);
+        ProductDetails productDetails = productDetailsList.get(0);
+        title.setText(productDetails.getTitle());
+        price.setText(productDetails.getOneTimePurchaseOfferDetails().getFormattedPrice());
+        membershipType.setText("limited peroid");
+        NeumorphCardView lauchBilling = findViewById(R.id.launchBilling);
+        lauchBilling.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // An activity reference from which the billing flow will be launched.
+                Activity activity = VipMembership.this;
+
+                ImmutableList productDetailsParamsList =
+                        ImmutableList.of(
+                                BillingFlowParams.ProductDetailsParams.newBuilder()
+                                        // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
+                                        .setProductDetails(productDetails)
+                                        // to get an offer token, call ProductDetails.getSubscriptionOfferDetails()
+                                        // for a list of offers that are available to the user
+                                        .build()
+                        );
+
+                BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                        .setProductDetailsParamsList(productDetailsParamsList)
+                        .build();
+
+// Launch the billing flow
+                billingClient.launchBillingFlow(activity, billingFlowParams);
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+        TextView title2 = findViewById(R.id.title2);
+        TextView price2 = findViewById(R.id.price2);
+        TextView membershipType2 = findViewById(R.id.membershipType2);
+        ProductDetails productDetails2 = productDetailsList.get(1);
+        title2.setText(productDetails2.getTitle());
+        price2.setText(productDetails2.getOneTimePurchaseOfferDetails().getFormattedPrice());
+        membershipType2.setText("special offer");
+        NeumorphCardView lauchBilling2 = findViewById(R.id.launchBilling2);
+        lauchBilling2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // An activity reference from which the billing flow will be launched.
+                Activity activity = VipMembership.this;
+
+                ImmutableList productDetailsParamsList =
+                        ImmutableList.of(
+                                BillingFlowParams.ProductDetailsParams.newBuilder()
+                                        // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
+                                        .setProductDetails(productDetails2)
+                                        // to get an offer token, call ProductDetails.getSubscriptionOfferDetails()
+                                        // for a list of offers that are available to the user
+                                        .build()
+                        );
+
+                BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                        .setProductDetailsParamsList(productDetailsParamsList)
+                        .build();
+
+// Launch the billing flow
+                billingClient.launchBillingFlow(activity, billingFlowParams);
+                progressBar.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        TextView title3 = findViewById(R.id.title3);
+        TextView price3 = findViewById(R.id.price3);
+        TextView membershipType3 = findViewById(R.id.membershipType3);
+        ProductDetails productDetails3 = productDetailsList.get(2);
+        title3.setText(productDetails3.getTitle());
+        price3.setText(productDetails3.getOneTimePurchaseOfferDetails().getFormattedPrice());
+        membershipType3.setText("popular");
+        NeumorphCardView lauchBilling3 = findViewById(R.id.launchBilling3);
+        lauchBilling3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // An activity reference from which the billing flow will be launched.
+                Activity activity = VipMembership.this;
+
+                ImmutableList productDetailsParamsList =
+                        ImmutableList.of(
+                                BillingFlowParams.ProductDetailsParams.newBuilder()
+                                        // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
+                                        .setProductDetails(productDetails3)
+                                        // to get an offer token, call ProductDetails.getSubscriptionOfferDetails()
+                                        // for a list of offers that are available to the user
+                                        .build()
+                        );
+
+                BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                        .setProductDetailsParamsList(productDetailsParamsList)
+                        .build();
+
+// Launch the billing flow
+                billingClient.launchBillingFlow(activity, billingFlowParams);
+                progressBar.setVisibility(View.VISIBLE);
+
+            }
+        });
+
 
     }
 
 
     private void verifyPurchase(Purchase purchase) {
+
+        int Validity_period = 0;
+
+        if (purchase.getProducts().get(0).equals("vip_1")) {
+            Validity_period = 30;
+        } else if (purchase.getProducts().get(0).equals("vip_3")) {
+            Validity_period = 90;
+        } else {
+            Validity_period = 365;
+
+        }
+
+        savePurchaseDetails_inSharedPreference(purchase.getPurchaseToken(),Validity_period,purchase.getPurchaseTime());
 
         ConsumeParams consumeParams = ConsumeParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
         billingClient.consumeAsync(
@@ -141,11 +287,12 @@ public class VipMembership extends AppCompatActivity {
                     @Override
                     public void onConsumeResponse(@NonNull BillingResult billingResult, @NonNull String s) {
                         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                            Log.d("TAGAA", "onConsumeResponse: ");
+                            Log.d(SplashScreen.TAG, "Consumed: ");
                         }
                     }
                 }
         );
+
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference documentRef = db.collection("purchases").document(purchase.getPurchaseToken());
@@ -195,10 +342,29 @@ public class VipMembership extends AppCompatActivity {
                 // Error occurred while retrieving the document
                 FirebaseFirestoreException exception = (FirebaseFirestoreException) task.getException();
                 // Handle the exception
-                Log.d("TAGAA", "FirebaseFirestoreException: " + exception.getMessage());
+                Log.d(SplashScreen.TAG, "FirebaseFirestoreException: " + exception.getMessage());
             }
         });
 
+
+    }
+
+    private void savePurchaseDetails_inSharedPreference(String purchaseToken, int validity_period, long purchaseTime) {
+        //Reading purchase Token
+        SharedPreferences sh = getSharedPreferences("UserInfo", MODE_PRIVATE);
+        String a = sh.getString("purchaseToken", purchaseToken);
+
+        // Creating purchase Token into SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+        SharedPreferences.Editor myEdit = sharedPreferences.edit();
+        myEdit.putString("purchaseToken", purchaseToken);
+        myEdit.putInt("validity_period", validity_period);
+
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String dateString = dateFormat.format(currentDate);
+        myEdit.putString("purchase_date", dateString);
+        myEdit.commit();
 
     }
 
@@ -216,6 +382,8 @@ public class VipMembership extends AppCompatActivity {
                                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED &&
                                         !purchase.isAcknowledged()) {
                                     verifyPurchase(purchase);
+                                    progressBar.setVisibility(View.GONE);
+
                                 }
                             }
                         }

@@ -114,7 +114,11 @@ Collection_GridView extends AppCompatActivity {
         VipMembership.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(SplashScreen.isInternetAvailable(Collection_GridView.this)){
                 startActivity(new Intent(Collection_GridView.this, VipMembership.class));
+                }else{
+                    Toast.makeText(Collection_GridView.this, "Check Internet Connection!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
