@@ -117,7 +117,6 @@ public class Notification_Story_Detail extends AppCompatActivity {
                         startActivity(new Intent(Notification_Story_Detail.this, VipMembership.class));
                     } else {
                         Toast.makeText(Notification_Story_Detail.this, "coming soon!", Toast.LENGTH_SHORT).show();
-
                     }
                 } else {
                     Toast.makeText(Notification_Story_Detail.this, "Check Internet Connection!", Toast.LENGTH_SHORT).show();

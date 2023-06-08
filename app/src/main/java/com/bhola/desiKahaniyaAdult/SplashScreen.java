@@ -313,7 +313,6 @@ public class SplashScreen extends AppCompatActivity {
             vipMemberPrivileges();
         }
 
-
         if (Notification_Intent_Firebase.equals("active")) {
             Intent intent = new Intent(getApplicationContext(), Notification_Story_Detail.class);
             startActivity(intent);
