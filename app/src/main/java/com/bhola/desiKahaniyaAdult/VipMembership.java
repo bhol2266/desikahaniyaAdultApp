@@ -34,6 +34,10 @@ import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
+import com.google.android.ads.nativetemplates.NativeTemplateStyle;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.ImmutableList;
@@ -49,6 +53,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import soup.neumorphism.NeumorphCardView;
 
@@ -58,7 +64,6 @@ public class VipMembership extends AppCompatActivity {
     AlertDialog dialog;
     private BillingClient billingClient;
     LinearLayout progressBar;
-    Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,29 +97,15 @@ public class VipMembership extends AppCompatActivity {
                 ).build();
 
 
-        //start the connection after initializing the billing client
-        connectGooglePlayBilling();
 
-
-        handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(new Runnable() {
             @Override
             public void run() {
-                TextView price2 = findViewById(R.id.price2);
-                Button refreshBtn=findViewById(R.id.refreshBtn);
-
-                if (price2.getText().equals("not set")) {
-                    refreshBtn.setVisibility(View.VISIBLE);
-                    refreshBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            connectGooglePlayBilling();
-                        }
-                    });
-
-                }
+                //start the connection after initializing the billing client
+                connectGooglePlayBilling();
             }
-        }, 2000);
+        });
 
     }
 
@@ -166,7 +157,14 @@ public class VipMembership extends AppCompatActivity {
         billingClient.queryProductDetailsAsync(queryProductDetailsParams, new ProductDetailsResponseListener() {
             public void onProductDetailsResponse(BillingResult billingResult, List<ProductDetails> productDetailsList) {
                 // Handle the product details response for multiple products
-                createListView(productDetailsList);
+
+                ((Activity) VipMembership.this).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        createListView(productDetailsList);
+
+                    }
+                });
             }
         });
 
@@ -185,6 +183,9 @@ public class VipMembership extends AppCompatActivity {
         ProductDetails productDetails = productDetailsList.get(0);
         title.setText(productDetails.getTitle());
         price.setText(productDetails.getOneTimePurchaseOfferDetails().getFormattedPrice());
+
+        int defaultPriceAmount= (int) productDetails.getOneTimePurchaseOfferDetails().getPriceAmountMicros();
+
         membershipType.setText("limited peroid");
         NeumorphCardView lauchBilling = findViewById(R.id.launchBilling);
         lauchBilling.setOnClickListener(new View.OnClickListener() {
@@ -472,14 +473,12 @@ public class VipMembership extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         exit_dialog();
-        handler.removeCallbacksAndMessages(null);
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        handler.removeCallbacksAndMessages(null);
 
     }
 }

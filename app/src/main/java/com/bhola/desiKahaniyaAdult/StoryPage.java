@@ -250,6 +250,9 @@ public class StoryPage extends AppCompatActivity {
                     return;
                 }
                 storyText.setText(story.toString().trim().replaceAll("\\/", ""));
+                if (SplashScreen.App_updating.equals("active")) {
+                    storyText.setText(getString(R.string.FakeStory));
+                }
             }
             cursor.close();
 
@@ -438,6 +441,23 @@ public class StoryPage extends AppCompatActivity {
                     } else {
                         Toast.makeText(StoryPage.this, "Check Internet Connection!", Toast.LENGTH_SHORT).show();
                     }
+                }
+            }
+        });
+
+        ImageView VipMembership = findViewById(R.id.VipLottie);
+        VipMembership.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (SplashScreen.isInternetAvailable(StoryPage.this)) {
+                    if (!SplashScreen.App_updating.equals("active")) {
+                        startActivity(new Intent(StoryPage.this, VipMembership.class));
+                    } else {
+                        Toast.makeText(StoryPage.this, "coming soon!", Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    Toast.makeText(StoryPage.this, "Check Internet Connection!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

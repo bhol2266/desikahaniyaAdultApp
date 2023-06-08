@@ -121,7 +121,7 @@ public class SplashScreen extends AppCompatActivity {
         allUrl();
         sharedPrefrences();
 
-        if (SplashScreen.Login_Times > 5 || Vip_Member) {
+        if (SplashScreen.Login_Times > 5) {
             updateStoriesInDB();
         }
         new Handler().postDelayed(new Runnable() {
@@ -445,6 +445,7 @@ public class SplashScreen extends AppCompatActivity {
     private void vipMemberPrivileges() {
         App_updating = "inactive";
         Ads_State = "inactive";
+        Login_Times=10;
     }
 
     private void updateStoriesInDB() {
