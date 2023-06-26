@@ -35,12 +35,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
-
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,7 +42,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -291,18 +284,15 @@ public class SplashScreen extends AppCompatActivity {
     private void generateNotification() {
 
 
-        FirebaseMessaging.getInstance().subscribeToTopic("all")
-                .addOnCompleteListener(task -> {
-                    String msg;
-                    if (!task.isSuccessful()) {
-                        msg = "Failed";
-                        Toast.makeText(SplashScreen.this,
-                                msg,
-                                Toast.LENGTH_SHORT).show();
-                    }
+        FirebaseMessaging.getInstance().subscribeToTopic("all").addOnCompleteListener(task -> {
+            String msg;
+            if (!task.isSuccessful()) {
+                msg = "Failed";
+                Toast.makeText(SplashScreen.this, msg, Toast.LENGTH_SHORT).show();
+            }
 
 
-                });
+        });
     }
 
 
@@ -445,7 +435,7 @@ public class SplashScreen extends AppCompatActivity {
     private void vipMemberPrivileges() {
         App_updating = "inactive";
         Ads_State = "inactive";
-        Login_Times=10;
+        Login_Times = 10;
     }
 
     private void updateStoriesInDB() {
@@ -673,13 +663,7 @@ public class SplashScreen extends AppCompatActivity {
         WindowInsetsControllerCompat windowInsetsCompat = new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
         windowInsetsCompat.hide(WindowInsetsCompat.Type.statusBars());
         windowInsetsCompat.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         }

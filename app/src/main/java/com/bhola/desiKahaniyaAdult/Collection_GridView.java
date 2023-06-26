@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -37,16 +36,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.multidex.BuildConfig;
 import androidx.viewpager.widget.ViewPager;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -60,7 +56,6 @@ import com.google.android.play.core.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -117,7 +112,7 @@ Collection_GridView extends AppCompatActivity {
                 if (SplashScreen.isInternetAvailable(Collection_GridView.this)) {
                     if (!SplashScreen.App_updating.equals("active")) {
                         startActivity(new Intent(Collection_GridView.this, VipMembership.class));
-                    }else{
+                    } else {
                         Toast.makeText(Collection_GridView.this, "coming soon!", Toast.LENGTH_SHORT).show();
 
                     }
@@ -480,6 +475,21 @@ Collection_GridView extends AppCompatActivity {
                         startActivity(intent);
                         drawerLayout.closeDrawer(GravityCompat.START);
                         break;
+
+                    case R.id.menu_VIP:
+                        if (SplashScreen.isInternetAvailable(Collection_GridView.this)) {
+                            if (!SplashScreen.App_updating.equals("active")) {
+                                startActivity(new Intent(Collection_GridView.this, VipMembership.class));
+                            } else {
+                                Toast.makeText(Collection_GridView.this, "coming soon!", Toast.LENGTH_SHORT).show();
+
+                            }
+                        } else {
+                            Toast.makeText(Collection_GridView.this, "Check Internet Connection!", Toast.LENGTH_SHORT).show();
+                        }
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                        break;
+
 
                     case R.id.menu_audio:
                         startActivity(new Intent(getApplicationContext(), OfflineAudioStory.class));

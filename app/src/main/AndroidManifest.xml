@@ -86,6 +86,11 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <service
+            android:name=".TimerService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

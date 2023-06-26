@@ -191,17 +191,17 @@ public class Collection_detail extends AppCompatActivity {
         Cursor cursor = (new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "FakeStory")).readFakeStory(category);
 
         while (cursor.moveToNext()) {
-            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
-            collectonData.add(storyItemModel);
-        }
-        if (SplashScreen.App_updating.equals("active")) {
-            try {
-                collectonData.subList(1, collectonData.size() - 1).clear();
-            } catch (Exception e) {
-                collectonData.clear();
+
+            if (SplashScreen.App_updating.equals("active")) {
+                if (cursor.getPosition() < 3) {
+                    StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
+                    collectonData.add(storyItemModel);
+                }
+            } else {
+                StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), cursor.getString(10), cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
+                collectonData.add(storyItemModel);
             }
         }
-
         cursor.close();
         adapter.notifyDataSetChanged();
         progressBar.setVisibility(View.GONE);
