@@ -119,7 +119,7 @@
                         android:layout_gravity="top|right"
                         android:layout_marginBottom="35dp"
                         android:elevation="10dp"
-                        android:alpha="0.5"
+                        android:alpha="0.8"
                         android:src="@drawable/off" />
 
 
@@ -175,6 +175,7 @@
                 android:id="@+id/closeDialog"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:visibility="invisible"
                 android:layout_gravity="center|bottom"
                 android:layout_marginTop="80dp"
                 android:background="@drawable/cross"

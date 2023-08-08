@@ -366,6 +366,10 @@ public class VipMembership extends AppCompatActivity {
 
     private void exit_dialog() {
 
+        if (mlist_offer == null || mlist_offer.size() == 0) {
+            return;
+        }
+
         getProductDetails("with offer");
         AlertDialog dialog;
 

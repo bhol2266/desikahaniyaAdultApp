@@ -416,7 +416,6 @@ public class SplashScreen extends AppCompatActivity {
                 Vip_Member = false;
                 Toast.makeText(this, "Your Membership has expried", Toast.LENGTH_SHORT).show();
             } else if (newDate.after(currentDate)) {
-
                 Vip_Member = true;
 
             } else if (newDate.before(currentDate)) {

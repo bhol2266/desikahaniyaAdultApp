@@ -7,7 +7,6 @@
     <string name="BannerAd">ca-app-pub-8226562131234590/9285296562</string>
     <string name="RewardedInterstitial">ca-app-pub-8226562131234590/6116497115</string>
     <string name="AppOpen">ca-app-pub-8226562131234590/9588548895</string>
-    <string name="NativeAd">ca-app-pub-8226562131234590/7962861636</string>
     <string name="Interstitial">ca-app-pub-8226562131234590/4215188318</string>
 
 
@@ -15,7 +14,6 @@
 
 <!--        <string name="RewardedInterstitial">ca-app-pub-3940256099942544/5354046379</string>-->
 <!--        <string name="BannerAd">ca-app-pub-3940256099942544/6300978111</string>-->
-<!--        <string name="NativeAd">ca-app-pub-3940256099942544/2247696110</string>-->
 <!--        <string name="AppOpen">.ca-app-pub-3940256099942544/3419835294</string>-->
 <!--        <string name="Interstitial">.ca-app-pub-3940256099942544/1033173712</string>-->
 
@@ -43,4 +41,7 @@
 वक्त बीतता गया और राहुल और प्रियंका का प्यार और विश्वास दिन पर दिन मजबूत होता गया। उन्होंने एक-दूसरे का साथ हमेशा निभाया और मुश्किल समयों में भी एक दूसरे का साथ दिया।
 
 इस ढेर सारे प्यार और विश्वास से भरी कहानी के बाद, राहुल और प्रियंका एक दूसरे के साथ बंधन में बंधे हुए खुशी-खुशी अपनी ज़िंदगी बिता रहे हैं, और हमेशा साथ रहेंगे।</string>
+
+
+
 </resources>
