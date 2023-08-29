@@ -71,6 +71,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String DB_NAME = "desikahaniya";
     public static String exit_Refer_appNavigation = "inactive";
     public static String App_updating = "active";
+    public static String databaseURL = "https://bucket2266.s3.ap-south-1.amazonaws.com/"; //default
     public static String Notification_ImageURL = "https://hotdesipics.co/wp-content/uploads/2022/06/Hot-Bangla-Boudi-Ki-Big-Boobs-Nangi-Selfies-_002.jpg";
     DatabaseReference url_mref;
     public static int Login_Times = 0;
@@ -253,6 +254,7 @@ public class SplashScreen extends AppCompatActivity {
                 Firebase_Version_Code = snapshot.child("version_code").getValue(Integer.class);
                 apk_Downloadlink = (String) snapshot.child("apk_Downloadlink").getValue();
                 update_Mandatory = (boolean) snapshot.child("update_Mandatory").getValue();
+                databaseURL = (String) snapshot.child("databaseURL").getValue();
 
 
                 Handler handler2 = new Handler();
@@ -616,10 +618,10 @@ public class SplashScreen extends AppCompatActivity {
 //        }
 //    }
 
-    public String loadJSONFromAsset(String filename) {
+    public static String loadJSONFromAsset(String filename,Context context) {
         String json = null;
         try {
-            InputStream is = getApplicationContext().getAssets().open(filename + ".json");
+            InputStream is = context.getAssets().open(filename );
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);

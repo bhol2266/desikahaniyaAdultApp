@@ -48,7 +48,7 @@ public class admin_panel extends AppCompatActivity {
     public static int counter = 0;
 
     DatabaseReference mref, notificationMref;  TextView Users_Counters;
-    Button   Refer_App_url_BTN, STory_Switch_Active_BTN;
+    Button   Refer_App_url_BTN, databaseBtn;
     Switch switch_Exit_Nav, switch_Activate_Ads, switch_App_Updating;
     Button Ad_Network;
     static String uncensored_title = "";
@@ -79,6 +79,7 @@ public class admin_panel extends AppCompatActivity {
         switch_App_Updating = findViewById(R.id.App_updating_Switch);
         switch_Exit_Nav = findViewById(R.id.switch_Exit_Nav);
         Refer_App_url_BTN = findViewById(R.id.Refer_App_url_BTN);
+        databaseBtn = findViewById(R.id.databaseBtn);
 
 
         firestore = FirebaseFirestore.getInstance();
@@ -203,6 +204,22 @@ public class admin_panel extends AppCompatActivity {
             }
 
         });
+
+
+        EditText  databaseEdittext = findViewById(R.id.databaseEdittext);
+        databaseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (databaseEdittext.length() > 2) {
+                    mref.child("databaseURL").setValue(databaseEdittext.getText().toString());
+                    Toast.makeText(admin_panel.this, "Databaseurl ADDED", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(admin_panel.this, "Field is Empty", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
         switch_Exit_Nav.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

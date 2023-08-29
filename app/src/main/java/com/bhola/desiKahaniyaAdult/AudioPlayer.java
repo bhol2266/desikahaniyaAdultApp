@@ -1,6 +1,5 @@
 package com.bhola.desiKahaniyaAdult;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -8,7 +7,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -30,11 +28,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
-
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.material.snackbar.Snackbar;
@@ -42,6 +37,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -54,7 +50,7 @@ public class AudioPlayer extends AppCompatActivity {
     TextView loadingMessage;
     MediaPlayer mediaPlayer;
     int pausePosition = -1;
-    String storyURL, storyName,title;
+    String storyURL, storyName, title, audioHref;
     SeekBar seekbar;
     Runnable runnable;
     Handler handler;
@@ -102,6 +98,7 @@ public class AudioPlayer extends AppCompatActivity {
         lottie = findViewById(R.id.lottie);
 
         storyURL = SplashScreen.decryption(getIntent().getStringExtra("storyURL"));
+        audioHref = SplashScreen.decryption(getIntent().getStringExtra("audioHref"));
         title = SplashScreen.decryption(getIntent().getStringExtra("title"));
         storyName = getIntent().getStringExtra("storyName");
         storyTitle.setText(storyName.replace("-", " ").trim());
@@ -183,41 +180,22 @@ public class AudioPlayer extends AppCompatActivity {
             }
         });
 
-        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @SuppressLint("ResourceAsColor")
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                URL_notWorking = true;
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadingMessage.setText("Audio link not working, Please try another story");
-                        loadingMessage.setTextSize(20);
-                        progressbarUnit.setVisibility(View.GONE);
-                    }
-                },1000);
 
-                mp.stop();
-
-                return false;
-            }
-        });
-
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                playBtn.setBackgroundResource(R.drawable.play);
-                if (!URL_notWorking) {
-                    Toast.makeText(AudioPlayer.this, "Finished", Toast.LENGTH_SHORT).show();
-                    try {
-                        onBackPressed();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-        });
+//        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp) {
+//                playBtn.setBackgroundResource(R.drawable.play);
+//                if (!URL_notWorking) {
+//                    Toast.makeText(AudioPlayer.this, "Finished", Toast.LENGTH_SHORT).show();
+//                    try {
+//                        onBackPressed();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//            }
+//        });
 
         updateStoryread();
     }
@@ -233,6 +211,42 @@ public class AudioPlayer extends AppCompatActivity {
                 mediaPlayer.reset();
                 mediaPlayer.setDataSource(storyURL);
                 mediaPlayer.prepareAsync();
+
+                mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                    @SuppressLint("ResourceAsColor")
+                    @Override
+                    public boolean onError(MediaPlayer mp, int what, int extra) {
+
+                        try {
+                            mp.reset(); // Reset the MediaPlayer before loading new data
+                            mediaPlayer.setDataSource(SplashScreen.databaseURL+"Sexstory_Audiofiles/"+audioHref);
+                            mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                @Override
+                                public void onPrepared(MediaPlayer mp) {
+                                    try {
+                                        seekbar.setMax(mediaPlayer.getDuration());
+                                        updateSeekbar();
+                                        setCurrentTime();
+                                        Toast.makeText(AudioPlayer.this, "Playing", Toast.LENGTH_SHORT).show();
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                            mp.prepareAsync();
+                        } catch (IOException e) {
+                            // Handle exceptions related to new audio source
+                            e.printStackTrace();
+                            URL_notWorking = true;
+                            loadingMessage.setText("Audio link not working, trying another URL...");
+                            loadingMessage.setTextSize(20);
+                            progressbarUnit.setVisibility(View.GONE);
+                        }
+                        return false;
+                    }
+                });
+
                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
@@ -461,7 +475,17 @@ public class AudioPlayer extends AppCompatActivity {
     }
 
     private void updateStoryread() {
-        new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updateStoryRead(title, 1);
+
+        for (int i = 0; i < ftab2.collectionData.size(); i++) {
+            if (SplashScreen.decryption(ftab2.collectionData.get(i).getTitle()).equals(title)) {
+                ftab2.collectionData.get(i).setRead(1);
+                ftab2.adapter2.notifyItemChanged(i);
+
+            }
+        }
+
+        String storyFileName = getIntent().getStringExtra("storyFileName");
+        ftab2.save_sharedPrefrence(AudioPlayer.this, ftab2.collectionData, storyFileName);
     }
 
 //Background Async Task to download story
