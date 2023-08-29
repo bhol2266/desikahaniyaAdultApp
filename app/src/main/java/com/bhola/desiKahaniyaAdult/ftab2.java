@@ -39,6 +39,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class ftab2 extends Fragment {
 
@@ -263,7 +264,13 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         ((Story_ROW_viewHolder) holder).title.setText(filename);
-//        ((Story_ROW_viewHolder) holder).date.setText(storyItemModel.getDate());
+        ((Story_ROW_viewHolder) holder).date.setText("2023-06-10");
+
+        Random rn = new Random();
+        int n = 50000 - 5000 + 1;
+        int i = rn.nextInt() % n;
+        int randomNum = 5000 + i;
+        ((Story_ROW_viewHolder) holder).views.setText(String.valueOf(randomNum));
 
 
         if (storyItemModel.getRead() == 1) {

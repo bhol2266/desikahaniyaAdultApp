@@ -216,32 +216,35 @@ public class AudioPlayer extends AppCompatActivity {
                     @SuppressLint("ResourceAsColor")
                     @Override
                     public boolean onError(MediaPlayer mp, int what, int extra) {
+                        if (mediaPlayer != null) {
 
-                        try {
-                            mp.reset(); // Reset the MediaPlayer before loading new data
-                            mediaPlayer.setDataSource(SplashScreen.databaseURL+"Sexstory_Audiofiles/"+audioHref);
-                            mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                @Override
-                                public void onPrepared(MediaPlayer mp) {
-                                    try {
-                                        seekbar.setMax(mediaPlayer.getDuration());
-                                        updateSeekbar();
-                                        setCurrentTime();
-                                        Toast.makeText(AudioPlayer.this, "Playing", Toast.LENGTH_SHORT).show();
 
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                            try {
+                                mp.reset(); // Reset the MediaPlayer before loading new data
+                                mediaPlayer.setDataSource(SplashScreen.databaseURL + "Sexstory_Audiofiles/" + audioHref);
+                                mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                    @Override
+                                    public void onPrepared(MediaPlayer mp) {
+                                        try {
+                                            seekbar.setMax(mediaPlayer.getDuration());
+                                            updateSeekbar();
+                                            setCurrentTime();
+                                            Toast.makeText(AudioPlayer.this, "Playing", Toast.LENGTH_SHORT).show();
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                }
-                            });
-                            mp.prepareAsync();
-                        } catch (IOException e) {
-                            // Handle exceptions related to new audio source
-                            e.printStackTrace();
-                            URL_notWorking = true;
-                            loadingMessage.setText("Audio link not working, trying another URL...");
-                            loadingMessage.setTextSize(20);
-                            progressbarUnit.setVisibility(View.GONE);
+                                });
+                                mp.prepareAsync();
+                            } catch (IOException e) {
+                                // Handle exceptions related to new audio source
+                                e.printStackTrace();
+                                URL_notWorking = true;
+                                loadingMessage.setText("Audio link not working, trying another URL...");
+                                loadingMessage.setTextSize(20);
+                                progressbarUnit.setVisibility(View.GONE);
+                            }
                         }
                         return false;
                     }
