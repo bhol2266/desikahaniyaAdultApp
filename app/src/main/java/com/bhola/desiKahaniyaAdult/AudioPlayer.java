@@ -181,21 +181,21 @@ public class AudioPlayer extends AppCompatActivity {
         });
 
 
-//        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp) {
-//                playBtn.setBackgroundResource(R.drawable.play);
-//                if (!URL_notWorking) {
-//                    Toast.makeText(AudioPlayer.this, "Finished", Toast.LENGTH_SHORT).show();
-//                    try {
-//                        onBackPressed();
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//            }
-//        });
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                playBtn.setBackgroundResource(R.drawable.play);
+                if (!URL_notWorking) {
+                    Toast.makeText(AudioPlayer.this, "Finished", Toast.LENGTH_SHORT).show();
+                    try {
+                        onBackPressed();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
 
         updateStoryread();
     }
@@ -218,10 +218,9 @@ public class AudioPlayer extends AppCompatActivity {
                     public boolean onError(MediaPlayer mp, int what, int extra) {
                         if (mediaPlayer != null) {
 
-
                             try {
                                 mp.reset(); // Reset the MediaPlayer before loading new data
-                                mediaPlayer.setDataSource(SplashScreen.databaseURL + "Sexstory_Audiofiles/" + audioHref);
+                                mediaPlayer.setDataSource(SplashScreen.databaseURL + "Sexstory_Audiofiles/" + audioHref + ".mp3");
                                 mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                     @Override
                                     public void onPrepared(MediaPlayer mp) {
@@ -386,17 +385,25 @@ public class AudioPlayer extends AppCompatActivity {
         try {
             loadAds();
             handler.removeCallbacks(runnable); // Seekbar handler
-            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                Toast.makeText(AudioPlayer.this, "Stopped", Toast.LENGTH_SHORT).show();
-            }
-            if (mediaPlayer != null) {
-                mediaPlayer.stop();
-                mediaPlayer = null;
-            }
+
+
         } catch (Exception e) {
             Log.d("TAGA", "onBackPressed: " + e.getMessage());
         }
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                Log.d("TAGA", "onStop: " + mediaPlayer.isPlaying());
+            }
+            mediaPlayer.release();
+            mediaPlayer = null;
+
+        }
     }
 
 
@@ -479,16 +486,10 @@ public class AudioPlayer extends AppCompatActivity {
 
     private void updateStoryread() {
 
-        for (int i = 0; i < ftab2.collectionData.size(); i++) {
-            if (SplashScreen.decryption(ftab2.collectionData.get(i).getTitle()).equals(title)) {
-                ftab2.collectionData.get(i).setRead(1);
-                ftab2.adapter2.notifyItemChanged(i);
+        int position = getIntent().getIntExtra("position", 0); // defaultValue is the value to be used if the key doesn't exist
 
-            }
-        }
-
-        String storyFileName = getIntent().getStringExtra("storyFileName");
-        ftab2.save_sharedPrefrence(AudioPlayer.this, ftab2.collectionData, storyFileName);
+        ftab2.adapter2.notifyItemChanged(position);
+        new DatabaseHelper(this, SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").updateStoryRead(title, 1);
     }
 
 //Background Async Task to download story

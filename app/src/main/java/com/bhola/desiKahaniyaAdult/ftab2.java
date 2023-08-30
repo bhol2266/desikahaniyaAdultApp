@@ -1,13 +1,16 @@
 package com.bhola.desiKahaniyaAdult;
 
-import static android.content.Context.MODE_PRIVATE;
-
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,37 +26,37 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
+import com.facebook.ads.AudienceNetworkAds;
+import com.google.android.ads.nativetemplates.NativeTemplateStyle;
 import com.google.android.ads.nativetemplates.TemplateView;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
-import com.google.common.reflect.TypeToken;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ftab2 extends Fragment {
 
     List<String> storyURL;
     List<String> storyName;
-    public static AudioStory_Details_Adapter adapter2;
+   public static AudioStory_Details_Adapter adapter2;
     StorageReference mStorageReference;
     ProgressBar progressBar2;
     RecyclerView recyclerView;
     FirebaseAuth mAuth;
     String TAG = "TAGA";
-    Context context;
     boolean storyLocked = false;
-    public static ArrayList<Audio_Model> collectionData;
 
 
     public ftab2() {
@@ -67,7 +70,6 @@ public class ftab2 extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ftab2, container, false);
 
-        context = view.getContext();
         storyURL = new ArrayList<String>();
         storyName = new ArrayList<String>();
         progressBar2 = view.findViewById(R.id.progressBar2);
@@ -77,10 +79,9 @@ public class ftab2 extends Fragment {
 
         loadAudioDatabase(view);
 
-        if (!SplashScreen.isInternetAvailable(getContext())) {
+        if (!isInternetAvailable(getContext())) {
             Toast.makeText(getContext(), "Check Internet Connection!", Toast.LENGTH_SHORT).show();
         } else {
-
         }
         return view;
     }
@@ -88,37 +89,36 @@ public class ftab2 extends Fragment {
 
     private void loadAudioDatabase(View view) {
 
-        collectionData = new ArrayList<Audio_Model>();
+
+        ArrayList<Object> collectionData = new ArrayList<Object>();
         Cursor cursor;
         if (SplashScreen.App_updating.equals("active")) {
             //fake content while upadting app
-
-            readStoryFromJson("Fake");
-            Collections.shuffle(collectionData);
+            cursor = new DatabaseHelper(getActivity(), SplashScreen.DB_NAME, SplashScreen.DB_VERSION, SplashScreen.DB_TABLE_NAME).readAudioStories("Audio_Story_Fake");
 
         } else {
 
             if (SplashScreen.Login_Times < 4) {
                 //Mixed content
-                readStoryFromJson("Fake");
-                readStoryFromJson("Censored");
-                Collections.shuffle(collectionData);
+                cursor = new DatabaseHelper(getActivity(), SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "FakeStory").readAudioStories("mix");
 
-            } else if (SplashScreen.Login_Times < 6) {
-                // censored Content
-                readStoryFromJson("Censored");
-                readStoryFromJson("All");
-
-                storyLocked = true;
-
-            } else {
+            }  else {
                 // full Content
-                readStoryFromJson("All");
+                cursor = new DatabaseHelper(getActivity(), SplashScreen.DB_NAME, SplashScreen.DB_VERSION, "StoryItems").readAudioStories("AdultContent");
                 storyLocked = true;
+
             }
         }
 
+        while (cursor.moveToNext()) {
+            StoryItemModel storyItemModel = new StoryItemModel(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getInt(9), "cursor.getString(10)", cursor.getInt(11), cursor.getInt(12), cursor.getString(13), cursor.getInt(14));
+            collectionData.add(storyItemModel);
+        }
 
+        cursor.close();
+        if (SplashScreen.Login_Times < 4) {
+            Collections.shuffle(collectionData);
+        }
         if (SplashScreen.App_updating.equals("active")) {
             collectionData.clear();
         }
@@ -130,102 +130,43 @@ public class ftab2 extends Fragment {
 
     }
 
-    private void readStoryFromJson(String story_type) {
 
-        String filename = "";
-        if (story_type.equals("Fake")) {
-            filename = "audiostories_f.json";
-        }
-        if (story_type.equals("Censored")) {
-            filename = "audiostories_c.json";
-        }
-        if (story_type.equals("All")) {
-            filename = "audiostories_a.json";
-        }
-
-        boolean dataAvailable = retreive_sharedPreferences(filename.replace(".json", ""), context);
-
-        if (!dataAvailable) {
-            String json = SplashScreen.loadJSONFromAsset(filename, context);
-            try {
-
-                ArrayList<Audio_Model> tempList = new ArrayList<Audio_Model>();
-                JSONArray jsonArray = new JSONArray(json);
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                    int like = jsonObject.getInt("Like");
-                    int read = jsonObject.getInt("Read");
-                    String title = jsonObject.getString("Title");
-                    String fileName = jsonObject.getString("filename");
-                    String audiolink = jsonObject.getString("audiolink");
-                    String href = jsonObject.getString("href");
-
-                    Audio_Model myItem = new Audio_Model();
-                    myItem.setLike(like);
-                    myItem.setRead(read);
-                    myItem.setTitle(title);
-                    myItem.setAudiolink(audiolink);
-                    myItem.setHref(href);
-                    myItem.setStoryFileName(fileName);
+    boolean isInternetAvailable(Context context) {
+        if (context == null) return false;
 
 
-                    tempList.add(myItem);
-                    // Now you can use the myItem object as needed
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager != null) {
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+                if (capabilities != null) {
+                    if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                        return true;
+                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                        return true;
+                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                        return true;
+                    }
                 }
+            } else {
 
-                save_sharedPrefrence(context, tempList, filename);
-                collectionData.addAll(tempList);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
+                try {
+                    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                    if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                        Log.i("update_statut", "Network is available : true");
+                        return true;
+                    }
+                } catch (Exception e) {
+                    Log.i("aaaaaaaaaaaaaaaaa", "" + e.getMessage());
+                }
             }
-
         }
-
+        return false;
     }
 
-
-    public static boolean retreive_sharedPreferences(String filename, Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("audio_stories", MODE_PRIVATE);
-        String json = sharedPreferences.getString(filename, null);
-        Gson gson = new Gson();
-        Type type = new TypeToken<ArrayList<Audio_Model>>() {
-        }.getType();
-
-
-        if (json == null) {
-            // Handle case when no ArrayList is saved in SharedPreferences
-            return false;
-        } else {
-            ArrayList<Audio_Model> tempList = new ArrayList<Audio_Model>();
-            tempList = gson.fromJson(json, type);
-            collectionData.addAll(tempList);
-
-            return true;
-        }
-
-
-    }
-
-
-    public static void save_sharedPrefrence(Context context, ArrayList<Audio_Model> iemList, String filename) {
-
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences("audio_stories", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-
-// Convert the ArrayList to JSON string
-        Gson gson = new Gson();
-        String json = gson.toJson(iemList);
-
-// Save the JSON string to SharedPreferences
-        editor.putString(filename, json);
-        editor.apply();
-
-    }
 }
 
 
@@ -235,13 +176,14 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
     boolean storyLocked;
     RewardedInterstitialAd mRewardedVideoAd;
     com.facebook.ads.InterstitialAd facebook_IntertitialAds;
-    ArrayList<Audio_Model> collectionData = new ArrayList<Audio_Model>();
+    ArrayList<Object> collectionData = new ArrayList<Object>();
 
 
-    public AudioStory_Details_Adapter(ArrayList<Audio_Model> data, FragmentActivity activity, boolean storyLocked) {
+    public AudioStory_Details_Adapter(ArrayList<Object> data, FragmentActivity activity, boolean storyLocked) {
         this.context = activity;
         this.collectionData = data;
         this.storyLocked = storyLocked;
+
     }
 
     @NonNull
@@ -257,27 +199,22 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
         int POSITION = position;
 
 //        AudioModel model = (AudioModel) collectionData.get(position);
-        Audio_Model storyItemModel = (Audio_Model) collectionData.get(position);
+        StoryItemModel storyItemModel = (StoryItemModel) collectionData.get(position);
 
         String filename = SplashScreen.decryption(storyItemModel.getTitle().replace("-", " ").trim());
         ((Story_ROW_viewHolder) holder).imageview.setImageResource(R.drawable.mp3);
 
 
         ((Story_ROW_viewHolder) holder).title.setText(filename);
-        ((Story_ROW_viewHolder) holder).date.setText("2023-06-10");
-
-        Random rn = new Random();
-        int n = 50000 - 5000 + 1;
-        int i = rn.nextInt() % n;
-        int randomNum = 5000 + i;
-        ((Story_ROW_viewHolder) holder).views.setText(String.valueOf(randomNum));
-
+        ((Story_ROW_viewHolder) holder).date.setText(storyItemModel.getDate());
+        ((Story_ROW_viewHolder) holder).views.setText(storyItemModel.getViews());
 
         if (storyItemModel.getRead() == 1) {
             ((Story_ROW_viewHolder) holder).title.setTextColor(Color.parseColor("#9A3412"));
         } else {
             ((Story_ROW_viewHolder) holder).title.setTextColor(Color.parseColor("#374151"));
         }
+
         if (!SplashScreen.Vip_Member && storyLocked) {
             if (holder.getAbsoluteAdapterPosition() > 1) {
                 ((Story_ROW_viewHolder) holder).lock.setVisibility(View.VISIBLE);
@@ -296,13 +233,14 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     Toast.makeText(context, "Become DesiKahani Member to listen this story", Toast.LENGTH_SHORT).show();
                     context.startActivity(new Intent(context, VipMembership.class));
                 } else {
-                    if (SplashScreen.isInternetAvailable(v.getContext())) {
+
+                    if (isInternetAvailable()) {
                         Intent intent = new Intent(context, AudioPlayer.class);
                         intent.putExtra("storyURL", storyItemModel.getAudiolink());
                         intent.putExtra("storyName", filename);
-                        intent.putExtra("storyFileName", storyItemModel.getStoryFileName());
                         intent.putExtra("audioHref", storyItemModel.getHref());
                         intent.putExtra("title", storyItemModel.getTitle());
+                        intent.putExtra("position", holder.getAbsoluteAdapterPosition());
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         v.getContext().startActivity(intent);
                     } else {
@@ -313,6 +251,41 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             }
 
+            boolean isInternetAvailable() {
+                if (context == null) return false;
+
+
+                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                if (connectivityManager != null) {
+
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+                        if (capabilities != null) {
+                            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                                return true;
+                            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                                return true;
+                            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                                return true;
+                            }
+                        }
+                    } else {
+
+                        try {
+                            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                                Log.i("update_statut", "Network is available : true");
+                                return true;
+                            }
+                        } catch (Exception e) {
+                            Log.i("update_statut", "" + e.getMessage());
+                        }
+                    }
+                }
+                Log.i("update_statut", "Network is available : FALSE ");
+                return false;
+            }
         });
 
 //        if (SplashScreen.Ads_State.equals("active")) {
@@ -321,6 +294,7 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
     }
+
 
 
     @Override
@@ -334,6 +308,7 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView date;
         TextView views;
         ImageView lock;
+
         ImageView imageview;
         LinearLayout recyclerview;
         TemplateView template;
@@ -353,75 +328,5 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 }
-
-class Audio_Model {
-    private int Like;
-    private int Read;
-    private String Title;
-    private String StoryFileName;
-    private String audiolink;
-    private String href;
-
-    public Audio_Model() {
-    }
-
-    public Audio_Model(int like, int read, String title, String storyFileName, String audiolink, String href) {
-        Like = like;
-        Read = read;
-        Title = title;
-        StoryFileName = storyFileName;
-        this.audiolink = audiolink;
-        this.href = href;
-    }
-
-    public int getLike() {
-        return Like;
-    }
-
-    public void setLike(int like) {
-        Like = like;
-    }
-
-    public int getRead() {
-        return Read;
-    }
-
-    public void setRead(int read) {
-        Read = read;
-    }
-
-    public String getTitle() {
-        return Title;
-    }
-
-    public void setTitle(String title) {
-        Title = title;
-    }
-
-    public String getStoryFileName() {
-        return StoryFileName;
-    }
-
-    public void setStoryFileName(String storyFileName) {
-        StoryFileName = storyFileName;
-    }
-
-    public String getAudiolink() {
-        return audiolink;
-    }
-
-    public void setAudiolink(String audiolink) {
-        this.audiolink = audiolink;
-    }
-
-    public String getHref() {
-        return href;
-    }
-
-    public void setHref(String href) {
-        this.href = href;
-    }
-}
-
 
 

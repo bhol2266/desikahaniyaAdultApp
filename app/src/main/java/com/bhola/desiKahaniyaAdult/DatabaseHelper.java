@@ -154,18 +154,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor readAudioStories(String category) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor;
+
         if (category.equals("AdultContent")) {
-            //all means full adunt contents from StoryItems table
+            //all means full adult contents from StoryItems table
 
             cursor = db.query(Database_tableNo, null, "audio=?", new String[]{"1"}, null, null, "completeDate DESC", null);
         } else {
 
-            if (category.equals("mix")) {
-                //all means both "Audio_Story_Fake" and "Audio_Story"
-                cursor = db.query(Database_tableNo, null, "audio=?", new String[]{"1"}, null, null, null, "30");
-            } else {
-                cursor = db.query(Database_tableNo, null, "category=?", new String[]{category}, null, null, null, null);
-            }
+            cursor = db.query(Database_tableNo, null, "audio=?", new String[]{"1"}, null, null, null, null);
+
         }
 
         return cursor;

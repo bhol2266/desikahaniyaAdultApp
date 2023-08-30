@@ -84,7 +84,7 @@ public class SplashScreen extends AppCompatActivity {
     public static int DB_VERSION = 1;//manual set
     public static int currentApp_Version = 3;//manual set
     public static int Firebase_Version_Code = 1;//manual set
-    public static int DB_VERSION_INSIDE_TABLE = 1; //manual set
+    public static int DB_VERSION_INSIDE_TABLE = 2; //manual set
     Handler handlerr;
 
     public static String apk_Downloadlink = "";
