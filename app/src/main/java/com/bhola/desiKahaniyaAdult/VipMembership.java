@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.InsetDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -109,30 +110,6 @@ public class VipMembership extends AppCompatActivity {
     }
 
 
-    private void checkTimeRunning() {
-        isTimerRunning = isServiceRunning(TimerService.class);
-        Log.d(SplashScreen.TAG, "checkTimeRunning: " + isTimerRunning);
-        if (isTimerRunning) {
-            backpressCount = 1;
-            timerUpdateReceiverCheck = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    long remainingTime = intent.getLongExtra("remainingTime", 0);
-                    updateTimerTextView(remainingTime);
-                }
-            };
-
-
-            IntentFilter filter = new IntentFilter();
-            filter.addAction("timer-update");
-            filter.addAction("timer-finish");
-
-            registerReceiver(timerUpdateReceiverCheck, filter);
-
-        }
-
-
-    }
 
     void connectGooglePlayBilling() {
         billingClient.startConnection(new BillingClientStateListener() {
@@ -490,6 +467,37 @@ public class VipMembership extends AppCompatActivity {
 
     }
 
+    private void checkTimeRunning() {
+        isTimerRunning = isServiceRunning(TimerService.class);
+        Log.d(SplashScreen.TAG, "checkTimeRunning: " + isTimerRunning);
+        if (isTimerRunning) {
+            backpressCount = 1;
+            timerUpdateReceiverCheck = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    long remainingTime = intent.getLongExtra("remainingTime", 0);
+                    updateTimerTextView(remainingTime);
+                }
+            };
+
+
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("timer-update");
+            filter.addAction("timer-finish");
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(timerUpdateReceiverCheck, filter, Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                registerReceiver(timerUpdateReceiverCheck, filter);
+            }
+
+        }
+
+
+    }
+
+
     private void startOfferTimer() {
 
 
@@ -506,7 +514,13 @@ public class VipMembership extends AppCompatActivity {
         filter.addAction("timer-update");
         filter.addAction("timer-finish");
 
-        registerReceiver(timerUpdateReceiver, filter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            registerReceiver(timerUpdateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(timerUpdateReceiver, filter);
+        }
+
+
 
         Intent intent = new Intent(this, TimerService.class);
         startService(intent);
