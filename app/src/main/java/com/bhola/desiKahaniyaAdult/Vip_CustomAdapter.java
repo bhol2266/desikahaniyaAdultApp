@@ -2,6 +2,7 @@ package com.bhola.desiKahaniyaAdult;
 
 import android.app.Activity;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,12 +68,14 @@ public class Vip_CustomAdapter extends BaseAdapter {
 
 
         ProductDetails productDetails = productDetailsList.get(i);
+
+
         if(offer.equals("with offer")){
             productDetails=mlist_offer.get(i);
         }
 
-        title.setText(productDetails.getTitle());
-        price.setText(productDetails.getOneTimePurchaseOfferDetails().getFormattedPrice().replace(".00", ""));
+        title.setText(productDetails.getTitle().replace("(Desi Kahani - Audio story)",""));
+        price.setText(productDetails.getSubscriptionOfferDetails().get(0).getPricingPhases().getPricingPhaseList().get(0).getFormattedPrice().replace(".00", ""));
         if (i == 0) {
             membershipType.setText("limited peroid");
         } else if (i == 1) {
@@ -85,7 +88,7 @@ public class Vip_CustomAdapter extends BaseAdapter {
         if (offer.equals("with offer")) {
             ProductDetails productDetails1 = productDetailsList.get(i);
             mrp.setVisibility(View.VISIBLE);
-            mrp.setText(productDetails1.getOneTimePurchaseOfferDetails().getFormattedPrice().replace(".00", ""));
+            mrp.setText(productDetails1.getSubscriptionOfferDetails().get(0).getPricingPhases().getPricingPhaseList().get(0).getFormattedPrice().replace(".00", ""));
             mrp.setPaintFlags(mrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -104,6 +107,8 @@ public class Vip_CustomAdapter extends BaseAdapter {
                                 BillingFlowParams.ProductDetailsParams.newBuilder()
                                         // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
                                         .setProductDetails(finalProductDetails)
+                                        .setOfferToken(finalProductDetails.getSubscriptionOfferDetails().get(0).getOfferToken())
+
                                         // to get an offer token, call ProductDetails.getSubscriptionOfferDetails()
                                         // for a list of offers that are available to the user
                                         .build()

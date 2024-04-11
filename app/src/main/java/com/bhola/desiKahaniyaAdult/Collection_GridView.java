@@ -121,6 +121,7 @@ Collection_GridView extends AppCompatActivity {
                 }
             }
         });
+        startActivity(new Intent(Collection_GridView.this, VipMembership.class));
     }
 
     private void showAds() {
