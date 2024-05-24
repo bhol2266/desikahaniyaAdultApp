@@ -271,12 +271,8 @@ public class Collection_detail extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (SplashScreen.isInternetAvailable(Collection_detail.this)) {
-                    if (!SplashScreen.App_updating.equals("active")) {
-                        startActivity(new Intent(Collection_detail.this, VipMembership.class));
-                    } else {
-                        Toast.makeText(Collection_detail.this, "coming soon!", Toast.LENGTH_SHORT).show();
-
-                    }                } else {
+                    startActivity(new Intent(Collection_detail.this, VipMembership.class));
+                } else {
                     Toast.makeText(Collection_detail.this, "Check Internet Connection!", Toast.LENGTH_SHORT).show();
                 }
             }
