@@ -109,6 +109,9 @@ public class Notification_Story_Detail extends AppCompatActivity {
         back = findViewById(R.id.back_arrow);
         back.setOnClickListener(v -> onBackPressed());
         ImageView VipMembership = findViewById(R.id.VipLottie);
+        if (SplashScreen.App_updating.equals("active")) {
+            VipMembership.setVisibility(View.GONE);
+        }
         VipMembership.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
