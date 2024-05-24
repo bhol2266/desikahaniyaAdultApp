@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,6 +28,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.billingclient.api.AcknowledgePurchaseParams;
@@ -120,16 +125,17 @@ public class VipMembership extends AppCompatActivity {
                     public void run() {
 
                         int Validity_period = 0;
-
-                        if (purchase.getProducts().get(0).equals("1_month") || purchase.getProducts().get(0).equals("1_month_offer")) {
+                        Log.d("sdafasdfsdaf", "run: "+purchase.getProducts().get(0));
+                        if (purchase.getProducts().get(0).contains("vip_1")) {
                             Validity_period = 30;
-                        } else if (purchase.getProducts().get(0).equals("3_months") || purchase.getProducts().get(0).equals("3_months_offer")) {
+                        } else if (purchase.getProducts().get(0).contains("vip_3")) {
                             Validity_period = 90;
-                        } else {
+                        } else if (purchase.getProducts().get(0).contains("vip_12")){
                             Validity_period = 365;
-
+                        }else{
+                            //lifetime
+                            Validity_period = 3650;
                         }
-                        Log.d("Validity_period", "Validity_period: "+Validity_period);
 
                         savePurchaseDetails_inSharedPreference(purchase.getPurchaseToken(), Validity_period, purchase.getPurchaseTime());
 
@@ -166,7 +172,7 @@ public class VipMembership extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         offerTimer = findViewById(R.id.offerTimer);
 
-
+        fullscreenMode();
 
 
 
@@ -227,19 +233,22 @@ public class VipMembership extends AppCompatActivity {
         List<String> productIds = new ArrayList<>();
         List<QueryProductDetailsParams.Product> list = new ArrayList<>();
 
-        productIds.add("1_month");
-        productIds.add("1_month_offer");
-        productIds.add("3_months");
-        productIds.add("3_months_offer");
-        productIds.add("12_months");
-        productIds.add("12_months_offer");
+        productIds.add("vip_1");
+        productIds.add("vip_3");
+        productIds.add("vip_12");
+        productIds.add("vip_1_offer");
+        productIds.add("vip_3_offer");
+        productIds.add("vip_12_offer");
+
+        productIds.add("vip_lifetime_offer");
+        productIds.add("vip_lifetime");
 
 // Add more product IDs as needed
 
         QueryProductDetailsParams.Builder queryBuilder = QueryProductDetailsParams.newBuilder();
 
         for (String productId : productIds) {
-            QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder().setProductId(productId).setProductType(BillingClient.ProductType.SUBS).build();
+            QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder().setProductId(productId).setProductType(BillingClient.ProductType.INAPP).build();
             list.add(product);
         }
         queryBuilder.setProductList(list);
@@ -267,40 +276,47 @@ public class VipMembership extends AppCompatActivity {
 
     private void createListView(List<ProductDetails> productDetailsList, String offer) {
 
-
         ArrayList<ProductDetails> mlist = new ArrayList<ProductDetails>();
         mlist_offer = new ArrayList<ProductDetails>();
 
         for (ProductDetails productDetails : productDetailsList) {
-            if (productDetails.getProductId().equals("1_month")) {
+            if (productDetails.getProductId().equals("vip_1")) {
                 mlist.add(productDetails);
             }
-            if (productDetails.getProductId().equals("1_month_offer")) {
+            if (productDetails.getProductId().equals("vip_1_offer")) {
                 mlist_offer.add(productDetails);
             }
-
         }
+
         for (ProductDetails productDetails : productDetailsList) {
-            if (productDetails.getProductId().equals("3_months")) {
+            if (productDetails.getProductId().equals("vip_3")) {
                 mlist.add(productDetails);
             }
-            if (productDetails.getProductId().equals("3_months_offer")) {
+            if (productDetails.getProductId().equals("vip_3_offer")) {
                 mlist_offer.add(productDetails);
             }
-
         }
+
         for (ProductDetails productDetails : productDetailsList) {
-            if (productDetails.getProductId().equals("12_months")) {
+            if (productDetails.getProductId().equals("vip_12")) {
                 mlist.add(productDetails);
             }
-            if (productDetails.getProductId().equals("12_months_offer")) {
+            if (productDetails.getProductId().equals("vip_12_offer")) {
+                mlist_offer.add(productDetails);
+            }
+        }
+
+        for (ProductDetails productDetails : productDetailsList) {
+            if (productDetails.getProductId().equals("vip_lifetime")) {
+                mlist.add(productDetails);
+            }
+            if (productDetails.getProductId().equals("vip_lifetime_offer")) {
                 mlist_offer.add(productDetails);
             }
 
         }
 
 
-        Log.d(SplashScreen.TAG, "createListView: "+mlist);
         ListView listView = findViewById(R.id.pricelist);
         Vip_CustomAdapter vipMembershipAdapter = new Vip_CustomAdapter(VipMembership.this, mlist, billingClient, progressBar, offer, mlist_offer);
         listView.setAdapter(vipMembershipAdapter);
@@ -402,7 +418,7 @@ public class VipMembership extends AppCompatActivity {
         TextView productName = promptView.findViewById(R.id.productName);
 
         productName.setText(productDetails.getTitle());
-        price.setText(productDetails.getSubscriptionOfferDetails().get(0).getPricingPhases().getPricingPhaseList().get(0).getFormattedPrice().replace(".00", ""));
+        price.setText(productDetails.getOneTimePurchaseOfferDetails().getFormattedPrice().replace(".00", ""));
         buyNowTimer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -414,7 +430,6 @@ public class VipMembership extends AppCompatActivity {
                                 BillingFlowParams.ProductDetailsParams.newBuilder()
                                         // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
                                         .setProductDetails(productDetails)
-                                        .setOfferToken(productDetails.getSubscriptionOfferDetails().get(0).getOfferToken())
                                         // to get an offer token, call ProductDetails.getSubscriptionOfferDetails()
                                         // for a list of offers that are available to the user
                                         .build()
@@ -442,8 +457,6 @@ public class VipMembership extends AppCompatActivity {
                                 BillingFlowParams.ProductDetailsParams.newBuilder()
                                         // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
                                         .setProductDetails(productDetails)
-                                        .setOfferToken(productDetails.getSubscriptionOfferDetails().get(0).getOfferToken())
-
                                         // to get an offer token, call ProductDetails.getSubscriptionOfferDetails()
                                         // for a list of offers that are available to the user
                                         .build()
@@ -482,7 +495,7 @@ public class VipMembership extends AppCompatActivity {
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                registerReceiver(timerUpdateReceiverCheck, filter, Context.RECEIVER_NOT_EXPORTED);
+                registerReceiver(timerUpdateReceiverCheck, filter, Context.RECEIVER_EXPORTED);
             } else {
                 registerReceiver(timerUpdateReceiverCheck, filter);
             }
@@ -510,7 +523,7 @@ public class VipMembership extends AppCompatActivity {
         filter.addAction("timer-finish");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            registerReceiver(timerUpdateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(timerUpdateReceiver, filter, Context.RECEIVER_EXPORTED);
         } else {
             registerReceiver(timerUpdateReceiver, filter);
         }
@@ -587,6 +600,51 @@ public class VipMembership extends AppCompatActivity {
     }
 
 
+    private void fullscreenMode() {
+        // Clear any fullscreen flags affecting both status bar and navigation bar
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        // Ensure the content fits the window
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        // Create WindowInsetsControllerCompat to manage system bars visibility
+        WindowInsetsControllerCompat windowInsetsCompat = new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
+
+        // Hide only the status bar
+        windowInsetsCompat.hide(WindowInsetsCompat.Type.statusBars());
+
+        // Set the behavior for showing system bars transiently by swipe
+        windowInsetsCompat.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+
+        // Ensure the navigation bar remains visible
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        );
+
+        // Set the navigation bar color
+//        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.vip_membership_goldcolor));
+
+        // For devices with display cutouts, allow content to layout in cutout areas if needed
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        }
+
+        // Handle older Android versions
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            // Clear any previously set fullscreen flag
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+            // Hide status bar for older versions
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                            View.SYSTEM_UI_FLAG_FULLSCREEN | // Hide the status bar
+                            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            );
+        }
+    }
 
 
 }

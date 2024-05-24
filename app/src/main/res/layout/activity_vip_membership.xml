@@ -155,7 +155,7 @@
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
             android:paddingRight="10dp"
-            android:text="Recurring billing, cancel anytime. By tapping Subscribe, your payment will be charged to your Google account, and your subscription will automatically renew for the same package length at the same price until you cancel on your Google account settings at least 24 hours prior to the end of the current period. By tapping Continue, you agree to our"
+            android:text="One time payment. By tapping Continue, your payment will be charged to your Google account, and your purchase is refundable within 24 hrs if something goes wrong. By tapping Continue, you agree to our"
             android:textAlignment="center"
             android:textColor="@color/semi_black"
             android:textSize="12dp" />
@@ -207,7 +207,7 @@
             android:layout_margin="7dp"
             android:fontFamily="@font/inter"
             android:text="Offer ends in 59:00"
-            android:textColor="@color/gnt_gray"
+            android:textColor="#DF2A1C"
             android:textSize="16dp"
             android:visibility="gone" />
 
