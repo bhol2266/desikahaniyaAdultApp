@@ -1,37 +1,27 @@
 {
   "project_info": {
-    "project_number": "438889328070",
-    "firebase_url": "https://desikahani-c7af3-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "desikahani-c7af3",
-    "storage_bucket": "desikahani-c7af3.appspot.com"
+    "project_number": "503994863341",
+    "firebase_url": "https://adultdesikahaniya-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "adultdesikahaniya",
+    "storage_bucket": "adultdesikahaniya.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:438889328070:android:b551f844092068e566d6c7",
+        "mobilesdk_app_id": "1:503994863341:android:dec8b190ea3d06a00946e4",
         "android_client_info": {
-          "package_name": "com.bhola.desiKahaniyaAdult"
+          "package_name": "com.sgs.desiKahaniyaAdult"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "438889328070-j96eon7uo3n11eu79upinnb5gs6mfg82.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDhu8mrpzMK1I6TrH45KzZH7GgrgaJv94w"
+          "current_key": "AIzaSyBrVNu1ErI85NHwms3bx5IYpdVqivkYgvA"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "438889328070-j96eon7uo3n11eu79upinnb5gs6mfg82.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

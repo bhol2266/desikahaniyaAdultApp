@@ -37,7 +37,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:srcCompat="@drawable/back_arrow"
-                app:tint="#9A3412" />
+                app:tint="@color/textcolor" />
 
 
             <TextView
@@ -94,7 +94,6 @@
             android:id="@+id/scrollview_story_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFF9F0"
             android:elevation="20dp"
             android:orientation="vertical"
             android:padding="5dp">
@@ -108,7 +107,7 @@
                 android:fontFamily="@font/kalam_regular"
                 android:gravity="center"
                 android:text="Story Title"
-                android:textColor="#9A3412"
+                android:textColor="@color/textcolor"
                 android:textSize="25dp"
                 android:textStyle="bold" />
 
@@ -164,7 +163,7 @@
                             android:fontFamily="@font/kalam_regular"
                             android:gravity="center"
                             android:text="ईश कहानी के कुछ और भाग"
-                            android:textColor="#9A3412"
+                            android:textColor="@color/textcolor"
                             android:textSize="20dp"
                             android:textStyle="bold" />
 
@@ -186,7 +185,7 @@
                             android:fontFamily="@font/kalam_regular"
                             android:gravity="center"
                             android:text="ऐसी ही कुछ और कहानियाँ"
-                            android:textColor="#9A3412"
+                            android:textColor="@color/textcolor"
                             android:textSize="20dp"
                             android:textStyle="bold" />
 
@@ -209,7 +208,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        android:backgroundTint="#FED7AA"
+        android:backgroundTint="@color/themeColorextralight"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -222,7 +221,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="#FED7AA"
+        android:backgroundTint="@color/themeColorextralight"
         android:clickable="true"
         android:focusable="true"
         android:visibility="invisible"
@@ -237,7 +236,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="#FED7AA"
+        android:backgroundTint="@color/themeColorextralight"
 
         android:clickable="true"
         android:focusable="true"
@@ -253,7 +252,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="#FED7AA"
+        android:backgroundTint="@color/themeColorextralight"
         android:clickable="true"
         android:focusable="true"
         android:visibility="invisible"
@@ -268,7 +267,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="#FED7AA"
+        android:backgroundTint="@color/themeColorextralight"
         android:clickable="true"
         android:focusable="true"
         android:visibility="invisible"

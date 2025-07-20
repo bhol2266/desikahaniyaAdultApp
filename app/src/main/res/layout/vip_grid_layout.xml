@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/hooverffext"
     app:cardCornerRadius="10dp"
-    app:neumorph_shadowColorDark="@color/themeColorextralight">
+  >
 
     <LinearLayout
 
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:text="not set"
-                    android:textColor="#9A3412"
+                    android:textColor="@color/textcolor"
                     android:textFontWeight="500"
                     android:textSize="18dp" />
 
@@ -95,7 +95,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="20dp"
                 android:textAlignment="center"
-                android:textColor="#9A3412"
+                android:textColor="@color/textcolor"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 

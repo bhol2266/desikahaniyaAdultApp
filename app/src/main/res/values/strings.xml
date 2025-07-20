@@ -1,21 +1,21 @@
 <resources>
     <string name="app_name">Desi Kahaniya</string>
-    <string name="app_ID">ca-app-pub-8226562131234590~7133414465</string>
+    <string name="app_ID">ca-app-pub-8226562131234590~6000968349</string>
 
 
     ADMOB Real Ads ID :
-    <string name="BannerAd">ca-app-pub-8226562131234590/9285296562</string>
-    <string name="RewardedInterstitial">ca-app-pub-8226562131234590/6116497115</string>
-    <string name="AppOpen">ca-app-pub-8226562131234590/9588548895</string>
-    <string name="Interstitial">ca-app-pub-8226562131234590/4215188318</string>
+<!--    <string name="BannerAd">ca-app-pub-8226562131234590/9285296562</string>-->
+<!--    <string name="RewardedInterstitial">ca-app-pub-8226562131234590/6116497115</string>-->
+<!--    <string name="AppOpen">ca-app-pub-8226562131234590/9588548895</string>-->
+<!--    <string name="Interstitial">ca-app-pub-8226562131234590/4215188318</string>-->
 
 
     ADMOB Test Ads ID:
 
-<!--        <string name="RewardedInterstitial">ca-app-pub-3940256099942544/5354046379</string>-->
-<!--        <string name="BannerAd">ca-app-pub-3940256099942544/6300978111</string>-->
-<!--        <string name="AppOpen">.ca-app-pub-3940256099942544/3419835294</string>-->
-<!--        <string name="Interstitial">.ca-app-pub-3940256099942544/1033173712</string>-->
+        <string name="RewardedInterstitial">ca-app-pub-3940256099942544/5354046379</string>
+        <string name="BannerAd">ca-app-pub-3940256099942544/6300978111</string>
+        <string name="AppOpen">.ca-app-pub-3940256099942544/3419835294</string>
+        <string name="Interstitial">.ca-app-pub-3940256099942544/1033173712</string>
 
     Facebook Ads ID:
     <string name="Facebook_BannerAdUnit">3104772449823731_3104778776489765</string>
@@ -23,7 +23,7 @@
     <string name="Facebook_NativeAd_MediumRect">3104772449823731_3104779526489690</string>
 
 
-    <string name="facebook_app_id">[3104772449823731]</string>
+    <string name="facebook_app_id">[310477244dsdsf9823731]</string>
 
 
     <string name="open">Open</string>

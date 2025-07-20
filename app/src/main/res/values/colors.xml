@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorAccent">#03DAC5</color>
-    <color name="textcolor">#AD5312</color>
-    <color name="background_start">#FFF7ED</color>
-    <color name="background_end">#FFF7ED</color>
-    <color name="themeColor">#DA8833</color>
-    <color name="themeColorextralight">#FFE8D1</color>
-    <color name="textcolor2">#BF171717</color>
-    <color name="neuro_shadowcolor">#FDE4C7</color>
+    <color name="colorAccent">#D6336C</color> <!-- Romantic Rose -->
+    <color name="textcolor">#3B0A2A</color> <!-- Rich deep maroon for primary text -->
+    <color name="background_start">#FFF1F5</color> <!-- Soft pink gradient start -->
+    <color name="background_end">#FFE1E9</color> <!-- Lighter end gradient -->
+    <color name="themeColor">#8B005D</color> <!-- Deep magenta for headers/nav -->
+    <color name="themeColorextralight">#FFD2DA</color> <!-- Light pink accent -->
+    <color name="textcolor2">#3B0A2A</color> <!-- Very light romantic background text -->
+    <color name="neuro_shadowcolor">#5A1A3E</color> <!-- Deep berry for soft shadows -->
 
-
-    <color name="semi_black">#BF171717</color>
-    <color name="white">#ffffff</color>
-    <color name="grey">#BFDFDFDF</color>
-    <color name="black">#000000</color>
-
+    <color name="semi_black">#AA262626</color> <!-- textcolor with alpha -->
+    <color name="white">#FFF8F9FA</color> <!-- Almost white, gentle on eyes -->
+    <color name="grey">#DDA5B3</color> <!-- Muted romantic grey -->
+    <color name="black">#000000</color> <!-- Deep burgundy black -->
+    <color name="red">#FB1000</color>
 </resources>

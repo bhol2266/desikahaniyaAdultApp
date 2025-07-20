@@ -121,7 +121,7 @@
             android:padding="5dp"
             android:text="Audio Player"
             android:textAlignment="center"
-            android:textColor="@color/textcolor2"
+            android:textColor="@color/textcolor"
             android:textSize="25sp"
          />
 
@@ -152,7 +152,7 @@
                 android:gravity="center"
                 android:text="loading from server.... (audio will play at 5%)"
                 android:textAlignment="center"
-                android:textColor="@color/textcolor2"
+                android:textColor="@color/textcolor"
                 android:textSize="13sp"
                 />
         </LinearLayout>

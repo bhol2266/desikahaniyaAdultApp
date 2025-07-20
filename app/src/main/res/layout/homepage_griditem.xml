@@ -10,8 +10,7 @@
     android:layout_height="wrap_content"
     android:layout_columnWeight="1"
     android:layout_gravity="center"
-    app:neumorph_shadowColorDark="#FFF8FB"
-    app:neumorph_shadowColorLight="@color/neuro_shadowcolor">
+   >
 
     <FrameLayout
         android:layout_width="match_parent"
