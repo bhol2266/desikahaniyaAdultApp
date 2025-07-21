@@ -8,8 +8,9 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="com.android.vending.BILLING" />
-    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
-
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -26,6 +27,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App"
         tools:targetApi="n">
+        <activity
+            android:name=".AudioPlayer2"
+            android:exported="false" />
         <activity
             android:name=".VipMembership"
             android:exported="false" />
@@ -86,7 +90,10 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
+        <service
+            android:name=".AudioPlayerService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
         <service
             android:name=".TimerService"
             android:enabled="true"

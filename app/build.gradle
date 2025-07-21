@@ -75,6 +75,10 @@ dependencies {
     implementation 'com.google.ads.mediation:facebook:6.20.0.0'
     implementation 'com.google.android.ads:mediation-test-suite:3.0.0'
 
+    implementation 'androidx.media:media:1.7.0'
+    implementation 'com.google.android.exoplayer:exoplayer:2.19.1'
+
+
     // Multidex
     implementation 'androidx.multidex:multidex:2.0.1'
 
@@ -96,6 +100,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation "androidx.lifecycle:lifecycle-runtime:2.9.1"
     implementation "androidx.lifecycle:lifecycle-process:2.9.1"
+    implementation 'androidx.activity:activity:1.8.0'
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:2.9.1"
 
     // Billing
