@@ -35,9 +35,7 @@
             android:exported="false" />
         <activity android:name=".TermsAndConditions" />
         <activity android:name=".AudioPlayer" />
-        <activity
-            android:name=".AudioPlayerOffline"
-            android:exported="false" />
+
         <activity
             android:name=".OfflineAudioStory"
             android:exported="false" />
@@ -92,8 +90,11 @@
         </service>
         <service
             android:name=".AudioPlayerService"
-            android:exported="false"
-            android:foregroundServiceType="mediaPlayback" />
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="false" />
+
+        <receiver android:name=".NotificationDismissedReceiver" android:exported="false" />
+
         <service
             android:name=".TimerService"
             android:enabled="true"

@@ -67,7 +67,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String Ad_Network_Name = "admob";
     public static String DB_NAME = "desikahaniya";
     public static String exit_Refer_appNavigation = "inactive";
-    public static String App_updating = "active";
+    public static String App_updating = "inactive";
     public static String databaseURL = "https://bucket2266.s3.ap-south-1.amazonaws.com/"; //default
     public static String Notification_ImageURL = "https://hotdesipics.co/wp-content/uploads/2022/06/Hot-Bangla-Boudi-Ki-Big-Boobs-Nangi-Selfies-_002.jpg";
     DatabaseReference url_mref;
@@ -91,7 +91,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String DB_TABLE_NAME = "";  //This is a table name "StoryItems or FakeStory"
     public static String API_URL = "https://clownfish-app-jn7w9.ondigitalocean.app/";
     private FirebaseAnalytics mFirebaseAnalytics;
-    public static boolean Vip_Member = false;
+    public static boolean Vip_Member = true;
 
 
     @Override
@@ -245,7 +245,7 @@ public class SplashScreen extends AppCompatActivity {
                 Refer_App_url2 = (String) snapshot.child("Refer_App_url2").getValue();
                 exit_Refer_appNavigation = (String) snapshot.child("switch_Exit_Nav").getValue();
                 Ads_State = (String) snapshot.child("Ads").getValue();
-                App_updating = (String) snapshot.child("updatingApp_on_PLatStore").getValue();
+//                App_updating = (String) snapshot.child("updatingApp_on_PLatStore").getValue();
                 Notification_ImageURL = (String) snapshot.child("Notification_ImageURL").getValue();
                 Ad_Network_Name = (String) snapshot.child("Ad_Network").getValue();
 
@@ -300,9 +300,25 @@ public class SplashScreen extends AppCompatActivity {
     private void handler_forIntent() {
         lottie.cancelAnimation();
 
+
         if (SplashScreen.Vip_Member) {
             vipMemberPrivileges();
         }
+
+        // ✅ Case: Coming from audio notification
+        if ("ComingFromAudioPlayer".equals(getIntent().getStringExtra("ComingFromAudioPlayer"))) {
+            Intent intent = new Intent(getApplicationContext(), AudioPlayer.class);
+            intent.putExtra("storyURL", getIntent().getStringExtra("storyURL"));
+            intent.putExtra("storyName", getIntent().getStringExtra("storyName"));
+            intent.putExtra("title", getIntent().getStringExtra("title"));
+            intent.putExtra("audioHref", getIntent().getStringExtra("audioHref"));
+            intent.putExtra("AudioDownloadState", getIntent().getStringExtra("AudioDownloadState"));
+            intent.putExtra("ComingFromAudioPlayer", getIntent().getStringExtra("ComingFromAudioPlayer"));
+            startActivity(intent);
+            finish();
+            return;
+        }
+
 
         if (Notification_Intent_Firebase.equals("active")) {
             Intent intent = new Intent(getApplicationContext(), Notification_Story_Detail.class);
@@ -327,12 +343,8 @@ public class SplashScreen extends AppCompatActivity {
     static boolean isInternetAvailable(Context context) {
         if (context == null) return false;
 
-
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
         if (connectivityManager != null) {
-
-
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
                 if (capabilities != null) {
@@ -345,7 +357,6 @@ public class SplashScreen extends AppCompatActivity {
                     }
                 }
             } else {
-
                 try {
                     NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
                     if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {

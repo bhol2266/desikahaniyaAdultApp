@@ -1,159 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background2"
-    android:orientation="vertical">
+    android:background="@drawable/background2">
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/back_arrow"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:tint="#9A3412"
-            app:srcCompat="@drawable/back_arrow" />
-
-        <TextView
-            android:id="@+id/title_collection"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="120dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/robotoslab_regular"
-            android:gravity="center"
-            android:longClickable="true"
-            android:text="Detail View"
-            android:textColor="#454545"
-            android:textFontWeight="700"
-            android:textSize="27sp" />
-
-        <ImageView
-            android:id="@+id/VipLottie"
-            android:layout_width="35dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/crown" />
-
-    </RelativeLayout>
-
-    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/background2"
-        android:visibility="gone"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/BannerAd" />
-
+    <!-- Main content container -->
     <LinearLayout
-        android:id="@+id/banner_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <!-- Top Toolbar Section -->
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-         />
+            android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/progressBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
-            android:background="@drawable/background2"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-
-            <ProgressBar
-                style="?android:attr/progressBarStyle"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:layout_gravity="center"
-                android:layout_marginRight="10dp"
-                android:backgroundTint="#FF0000"
-                android:indeterminateTint="#9A3412" />
+            <ImageView
+                android:id="@+id/back_arrow"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:tint="@color/themeColor"
+                app:srcCompat="@drawable/back_arrow" />
 
             <TextView
+                android:id="@+id/title_collection"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="120dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/robotoslab_regular"
+                android:gravity="center"
+                android:text="Detail View"
+                android:textColor="#454545"
+                android:textFontWeight="700"
+                android:textSize="27sp" />
+
+            <ImageView
+                android:id="@+id/VipLottie"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/crown" />
+        </RelativeLayout>
+
+        <!-- Ads -->
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/background2"
+            android:visibility="gone"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/BannerAd" />
+
+        <LinearLayout
+            android:id="@+id/banner_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" />
+
+        <!-- RecyclerView inside FrameLayout -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp" />
+
+            <!-- Loading bar -->
+            <LinearLayout
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:background="@drawable/background2"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:backgroundTint="#FF0000"
+                    android:indeterminateTint="@color/themeColor" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/inter"
+                    android:gravity="center"
+                    android:text="loading stories..." />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:fontFamily="@font/inter"
-                android:gravity="center"
-                android:text="loading stories..." />
-        </LinearLayout>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="120dp"
+                android:text="No stories Downloaded..."
+                android:textColor="#454545"
+                android:textSize="20dp"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <TextView
-            android:id="@+id/message"
+            android:id="@+id/check_Internet_Connection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="120dp"
-            android:text="No stories Downloaded..."
-            android:textColor="#454545"
+            android:layout_marginTop="20dp"
+            android:text="Check Internet Connection !"
+            android:textColor="#000000"
             android:textSize="20dp"
             android:visibility="gone" />
 
-    </FrameLayout>
+        <soup.neumorphism.NeumorphButton
+            android:id="@+id/retryBtn"
+            android:layout_width="300dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/hooverffext"
+            android:fontFamily="@font/robotoslab_regular"
+            android:gravity="center"
+            android:text="Retry"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
+    </LinearLayout>
 
-
-
-    <TextView
-        android:id="@+id/check_Internet_Connection"
-        android:layout_width="wrap_content"
+    <!-- ✅ Bottom audio player fixed to bottom -->
+    <include
+        layout="@layout/bottom_audio_player"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:text="Check Internet Connection !"
-        android:textColor="#000000"
-        android:textSize="20dp"
-        android:visibility="gone" />
+        android:layout_gravity="bottom" />
 
-    <soup.neumorphism.NeumorphButton
-        android:id="@+id/retryBtn"
-        android:layout_width="300dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:background="@drawable/hooverffext"
-        android:fontFamily="@font/robotoslab_regular"
-        android:gravity="center"
-        android:text="Retry"
-        android:textStyle="bold"
-        android:visibility="gone" />
-
-
-</LinearLayout>
+</FrameLayout>

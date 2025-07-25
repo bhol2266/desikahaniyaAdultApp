@@ -18,7 +18,7 @@ import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Download_Detail extends AppCompatActivity {
+public class Download_Detail extends BaseActivity {
 
 
     List<Object> collectonData;

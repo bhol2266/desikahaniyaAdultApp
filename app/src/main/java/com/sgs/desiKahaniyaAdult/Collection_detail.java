@@ -29,7 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Collection_detail extends AppCompatActivity {
+public class Collection_detail extends BaseActivity  {
 
 
     private AdLoader adLoader;

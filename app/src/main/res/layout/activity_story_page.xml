@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,21 +7,20 @@
     android:background="@drawable/background2"
     tools:context=".StoryPage">
 
+    <!-- Main Scrollable Content -->
     <LinearLayout
         android:id="@+id/AdsLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_audio_player">
 
-
+        <!-- Toolbar -->
         <RelativeLayout
             android:id="@+id/deltaRelative"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/back_arrow"
@@ -38,7 +35,6 @@
                 android:focusable="true"
                 app:srcCompat="@drawable/back_arrow"
                 app:tint="@color/textcolor" />
-
 
             <TextView
                 android:id="@+id/title_collection"
@@ -61,35 +57,31 @@
                 android:layout_width="35dp"
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
                 android:src="@drawable/crown" />
-
         </RelativeLayout>
 
-        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        <!-- Ads -->
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:visibility="gone"
             ads:adSize="BANNER"
-            ads:adUnitId="@string/BannerAd"
-            ads:layout_constraintBottom_toTopOf="@+id/scrollview_story_text" />
+            ads:adUnitId="@string/BannerAd" />
 
         <LinearLayout
             android:id="@+id/banner_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/deltaRelative" />
+            android:visibility="gone" />
 
-
+        <!-- Story Scroll Section -->
         <LinearLayout
             android:id="@+id/scrollview_story_text"
             android:layout_width="match_parent"
@@ -97,7 +89,6 @@
             android:elevation="20dp"
             android:orientation="vertical"
             android:padding="5dp">
-
 
             <TextView
                 android:id="@+id/storyPage_Title_textview"
@@ -111,18 +102,17 @@
                 android:textSize="25dp"
                 android:textStyle="bold" />
 
-
             <ScrollView
                 android:id="@+id/scrolltext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp">
+                android:padding="5dp"
+                android:paddingBottom="90dp"> <!-- ✅ Bottom padding to avoid overlap -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
 
                     <TextView
                         android:id="@+id/story_text"
@@ -145,7 +135,7 @@
                         android:fontFamily="@font/inter"
                         android:textSize="20dp"
                         android:text="लेखक के साथ बात करे"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white" />
 
                     <LinearLayout
                         android:id="@+id/storiesInsideparagraph"
@@ -166,7 +156,6 @@
                             android:textColor="@color/textcolor"
                             android:textSize="20dp"
                             android:textStyle="bold" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -188,21 +177,13 @@
                             android:textColor="@color/textcolor"
                             android:textSize="20dp"
                             android:textStyle="bold" />
-
                     </LinearLayout>
-
                 </LinearLayout>
-
-
             </ScrollView>
-
-
         </LinearLayout>
-
-
     </LinearLayout>
 
-
+    <!-- Floating Buttons -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonMain"
         android:layout_width="wrap_content"
@@ -227,8 +208,7 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonMain"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/floatingbar_copy"
-        tools:ignore="VectorDrawableCompat" />
+        app:srcCompat="@drawable/floatingbar_copy" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonShare"
@@ -237,14 +217,12 @@
         android:layout_marginRight="30dp"
         android:layout_marginBottom="20dp"
         android:backgroundTint="@color/themeColorextralight"
-
         android:clickable="true"
         android:focusable="true"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonCopy"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/floatingbar_share"
-        tools:ignore="VectorDrawableCompat" />
+        app:srcCompat="@drawable/floatingbar_share" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonText"
@@ -258,8 +236,7 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonShare"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/floatingbar_textsize"
-        tools:ignore="VectorDrawableCompat" />
+        app:srcCompat="@drawable/floatingbar_textsize" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionFavouriteButton"
@@ -273,8 +250,16 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonText"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/favourote_border"
-        tools:ignore="VectorDrawableCompat" />
+        app:srcCompat="@drawable/favourote_border" />
 
+    <!-- ✅ Bottom Audio Player -->
+    <include
+        android:id="@+id/bottom_audio_player"
+        layout="@layout/bottom_audio_player"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

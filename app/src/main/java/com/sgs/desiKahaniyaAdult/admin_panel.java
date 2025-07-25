@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class admin_panel extends AppCompatActivity {
+public class admin_panel extends BaseActivity  {
     public static int counter = 0;
 
     DatabaseReference mref, notificationMref;  TextView Users_Counters;

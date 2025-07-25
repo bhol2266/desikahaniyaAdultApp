@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class StoryPage extends AppCompatActivity {
+public class StoryPage extends BaseActivity {
     ImageView back;
     TextView storyText, textsize, title_textview;
     String date, heading, title, href, title_category, relatedStories, storiesInsideParagraph;

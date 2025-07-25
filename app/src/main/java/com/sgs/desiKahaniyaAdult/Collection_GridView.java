@@ -71,7 +71,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class
-Collection_GridView extends AppCompatActivity {
+Collection_GridView extends BaseActivity {
     String Ads_State;
     NavigationView nav;
     ActionBarDrawerToggle toggle;
@@ -599,7 +599,8 @@ Collection_GridView extends AppCompatActivity {
     private void init() {
         reviewManager = ReviewManagerFactory.create(this);
         // Referencing the button
-        showRateApp(Collection_GridView.this);    }
+        showRateApp(Collection_GridView.this);
+    }
 
 
     // Shows the app rate dialog box using In-App review API
@@ -624,7 +625,6 @@ Collection_GridView extends AppCompatActivity {
             }
         });
     }
-
 
 
     private void insertDataIN_Database() {

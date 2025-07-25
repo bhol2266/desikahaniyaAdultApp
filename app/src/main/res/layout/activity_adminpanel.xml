@@ -218,6 +218,10 @@
 
         </LinearLayout>
 
+
+        <include layout="@layout/bottom_audio_player" />
+
     </LinearLayout>
+
 
 </ScrollView>

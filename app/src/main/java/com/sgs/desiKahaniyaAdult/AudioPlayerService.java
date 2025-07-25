@@ -1,88 +1,291 @@
 package com.sgs.desiKahaniyaAdult;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+import androidx.media.app.NotificationCompat.MediaStyle;
+
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
+
+import java.util.Locale;
 
 public class AudioPlayerService extends Service {
 
-    public static MediaPlayer mediaPlayer;
-    private static final String CHANNEL_ID = "audio_channel";
+    private MediaPlayer mediaPlayer;
+    private Handler handler = new Handler();
+    private String audioUrl, title, audioHref, storyName, AudioDownloadState;
+    public static final String CHANNEL_ID = "audio_channel";
+
+    private MediaSessionCompat mediaSession;
+    public static String CURRENT_AUDIO_URL = null;
+    public static boolean isServiceRunning = false;
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String url = intent.getStringExtra("storyURL");
-        String title = intent.getStringExtra("title");
+        String action = intent.getAction();
 
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
+        // Initialize audio metadata if available
+        if (intent.getStringExtra("storyURL") != null) {
+            audioUrl = intent.getStringExtra("storyURL");
+            storyName = intent.getStringExtra("storyName");
+            title = intent.getStringExtra("title");
+            audioHref = intent.getStringExtra("audioHref");
+            AudioDownloadState = intent.getStringExtra("AudioDownloadState");
+            CURRENT_AUDIO_URL = audioUrl;
+
+
         }
 
-        mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.setDataSource(url);
-            mediaPlayer.setOnPreparedListener(MediaPlayer::start);
-            mediaPlayer.prepareAsync();
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        // Initialize MediaSession if null
+        if (mediaSession == null) {
+            mediaSession = new MediaSessionCompat(this, "AudioServiceSession");
+            mediaSession.setActive(true);
+            mediaSession.setCallback(new MediaSessionCompat.Callback() {
+                @Override
+                public void onPlay() {
+                    if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+                        mediaPlayer.start();
+                        updateMediaSession();
+                        showNotification(true);
+                        sendPlayPauseState();
+                    }
+                }
+
+                @Override
+                public void onPause() {
+                    if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                        mediaPlayer.pause();
+                        updateMediaSession();
+                        showNotification(false);
+                        sendPlayPauseState();
+
+
+                    }
+                }
+
+                @Override
+                public void onSeekTo(long pos) {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.seekTo((int) pos);
+                    }
+                }
+            });
         }
 
-        showNotification(title);
+        // Initialize and start media player
+        if (mediaPlayer == null) {
+            mediaPlayer = new MediaPlayer();
+            try {
+                mediaPlayer.setDataSource(audioUrl);
+                mediaPlayer.prepareAsync();
+
+                mediaPlayer.setOnPreparedListener(mp -> {
+                    mediaPlayer.start();
+                    updateMediaSession();
+                    showNotification(true);
+                    sendProgress();
+                });
+
+                // ✅ BUFFERING LISTENER ADDED HERE
+                mediaPlayer.setOnBufferingUpdateListener((mp, percent) -> {
+                    Intent bufferIntent = new Intent("BUFFER_UPDATE");
+                    bufferIntent.putExtra("percent", percent);
+                    sendBroadcast(bufferIntent);
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (action != null) {
+            switch (action) {
+                case "PLAY":
+                    mediaPlayer.start();
+                    updateMediaSession();
+                    showNotification(true);
+                    break;
+
+                case "PAUSE":
+                    mediaPlayer.pause();
+                    updateMediaSession();
+                    showNotification(false);
+                    break;
+
+                case "SYNC":
+                    sendPlayPauseState();
+                    break;
+
+                case "TOGGLE":
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.pause();
+                        showNotification(false);
+                    } else {
+                        mediaPlayer.start();
+                        showNotification(true);
+                    }
+                    updateMediaSession();
+                    break;
+
+                case "SEEK":
+                    int pos = intent.getIntExtra("seekTo", -1);
+                    if (pos >= 0) mediaPlayer.seekTo(pos);
+                    break;
+            }
+        }
+
         return START_STICKY;
     }
 
-    private void showNotification(String title) {
-        createNotificationChannel();
+    private void sendPlayPauseState() {
 
-        Intent intent = new Intent(this, AudioPlayer.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        //this is broadcasted when the play pause btn is clicked in notification media control
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Now Playing")
-                .setContentText(title)
-                .setSmallIcon(R.drawable.app_icon)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_icon))
-                .setContentIntent(pendingIntent)
-                .setOngoing(true)
-                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle());
+        Intent intent = new Intent("PAUSE_PLAY_BTN_UPDATE");
+        intent.putExtra("PAUSE_PLAY_BTN_UPDATE", mediaPlayer != null && mediaPlayer.isPlaying() ? "PLAY" : "PAUSE");
+        intent.putExtra("current", mediaPlayer.getCurrentPosition());
+        intent.putExtra("duration", mediaPlayer.getDuration());
 
-        startForeground(1, builder.build());
+
+        sendBroadcast(intent);
     }
 
-    private void createNotificationChannel() {
+    private void updateMediaSession() {
+        if (mediaPlayer == null) return;
+
+        mediaSession.setMetadata(new MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, mediaPlayer.getDuration())
+                .build());
+
+        PlaybackStateCompat playbackState = new PlaybackStateCompat.Builder()
+                .setActions(
+                        PlaybackStateCompat.ACTION_PLAY |
+                                PlaybackStateCompat.ACTION_PAUSE |
+                                PlaybackStateCompat.ACTION_SEEK_TO |
+                                PlaybackStateCompat.ACTION_PLAY_PAUSE
+                )
+                .setState(
+                        mediaPlayer.isPlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED,
+                        mediaPlayer.getCurrentPosition(),
+                        1.0f
+                )
+                .build();
+
+        mediaSession.setPlaybackState(playbackState);
+    }
+
+    private void showNotification(boolean isPlaying) {
+
+        Intent notifIntent = new Intent(this, SplashScreen.class);
+        notifIntent.putExtra("storyURL", audioUrl);
+        notifIntent.putExtra("storyName", storyName);
+        notifIntent.putExtra("title", title);
+        notifIntent.putExtra("audioHref", audioHref);
+        notifIntent.putExtra("AudioDownloadState", AudioDownloadState);
+        notifIntent.putExtra("ComingFromAudioPlayer", "ComingFromAudioPlayer");
+
+        notifIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        Intent deleteIntent = new Intent(this, NotificationDismissedReceiver.class);
+        PendingIntent deletePendingIntent = PendingIntent.getBroadcast(this, 0, deleteIntent, PendingIntent.FLAG_IMMUTABLE);
+
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, notifIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        Intent playPauseIntent = new Intent(this, AudioPlayerService.class);
+        playPauseIntent.setAction("TOGGLE");
+
+        PendingIntent actionIntent = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Audio Playback",
-                    NotificationManager.IMPORTANCE_LOW
+            actionIntent = PendingIntent.getForegroundService(
+                    this, 1, playPauseIntent, PendingIntent.FLAG_IMMUTABLE
             );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            if (manager != null) manager.createNotificationChannel(channel);
         }
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Now Playing")
+                .setContentText("Desi Kahani Audio Player")
+                .setSmallIcon(R.drawable.app_icon)
+                .setContentIntent(pendingIntent)
+                .setDeleteIntent(deletePendingIntent) // 🔥 Key line
+
+                .addAction(isPlaying ? R.drawable.pause : R.drawable.play,
+                        isPlaying ? "Pause" : "Play", actionIntent)
+                .setStyle(new MediaStyle()
+                        .setMediaSession(mediaSession.getSessionToken())
+                        .setShowActionsInCompactView(0))
+                .setOnlyAlertOnce(true)
+                .setOngoing(true)
+                .build();
+
+        startForeground(1, notification);
+    }
+
+    private void sendProgress() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mediaPlayer != null ) {
+                    Intent updateIntent = new Intent("PROGRESS_UPDATE");
+                    updateIntent.putExtra("current", mediaPlayer.getCurrentPosition());
+                    updateIntent.putExtra("duration", mediaPlayer.getDuration());
+                    updateIntent.putExtra("title", title);
+                    updateIntent.putExtra("isPlaying", mediaPlayer.isPlaying());
+                    sendBroadcast(updateIntent);
+
+                    updateMediaSession();
+
+                }
+                handler.postDelayed(this, 1000);
+            }
+        }, 1000);
     }
 
     @Override
     public void onDestroy() {
         if (mediaPlayer != null) {
-            mediaPlayer.stop();
             mediaPlayer.release();
         }
+        if (mediaSession != null) {
+            mediaSession.release();
+        }
+        handler.removeCallbacksAndMessages(null);
         super.onDestroy();
+        isServiceRunning = false;
+
     }
+
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    private String formatTime(int milliseconds) {
+        int minutes = (milliseconds / 1000) / 60;
+        int seconds = (milliseconds / 1000) % 60;
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        isServiceRunning = true;
     }
 }

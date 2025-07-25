@@ -1,91 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<soup.neumorphism.NeumorphCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="#55FFFFFF">
+    android:layout_margin="24dp"
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="8dp"
+    android:background="@android:color/white">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-    >
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
+            android:text="Downloading..."
+            android:textColor="#000"
+            android:textSize="18sp"
             android:fontFamily="@font/rajdhani_regular"
-            android:gravity="start"
-            android:text="asdfdsfa.mp3 downloading..."
-            android:textSize="18dp" />
+            android:layout_marginBottom="12dp" />
 
+        <ProgressBar
+            android:id="@+id/seekbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="@color/themeColor"
+            android:progressBackgroundTint="@android:color/darker_gray"
+            android:layout_marginBottom="12dp" />
 
-    <ProgressBar
-        android:id="@+id/seekbar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/description"
-        android:layout_margin="10dp"
-        android:max="100"
-        android:progress="0"
-        android:progressBackgroundTint="@color/themeColor"
-        android:progressTint="@color/themeColor" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/progress_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/seekbar"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:fontFamily="@font/rajdhani_regular"
-        android:text="connecting..."
-        android:textSize="20dp" />
+            <TextView
+                android:id="@+id/progress_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Connecting..."
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:fontFamily="@font/rajdhani_regular" />
 
-    <TextView
-        android:id="@+id/downloadSize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-android:layout_toRightOf="@+id/progress_indicator"
-        android:layout_below="@id/seekbar"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:fontFamily="@font/rajdhani_regular"
-        android:text="(2MB/50MB)"
-        android:visibility="gone"
-        android:textSize="14dp" />
-
+            <TextView
+                android:id="@+id/downloadSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(0MB/0MB)"
+                android:textColor="#000"
+                android:textSize="14sp"
+                android:visibility="gone"
+                android:fontFamily="@font/rajdhani_regular" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/cancelbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/seekbar"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/hooverffext"
-            android:fontFamily="@font/rajdhani_regular"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
             android:text="Cancel"
-            android:textSize="16dp" />
-    </RelativeLayout>
+            android:textColor="@android:color/black"
+            android:background="@drawable/hooverffext"
+            android:textSize="16sp"
+            android:fontFamily="@font/rajdhani_regular"
+            android:layout_gravity="end"
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="6dp" />
+    </LinearLayout>
 
-
-</soup.neumorphism.NeumorphCardView>
+</androidx.cardview.widget.CardView>

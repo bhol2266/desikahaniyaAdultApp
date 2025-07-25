@@ -232,11 +232,13 @@ class AudioStory_Details_Adapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     if (isInternetAvailable()) {
                         Intent intent = new Intent(context, AudioPlayer.class);
-                        intent.putExtra("storyURL", storyItemModel.getAudiolink());
+                        intent.putExtra("storyURL", SplashScreen.decryption(storyItemModel.getAudiolink()));
                         intent.putExtra("storyName", filename);
-                        intent.putExtra("audioHref", storyItemModel.getHref());
-                        intent.putExtra("title", storyItemModel.getTitle());
+                        intent.putExtra("audioHref", SplashScreen.decryption(storyItemModel.getHref()));
+                        intent.putExtra("title",SplashScreen.decryption( storyItemModel.getTitle()));
                         intent.putExtra("position", holder.getAbsoluteAdapterPosition());
+                        intent.putExtra("AudioDownloadState","online");
+
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         v.getContext().startActivity(intent);
                     } else {

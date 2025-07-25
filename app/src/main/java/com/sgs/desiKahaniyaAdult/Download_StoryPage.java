@@ -28,7 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class Download_StoryPage extends AppCompatActivity {
+public class Download_StoryPage extends BaseActivity {
     ImageView back, play_audio;
     TextView storyText, textsize, title_textview;
     String date, heading, title, Ads_State;

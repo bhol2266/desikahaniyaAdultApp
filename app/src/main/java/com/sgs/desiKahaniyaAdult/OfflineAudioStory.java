@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OfflineAudioStory extends AppCompatActivity {
+public class OfflineAudioStory extends BaseActivity {
     String TAG = "taga";
     List<AudioCategoryModel> collectionData;
 
@@ -245,9 +246,14 @@ class OfflineAudioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ((Story_ROW_viewHolder) holder).recyclerview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AudioPlayerOffline.class);
+
+                Intent intent = new Intent(context, AudioPlayer.class);
                 intent.putExtra("storyURL", model.getPath());
-                intent.putExtra("storyName", model.getName());
+                intent.putExtra("storyName", model.getName().replaceAll("_"," ").replace(".mp3",""));
+                intent.putExtra("audioHref", "");
+                intent.putExtra("title", model.getName().replaceAll("_"," ").replace(".mp3",""));
+                intent.putExtra("position",-1);
+                intent.putExtra("AudioDownloadState","offline");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 v.getContext().startActivity(intent);
 
