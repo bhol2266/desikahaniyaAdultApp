@@ -67,7 +67,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String Ad_Network_Name = "admob";
     public static String DB_NAME = "desikahaniya";
     public static String exit_Refer_appNavigation = "inactive";
-    public static String App_updating = "inactive";
+    public static String App_updating = "active";
     public static String databaseURL = "https://bucket2266.s3.ap-south-1.amazonaws.com/"; //default
     public static String Notification_ImageURL = "https://hotdesipics.co/wp-content/uploads/2022/06/Hot-Bangla-Boudi-Ki-Big-Boobs-Nangi-Selfies-_002.jpg";
     DatabaseReference url_mref;
@@ -91,7 +91,7 @@ public class SplashScreen extends AppCompatActivity {
     public static String DB_TABLE_NAME = "";  //This is a table name "StoryItems or FakeStory"
     public static String API_URL = "https://clownfish-app-jn7w9.ondigitalocean.app/";
     private FirebaseAnalytics mFirebaseAnalytics;
-    public static boolean Vip_Member = true;
+    public static boolean Vip_Member = false;
 
 
     @Override
@@ -245,7 +245,7 @@ public class SplashScreen extends AppCompatActivity {
                 Refer_App_url2 = (String) snapshot.child("Refer_App_url2").getValue();
                 exit_Refer_appNavigation = (String) snapshot.child("switch_Exit_Nav").getValue();
                 Ads_State = (String) snapshot.child("Ads").getValue();
-//                App_updating = (String) snapshot.child("updatingApp_on_PLatStore").getValue();
+                App_updating = (String) snapshot.child("updatingApp_on_PLatStore").getValue();
                 Notification_ImageURL = (String) snapshot.child("Notification_ImageURL").getValue();
                 Ad_Network_Name = (String) snapshot.child("Ad_Network").getValue();
 
